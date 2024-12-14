@@ -7,12 +7,14 @@
 .num_samples(x)
 }
 \arguments{
-\item{x}{An input object (scalar, vector, or matrix).}
+\item{x}{An input object (scalar, vector, matrix, or data frame).}
 }
 \value{
-The number of samples (rows) in the input object.
+An integer representing the number of samples (rows) in the input object.
 }
 \description{
 This helper function determines the number of samples in the input object.
+For a vector, it returns its length. For a matrix or data frame, it returns
+the number of rows.
 }
 \keyword{internal}

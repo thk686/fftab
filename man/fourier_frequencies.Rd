@@ -7,11 +7,13 @@
 fourier_frequencies(x)
 }
 \arguments{
-\item{x}{The input (scalar, vector, or time series object).}
+\item{x}{The input object (scalar, vector, matrix, time series, or array).}
 }
 \value{
-A vector of Fourier frequencies, normalized or scaled based on the input type.
+A numeric vector for 1D inputs or a tibble for multidimensional inputs,
+containing the Fourier frequencies normalized or scaled based on the input type.
 }
 \description{
-This is a generic function for computing Fourier frequencies.
+This is a generic function for computing Fourier frequencies for various
+types of inputs, such as scalars, vectors, matrices, time series, or arrays.
 }

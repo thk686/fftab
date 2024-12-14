@@ -8,6 +8,14 @@
 \description{
 Provides functions for storing fourier coefficients in a tibble and manipulating them in various ways.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/thk686/tidyfft}
+  \item Report bugs at \url{https://github.com/thk686/tidyfft/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Timothy Keitt \email{tkeitt@gmail.com}
 

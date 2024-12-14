@@ -10,10 +10,11 @@
 \item{x}{A time series (\code{ts}) object.}
 }
 \value{
-A numeric vector of scaled Fourier frequencies.
+A tibble with a single column \code{dim_1} containing the normalized Fourier frequencies.
 }
 \description{
-Computes Fourier frequencies scaled by the frequency attribute of a \code{ts} object.
+Computes Fourier frequencies scaled by the frequency attribute of a \code{ts} object,
+making them domain-specific to the time series.
 }
 \examples{
 ts_obj <- ts(rnorm(12), frequency = 12)

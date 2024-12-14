@@ -7,7 +7,7 @@
 tidy_fft(x, repr = c("polr", "rect", "cplx"))
 }
 \arguments{
-\item{x}{Input object (vector or \code{ts} object).}
+\item{x}{Input object (vector, time series, or array).}
 
 \item{repr}{The desired representation of the FFT result: \code{"polr"}, \code{"rect"}, or \code{"cplx"}.}
 }
