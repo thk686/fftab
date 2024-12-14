@@ -169,9 +169,6 @@ test_that("Impulse position matches expected frequency for column sine wave", {
   # Perform FFT
   y <- tidy_fft(x, repr = "polr")
 
-  # Frequency grid for the FFT
-  dim_grid <- fourier_frequencies(x)
-
   # Find max impulse
   impulse <- y[which.max(y$mod), ]
 
@@ -179,3 +176,25 @@ test_that("Impulse position matches expected frequency for column sine wave", {
   expect_equal(impulse$dim_1, 0, tolerance = 1e-6)             # No variation along rows
   expect_equal(impulse$dim_2, dim_col / dims[2], tolerance = 1e-6)  # Expected column frequency
 })
+
+test_that("Impulse position matches expected frequency for array", {
+  dims <- c(16, 32, 64)
+  clen <- c(2, 8, 2)
+  x <- array(0, dim = dims)
+  for (i in 1:3) {
+    x <- x + slice.index(x, i) / clen[i]
+  }
+  y <- tidy_fft(sin(2 * pi * x), repr = "polr")
+
+  # Find max impulse
+  y |>
+    dplyr::mutate(i = 1:dplyr::n()) |>
+    dplyr::filter(dim_1 > 0, dim_2 > 0, dim_3 > 0) |>
+    dplyr::filter(mod == max(mod)) -> impl
+
+  # Assertions
+  expect_equal(impl$dim_1, 1 / clen[1], tolerance = 1e-6)
+  expect_equal(impl$dim_2, 1 / clen[2], tolerance = 1e-6)
+  expect_equal(impl$dim_3, 1 / clen[3], tolerance = 1e-6)
+})
+
