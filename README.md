@@ -24,7 +24,7 @@ pak::pak("thk686/tidyfft")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Using tidy_fft with ggplot.
 
 ``` r
 library(ggplot2)
