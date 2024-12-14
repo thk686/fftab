@@ -4,6 +4,8 @@
 # tidyfft
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of tidyfft is to make working with fft’s in R easier and more
