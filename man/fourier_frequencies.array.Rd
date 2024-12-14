@@ -21,15 +21,15 @@ a tidy tibble with frequencies for all dimensions.
 \examples{
 # Compute Fourier frequencies for a 3D array
 array_input <- array(1:27, dim = c(3, 3, 3))
-fourier_frequencies.array(array_input)
+fourier_frequencies(array_input)
 
 # Compute Fourier frequencies for a 2D matrix
 matrix_input <- matrix(1:9, nrow = 3, ncol = 3)
-fourier_frequencies.array(matrix_input)
+fourier_frequencies(matrix_input)
 
 # Compute Fourier frequencies for a vector (1D case)
 vector_input <- 1:8
-fourier_frequencies.array(vector_input)
+fourier_frequencies(vector_input)
 }
 \seealso{
 \code{\link[=fourier_frequencies.default]{fourier_frequencies.default()}}, \code{\link[tidyr:expand_grid]{tidyr::expand_grid()}}

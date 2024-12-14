@@ -1,3 +1,6 @@
+# Declare .data as a global variable to avoid R CMD check NOTE
+utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
+
 #' Compute the number of samples in an input
 #'
 #' This helper function determines the number of samples in the input object.
@@ -87,15 +90,15 @@ fourier_frequencies.ts <- function(x) {
 #' @examples
 #' # Compute Fourier frequencies for a 3D array
 #' array_input <- array(1:27, dim = c(3, 3, 3))
-#' fourier_frequencies.array(array_input)
+#' fourier_frequencies(array_input)
 #'
 #' # Compute Fourier frequencies for a 2D matrix
 #' matrix_input <- matrix(1:9, nrow = 3, ncol = 3)
-#' fourier_frequencies.array(matrix_input)
+#' fourier_frequencies(matrix_input)
 #'
 #' # Compute Fourier frequencies for a vector (1D case)
 #' vector_input <- 1:8
-#' fourier_frequencies.array(vector_input)
+#' fourier_frequencies(vector_input)
 #' @seealso [fourier_frequencies.default()], [tidyr::expand_grid()]
 #' @export
 fourier_frequencies.array <- function(x) {
@@ -295,7 +298,7 @@ change_repr <- function(x, repr = c("polr", "rect", "cplx")) {
   if (from == "polr" && to == "cplx") {
     return(dplyr::mutate(
       structure(x, repr = to),
-      fx = complex(arg = arg, mod = mod),
+      fx = complex(argument = arg, modulus = mod),
       .keep = "unused"
     ))
   }
@@ -303,17 +306,14 @@ change_repr <- function(x, repr = c("polr", "rect", "cplx")) {
   if (from == "polr" && to == "rect") {
     return(dplyr::mutate(
       structure(x, repr = to),
-      re = Re(complex(arg = arg, mod = mod)),
-      im = Im(complex(arg = arg, mod = mod)),
+      re = Re(complex(argument = arg, modulus = mod)),
+      im = Im(complex(argument = arg, modulus = mod)),
       .keep = "unused"
     ))
   }
 
   stop("Cannot convert to", to)
 }
-
-# Declare .data as a global variable to avoid R CMD check NOTE
-utils::globalVariables(c(".data"))
 
 #' Plot the modulus of FFT results
 #'
