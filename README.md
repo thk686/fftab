@@ -27,15 +27,18 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(ggplot2)
 library(tidyfft)
+xlocs <- c(1, 0.1, 0.01)
+xlabs <- c("1", "10", "100")
 tidy_fft(sunspot.month) |>
-  plot() +
-  scale_y_continuous(trans = "log") +
-  scale_x_continuous(trans = "log") +
-  geom_vline(aes(xintercept = 1), lty = 2, alpha = 0.5) +
-  geom_vline(aes(xintercept = 0.1), lty = 2, alpha = 0.5) +
-  geom_vline(aes(xintercept = 0.01), lty = 2, alpha = 0.5) +
-  xlab("cycles per year") +
-  geom_smooth()
+  ggplot() +
+  aes(x = frequency, y = mod) +
+  geom_point() +
+  scale_y_continuous(trans = "log", labels = function(y) round(y)) +
+  scale_x_continuous(trans = "log", breaks = xlocs, labels = xlabs) +
+  xlab("Cycle duration (years)") +
+  ylab("Cycle amplitude") +
+  geom_smooth() +
+  theme_bw()
 #> `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
 ```
 
