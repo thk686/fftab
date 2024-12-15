@@ -159,13 +159,13 @@ change_repr <- function(x,
              )),
              .keep = .keep
            )),
-           cmplx = return(dplyr::mutate(
+           cplx = return(dplyr::mutate(
              x,
              fx = complex(argument = arg, modulus = mod),
              .keep = .keep
            )))
   }
-  stop("Cannot convert to ", to, "representation.")
+  stop("Cannot convert to ", to, " representation.")
 }
 
 #' Plot the modulus of FFT results

@@ -34,20 +34,41 @@ pak::pak("thk686/tidyfft")
 
 Using tidy_fft with ggplot.
 
-```{r example, warning=FALSE}
-library(ggplot2)
+```{r, warning=FALSE, message=FALSE}
 library(tidyfft)
+(
+    tidy_fft(sunspot.month) |>
+    change_repr("rect", .keep = "all") |>
+    change_repr("cplx", .keep = "all") -> sunspot.month.fft
+)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(ggfortify)
+library(patchwork)
+
+ggplot(fortify(sunspot.month)) + 
+  aes(x = Index, y = Data) + 
+  geom_line() +
+  xlab("Year") +
+  ylab("Sunspot count") +
+  theme_bw() -> p1
+
 xlocs <- c(1, 0.1, 0.01)
 xlabs <- c("1", "10", "100")
-tidy_fft(sunspot.month) |>
+
+sunspot.month.fft |>
+  dplyr::filter(dim_1 > 0) |>
   ggplot() +
-  aes(x = frequency, y = mod) +
-  geom_point() +
-  scale_y_continuous(trans = "log", labels = function(y) round(y)) +
-  scale_x_continuous(trans = "log", breaks = xlocs, labels = xlabs) +
-  xlab("Cycle duration (years)") +
-  ylab("Cycle amplitude") +
-  geom_smooth() +
-  theme_bw()
+    aes(x = dim_1, y = mod) +
+    geom_point() +
+    scale_y_continuous(trans = "log", labels = function(y) round(y)) +
+    scale_x_continuous(trans = "log", breaks = xlocs, labels = xlabs) +
+    xlab("Cycle duration (years)") +
+    ylab("Cycle amplitude") +
+    geom_smooth() +
+    theme_bw() -> p2
+
+print(p1 / p2)
 ```
 
