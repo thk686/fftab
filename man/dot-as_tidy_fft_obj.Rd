@@ -24,11 +24,4 @@ attributes to convert a given object into a \code{tidy_fft} object.
 A \code{tidy_fft} object is a tibble-like structure with additional class
 attributes used to represent Fourier Transform results in a tidy format.
 }
-\examples{
-# Example usage
-library(tibble)
-fft_result <- tibble(dim_1 = c(0, 0.25, 0.5, -0.25), fx = complex(real = c(1, 0, -1, 0)))
-tidy_fft_obj <- .as_tidy_fft_obj(fft_result, is_complex = TRUE)
-class(tidy_fft_obj) # Returns c("tidy_fft", "tbl_df", "tbl", "data.frame")
-}
 \keyword{internal}
