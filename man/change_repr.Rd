@@ -11,7 +11,14 @@ change_repr(x, repr = c("polr", "rect", "cplx"), .keep = "unused")
 
 \item{repr}{The target representation (\code{"polr"}, \code{"rect"}, or \code{"cplx"}).}
 
-\item{.keep}{Control which columns from x are retained in the output. See \code{dplyr::mutate}.}
+\item{.keep}{Determines which columns to retain in the output.
+Passed directly to \code{dplyr::mutate}. Options include:
+\itemize{
+\item \code{"all"}: Keep all columns (default).
+\item \code{"used"}: Keep only columns used in the computation, plus the new ones.
+\item \code{"unused"}: Keep only columns not used in the computation, plus the new ones.
+\item \code{"none"}: Keep only the new columns.
+}}
 }
 \value{
 The modified object with the new representation.
@@ -21,5 +28,5 @@ Converts FFT results between different representations.
 }
 \examples{
 fft_res <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
-change_repr(fft_res, "rect")
+change_repr(fft_res, "rect", .keep = "none")
 }

@@ -22,14 +22,11 @@ tidy_fft <- function(x, repr = c("polr", "rect", "cplx")) {
 #' @export
 tidy_fft.default <- function(x, repr = c("polr", "rect", "cplx")) {
   repr <- match.arg(repr)
-  if (!is.vector(x))
-    stop('Input must be a vector.')
+  if (!is.vector(x) || !is.numeric(x))
+    stop('Input must be a numeric vector.')
   fourier_frequencies(x) |>
     tibble::add_column(fx = stats::fft(x)) |>
-    structure(
-      class = c("tidy_fft", "tbl_df", "tbl", "data.frame"),
-      is_complex = is.complex(x)
-    ) |>
+    .as_tidy_fft_obj(is_complex = is.complex(x)) |>
     change_repr(repr = match.arg(repr))
 }
 
@@ -45,9 +42,9 @@ tidy_fft.default <- function(x, repr = c("polr", "rect", "cplx")) {
 #' tidy_fft(ts_obj, repr = "polr")
 #' @export
 tidy_fft.ts <- function(x, repr = c("polr", "rect", "cplx")) {
-  stride = attr(x, "tsp")[3]
+  strides = attr(x, "tsp")[3]
   tidy_fft(as.vector(x), repr = match.arg(repr)) |>
-    dplyr::mutate(dim_1 = .fourier_frequencies(x) * stride) |>
+    dplyr::mutate(dim_1 = .fourier_frequencies(x) * strides) |>
     structure(tsp_orig = attr(x, "tsp"))
 }
 
@@ -65,11 +62,7 @@ tidy_fft.ts <- function(x, repr = c("polr", "rect", "cplx")) {
 tidy_fft.array <- function(x, repr = c("polr", "rect", "cplx")) {
   fourier_frequencies(x) |>
     dplyr::mutate(fx = as.vector(stats::fft(x))) |>
-    structure(
-      class = c("tidy_fft", "tbl_df", "tbl", "data.frame"),
-      is_complex = is.complex(x),
-      dim_orig = dim(x)
-    ) |>
+    .as_tidy_fft_obj(is_complex = is.complex(x), dim_orig = dim(x)) |>
     change_repr(repr = match.arg(repr))
 }
 
@@ -104,10 +97,9 @@ tidy_ifft.tidy_fft <- function(x) {
   }
   if (attr(x, "is_complex") == FALSE)
     res <- Re(res)
-  if (is.null(attr(x, "tsp_o$ig")) == FALSE) {
+  if (is.null(attr(x, "tsp_orig")) == FALSE) {
     attr(res, "tsp") <- attr(x, "tsp_orig")
     class(res) <- "ts"
   }
   res
 }
-

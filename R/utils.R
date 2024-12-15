@@ -1,6 +1,30 @@
 # Declare .data as a global variable to avoid R CMD check NOTE
 utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
 
+#' Convert an Object to a Tidy FFT Object
+#'
+#' This internal helper function applies the necessary structure and class
+#' attributes to convert a given object into a `tidy_fft` object.
+#'
+#' A `tidy_fft` object is a tibble-like structure with additional class
+#' attributes used to represent Fourier Transform results in a tidy format.
+#'
+#' @param x The input object to convert, typically a tibble or data frame.
+#' @param ... Additional attributes to include in the structured object, such
+#'   as metadata or specific attributes required for Fourier Transform analysis.
+#' @return The input object `x`, with the `tidy_fft` class and any additional
+#'   attributes provided in `...`.
+#' @keywords internal
+#' @examples
+#' # Example usage
+#' library(tibble)
+#' fft_result <- tibble(dim_1 = c(0, 0.25, 0.5, -0.25), fx = complex(real = c(1, 0, -1, 0)))
+#' tidy_fft_obj <- .as_tidy_fft_obj(fft_result, is_complex = TRUE)
+#' class(tidy_fft_obj) # Returns c("tidy_fft", "tbl_df", "tbl", "data.frame")
+.as_tidy_fft_obj <- function(x, ...) {
+  structure(x, ..., class = c("tidy_fft", "tbl_df", "tbl", "data.frame"))
+}
+
 #' Compute the number of samples in an input
 #'
 #' This helper function determines the number of samples in the input object.
@@ -33,7 +57,20 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
   ifelse(k <= n / 2, k, k - n) / n
 }
 
-.can_repr <- function(x, repr = c("polr", "rect", "cplx")) {
+#' Check if a `tidy_fft` object has a specific representation
+#'
+#' This function checks if the given `tidy_fft` object contains the specified
+#' representation: polar (`"polr"`), rectangular (`"rect"`), or complex (`"cplx"`).
+#'
+#' @param x A `tidy_fft` object.
+#' @param repr The target representation to check (`"polr"`, `"rect"`, or `"cplx"`).
+#' @return A logical value (`TRUE` if the object has the specified representation, otherwise `FALSE`).
+#' @examples
+#' tft <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
+#' can_repr(tft, "cplx")  # Returns TRUE
+#' can_repr(tft, "rect")  # Returns FALSE
+#' @export
+can_repr <- function(x, repr = c("polr", "rect", "cplx")) {
   switch(
     match.arg(repr),
     polr = all(c("mod", "arg") %in% names(x)),
@@ -50,7 +87,7 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
 get_repr <- function(x) {
   reprs <- c("polr", "rect", "cplx")
   reprs[sapply(reprs, function(repr)
-    .can_repr(x, repr))]
+    can_repr(x, repr))]
 }
 
 #' Change the representation of FFT results
@@ -59,15 +96,24 @@ get_repr <- function(x) {
 #'
 #' @param x A `tidy_fft` object.
 #' @param repr The target representation (`"polr"`, `"rect"`, or `"cplx"`).
-#' @param .keep Control which columns from x are retained in the output. See \code{dplyr::mutate}.
+#' @param .keep Determines which columns to retain in the output.
+#'   Passed directly to \code{dplyr::mutate}. Options include:
+#'   \itemize{
+#'     \item \code{"all"}: Keep all columns (default).
+#'     \item \code{"used"}: Keep only columns used in the computation, plus the new ones.
+#'     \item \code{"unused"}: Keep only columns not used in the computation, plus the new ones.
+#'     \item \code{"none"}: Keep only the new columns.
+#'   }
 #' @return The modified object with the new representation.
 #' @examples
 #' fft_res <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
-#' change_repr(fft_res, "rect")
+#' change_repr(fft_res, "rect", .keep = "none")
 #' @export
-change_repr <- function(x, repr = c("polr", "rect", "cplx"), .keep = "unused") {
+change_repr <- function(x,
+                        repr = c("polr", "rect", "cplx"),
+                        .keep = "unused") {
   to <- match.arg(repr)
-  if (.can_repr(x, "cplx")) {
+  if (can_repr(x, "cplx")) {
     switch(to,
            polr = return(dplyr::mutate(
              x,
@@ -83,7 +129,7 @@ change_repr <- function(x, repr = c("polr", "rect", "cplx"), .keep = "unused") {
            )),
            cplx = return(x))
   }
-  if (.can_repr(x, "rect")) {
+  if (can_repr(x, "rect")) {
     switch(to,
            polr = return(dplyr::mutate(
              x,
@@ -100,7 +146,7 @@ change_repr <- function(x, repr = c("polr", "rect", "cplx"), .keep = "unused") {
              x, fx = complex(real = re, imaginary = im), .keep = .keep
            )))
   }
-  if (.can_repr(x, "polr")) {
+  if (can_repr(x, "polr")) {
     switch(to,
            polr = return(x),
            rect = return(dplyr::mutate(
