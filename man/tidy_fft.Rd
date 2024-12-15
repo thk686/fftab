@@ -4,12 +4,10 @@
 \alias{tidy_fft}
 \title{Perform FFT and return a tidy result}
 \usage{
-tidy_fft(x, repr = c("polr", "rect", "cplx"))
+tidy_fft(x)
 }
 \arguments{
 \item{x}{Input object (vector, time series, or array).}
-
-\item{repr}{The desired representation of the FFT result: \code{"polr"}, \code{"rect"}, or \code{"cplx"}.}
 }
 \value{
 A tibble containing Fourier frequencies and FFT values in the specified format.

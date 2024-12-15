@@ -16,6 +16,6 @@ The reconstructed signal as a vector or time series object.
 Performs the inverse FFT and reconstructs the original signal.
 }
 \examples{
-fft_res <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
+fft_res <- tidy_fft(c(1, 0, -1, 0))
 tidy_ifft(fft_res)
 }

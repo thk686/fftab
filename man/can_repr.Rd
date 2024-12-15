@@ -19,7 +19,7 @@ This function checks if the given \code{tidy_fft} object contains the specified
 representation: polar (\code{"polr"}), rectangular (\code{"rect"}), or complex (\code{"cplx"}).
 }
 \examples{
-tft <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
+tft <- tidy_fft(c(1, 0, -1, 0))
 can_repr(tft, "cplx")  # Returns TRUE
 can_repr(tft, "rect")  # Returns FALSE
 }

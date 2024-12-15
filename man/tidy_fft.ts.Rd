@@ -4,12 +4,10 @@
 \alias{tidy_fft.ts}
 \title{Perform FFT for time series inputs}
 \usage{
-\method{tidy_fft}{ts}(x, repr = c("polr", "rect", "cplx"))
+\method{tidy_fft}{ts}(x)
 }
 \arguments{
 \item{x}{A time series (\code{ts}) object.}
-
-\item{repr}{The desired representation of the FFT result.}
 }
 \value{
 A tibble containing Fourier frequencies and FFT values in the specified format.
@@ -19,5 +17,5 @@ Computes the FFT for a time series object and returns a tidy result.
 }
 \examples{
 ts_obj <- ts(sin(1:10), frequency = 12)
-tidy_fft(ts_obj, repr = "polr")
+tidy_fft(ts_obj)
 }

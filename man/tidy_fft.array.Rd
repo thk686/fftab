@@ -4,12 +4,10 @@
 \alias{tidy_fft.array}
 \title{Perform FFT for array inputs}
 \usage{
-\method{tidy_fft}{array}(x, repr = c("polr", "rect", "cplx"))
+\method{tidy_fft}{array}(x)
 }
 \arguments{
 \item{x}{A numeric array.}
-
-\item{repr}{The desired representation of the FFT result.}
 }
 \value{
 A tibble containing Fourier frequencies and FFT values in the specified format.
@@ -19,5 +17,5 @@ Computes the FFT for an array and returns a tidy result.
 }
 \examples{
 arr <- array(1:8, dim = c(2, 2, 2))
-tidy_fft(arr, repr = "rect")
+tidy_fft(arr)
 }

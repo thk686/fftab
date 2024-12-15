@@ -3,10 +3,9 @@
 #' This is a generic function to compute the FFT and return the result in a tidy format.
 #'
 #' @param x Input object (vector, time series, or array).
-#' @param repr The desired representation of the FFT result: `"polr"`, `"rect"`, or `"cplx"`.
 #' @return A tibble containing Fourier frequencies and FFT values in the specified format.
 #' @export
-tidy_fft <- function(x, repr = c("polr", "rect", "cplx")) {
+tidy_fft <- function(x) {
   UseMethod("tidy_fft")
 }
 
@@ -15,19 +14,16 @@ tidy_fft <- function(x, repr = c("polr", "rect", "cplx")) {
 #' Computes the FFT for a numeric vector and returns a tidy result.
 #'
 #' @param x A numeric vector.
-#' @param repr The desired representation of the FFT result.
 #' @return A tibble containing Fourier frequencies and FFT values in the specified format.
 #' @examples
-#' tidy_fft(c(1, 0, -1, 0), repr = "rect")
+#' tidy_fft(c(1, 0, -1, 0))
 #' @export
-tidy_fft.default <- function(x, repr = c("polr", "rect", "cplx")) {
-  repr <- match.arg(repr)
+tidy_fft.default <- function(x) {
   if (!is.vector(x) || !is.numeric(x))
     stop('Input must be a numeric vector.')
   fourier_frequencies(x) |>
     tibble::add_column(fx = stats::fft(x)) |>
-    .as_tidy_fft_obj(is_complex = is.complex(x)) |>
-    change_repr(repr = match.arg(repr))
+    .as_tidy_fft_obj(is_complex = is.complex(x))
 }
 
 #' Perform FFT for time series inputs
@@ -35,15 +31,14 @@ tidy_fft.default <- function(x, repr = c("polr", "rect", "cplx")) {
 #' Computes the FFT for a time series object and returns a tidy result.
 #'
 #' @param x A time series (`ts`) object.
-#' @param repr The desired representation of the FFT result.
 #' @return A tibble containing Fourier frequencies and FFT values in the specified format.
 #' @examples
 #' ts_obj <- ts(sin(1:10), frequency = 12)
-#' tidy_fft(ts_obj, repr = "polr")
+#' tidy_fft(ts_obj)
 #' @export
-tidy_fft.ts <- function(x, repr = c("polr", "rect", "cplx")) {
+tidy_fft.ts <- function(x) {
   strides = attr(x, "tsp")[3]
-  tidy_fft(as.vector(x), repr = match.arg(repr)) |>
+  tidy_fft(as.vector(x)) |>
     dplyr::mutate(dim_1 = .fourier_frequencies(x) * strides) |>
     structure(tsp_orig = attr(x, "tsp"))
 }
@@ -53,17 +48,15 @@ tidy_fft.ts <- function(x, repr = c("polr", "rect", "cplx")) {
 #' Computes the FFT for an array and returns a tidy result.
 #'
 #' @param x A numeric array.
-#' @param repr The desired representation of the FFT result.
 #' @return A tibble containing Fourier frequencies and FFT values in the specified format.
 #' @examples
 #' arr <- array(1:8, dim = c(2, 2, 2))
-#' tidy_fft(arr, repr = "rect")
+#' tidy_fft(arr)
 #' @export
-tidy_fft.array <- function(x, repr = c("polr", "rect", "cplx")) {
+tidy_fft.array <- function(x) {
   fourier_frequencies(x) |>
     dplyr::mutate(fx = as.vector(stats::fft(x))) |>
-    .as_tidy_fft_obj(is_complex = is.complex(x), dim_orig = dim(x)) |>
-    change_repr(repr = match.arg(repr))
+    .as_tidy_fft_obj(is_complex = is.complex(x), dim_orig = dim(x))
 }
 
 #' Perform inverse FFT on a tidy result
@@ -84,7 +77,7 @@ tidy_ifft <- function(x) {
 #' @param x A `tidy_fft` object.
 #' @return The reconstructed signal as a vector or time series object.
 #' @examples
-#' fft_res <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
+#' fft_res <- tidy_fft(c(1, 0, -1, 0))
 #' tidy_ifft(fft_res)
 #' @export
 tidy_ifft.tidy_fft <- function(x) {

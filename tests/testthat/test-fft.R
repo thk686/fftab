@@ -4,18 +4,18 @@ test_that("tidy_fft.default computes FFT results correctly", {
   x <- c(1, 0, -1, 0)
 
   # Complex representation
-  res <- tidy_fft(x, repr = "cplx")
+  res <- tidy_fft(x)
   expect_true(inherits(res, "tidy_fft"))
   expect_equal(res$dim_1, .fourier_frequencies(x))
   expect_equal(res$fx, stats::fft(x))
 
   # Rectangular representation
-  res_rect <- tidy_fft(x, repr = "rect")
+  res_rect <- tidy_fft(x) |> change_repr("rect")
   expect_equal(res_rect$re, Re(stats::fft(x)))
   expect_equal(res_rect$im, Im(stats::fft(x)))
 
   # Polar representation
-  res_polr <- tidy_fft(x, repr = "polr")
+  res_polr <- tidy_fft(x) |> change_repr("polr")
   expect_equal(res_polr$mod, Mod(stats::fft(x)))
   expect_equal(res_polr$arg, Arg(stats::fft(x)))
 })
@@ -24,7 +24,7 @@ test_that("tidy_fft.ts computes FFT results with proper scaling", {
   ts_obj <- ts(c(1, 0, -1, 0), frequency = 4)
 
   # Complex representation
-  res <- tidy_fft(ts_obj, repr = "cplx")
+  res <- tidy_fft(ts_obj)
   expect_true(inherits(res, "tidy_fft"))
   expect_equal(res$dim_1, .fourier_frequencies(ts_obj) * 4)  # Scaled by frequency
   expect_equal(res$fx, stats::fft(as.vector(ts_obj)))
@@ -37,12 +37,12 @@ test_that("tidy_fft.array computes FFT results correctly", {
   arr <- array(1:8, dim = c(2, 2, 2))
 
   # Complex representation
-  res <- tidy_fft(arr, repr = "cplx")
+  res <- tidy_fft(arr)
   expect_true(inherits(res, "tidy_fft"))
   expect_equal(res$fx, as.vector(stats::fft(arr)))
 
   # Rectangular representation
-  res_rect <- tidy_fft(arr, repr = "rect")
+  res_rect <- tidy_fft(arr) |> change_repr("rect")
   expect_equal(res_rect$re, Re(as.vector(stats::fft(arr))))
   expect_equal(res_rect$im, Im(as.vector(stats::fft(arr))))
 
@@ -52,7 +52,7 @@ test_that("tidy_fft.array computes FFT results correctly", {
 
 test_that("tidy_ifft reconstructs original signal accurately", {
   x <- c(1, 0, -1, 0)
-  fft_res <- tidy_fft(x, repr = "cplx")
+  fft_res <- tidy_fft(x)
 
   # Reconstruct signal
   recon <- tidy_ifft(fft_res)
@@ -60,7 +60,7 @@ test_that("tidy_ifft reconstructs original signal accurately", {
 
   # Test with array
   arr <- array(1:8, dim = c(2, 2, 2))
-  fft_arr_res <- tidy_fft(arr, repr = "cplx")
+  fft_arr_res <- tidy_fft(arr)
   recon_arr <- tidy_ifft(fft_arr_res)
   expect_equal(Re(recon_arr), arr)
 })

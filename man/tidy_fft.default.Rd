@@ -4,12 +4,10 @@
 \alias{tidy_fft.default}
 \title{Perform FFT for default inputs}
 \usage{
-\method{tidy_fft}{default}(x, repr = c("polr", "rect", "cplx"))
+\method{tidy_fft}{default}(x)
 }
 \arguments{
 \item{x}{A numeric vector.}
-
-\item{repr}{The desired representation of the FFT result.}
 }
 \value{
 A tibble containing Fourier frequencies and FFT values in the specified format.
@@ -18,5 +16,5 @@ A tibble containing Fourier frequencies and FFT values in the specified format.
 Computes the FFT for a numeric vector and returns a tidy result.
 }
 \examples{
-tidy_fft(c(1, 0, -1, 0), repr = "rect")
+tidy_fft(c(1, 0, -1, 0))
 }

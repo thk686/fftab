@@ -27,6 +27,6 @@ The modified object with the new representation.
 Converts FFT results between different representations.
 }
 \examples{
-fft_res <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
+fft_res <- tidy_fft(c(1, 0, -1, 0))
 change_repr(fft_res, "rect", .keep = "none")
 }

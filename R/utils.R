@@ -60,7 +60,7 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
 #' @param repr The target representation to check (`"polr"`, `"rect"`, or `"cplx"`).
 #' @return A logical value (`TRUE` if the object has the specified representation, otherwise `FALSE`).
 #' @examples
-#' tft <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
+#' tft <- tidy_fft(c(1, 0, -1, 0))
 #' can_repr(tft, "cplx")  # Returns TRUE
 #' can_repr(tft, "rect")  # Returns FALSE
 #' @export
@@ -100,7 +100,7 @@ get_repr <- function(x) {
 #'   }
 #' @return The modified object with the new representation.
 #' @examples
-#' fft_res <- tidy_fft(c(1, 0, -1, 0), repr = "cplx")
+#' fft_res <- tidy_fft(c(1, 0, -1, 0))
 #' change_repr(fft_res, "rect", .keep = "none")
 #' @export
 change_repr <- function(x,
