@@ -8,7 +8,7 @@
 #'         containing the Fourier frequencies normalized or scaled based on the input type.
 #' @export
 fourier_frequencies <- function(x) {
-  UseMethod("fourier_frequencies")
+    UseMethod("fourier_frequencies")
 }
 
 #' Compute Fourier frequencies for default inputs
@@ -22,7 +22,7 @@ fourier_frequencies <- function(x) {
 #' fourier_frequencies(8)
 #' @export
 fourier_frequencies.default <- function(x) {
-  tibble::tibble(dim_1 = .fourier_frequencies(x))
+    tibble::tibble(dim_1 = .fourier_frequencies(x))
 }
 
 #' Compute Fourier frequencies for time series objects
@@ -37,10 +37,10 @@ fourier_frequencies.default <- function(x) {
 #' fourier_frequencies(ts_obj)
 #' @export
 fourier_frequencies.ts <- function(x) {
-  n <- length(x)
-  stride <- attr(x, "tsp")[3]
-  fourier_frequencies(n) |>
-    dplyr::mutate(dim_1 = stride * dim_1)
+    n <- length(x)
+    stride <- attr(x, "tsp")[3]
+    fourier_frequencies(n) |>
+        dplyr::mutate(dim_1 = stride * dim_1)
 }
 
 #' Compute Fourier frequencies for multidimensional arrays
@@ -67,11 +67,11 @@ fourier_frequencies.ts <- function(x) {
 #' @seealso [fourier_frequencies.default()], [tidyr::expand_grid()]
 #' @export
 fourier_frequencies.array <- function(x) {
-  ff <- list()
-  dims <- dim(drop(x))
-  for (i in rev(seq_along(dims))) {
-    ff[[paste0("dim_", i)]] <- .fourier_frequencies(dims[i])
-  }
-  tidyr::expand_grid(!!!ff)
+    ff <- list()
+    dims <- dim(drop(x))
+    for (i in rev(seq_along(dims))) {
+        ff[[paste0("dim_", i)]] <- .fourier_frequencies(dims[i])
+    }
+    tidyr::expand_grid(!!!ff)
 }
 

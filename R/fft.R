@@ -6,7 +6,7 @@
 #' @return A tibble containing Fourier frequencies and FFT values in the specified format.
 #' @export
 tidy_fft <- function(x) {
-  UseMethod("tidy_fft")
+    UseMethod("tidy_fft")
 }
 
 #' Perform FFT for default inputs
@@ -19,11 +19,11 @@ tidy_fft <- function(x) {
 #' tidy_fft(c(1, 0, -1, 0))
 #' @export
 tidy_fft.default <- function(x) {
-  if (!is.vector(x) || !is.numeric(x))
-    stop('Input must be a numeric vector.')
-  fourier_frequencies(x) |>
-    tibble::add_column(fx = stats::fft(x)) |>
-    .as_tidy_fft_obj(is_complex = is.complex(x))
+    stopifnot(is.vector(x), is.numeric(x))
+    fourier_frequencies(x) |>
+        tibble::add_column(fx = stats::fft(x)) |>
+        .as_tidy_fft_obj(.is_complex = is.complex(x)) |>
+        reduced_repr()
 }
 
 #' Perform FFT for time series inputs
@@ -37,10 +37,11 @@ tidy_fft.default <- function(x) {
 #' tidy_fft(ts_obj)
 #' @export
 tidy_fft.ts <- function(x) {
-  strides = attr(x, "tsp")[3]
-  tidy_fft(as.vector(x)) |>
-    dplyr::mutate(dim_1 = .fourier_frequencies(x) * strides) |>
-    structure(.tsp = attr(x, "tsp"))
+    strides <- attr(x, "tsp")[3]
+    tidy_fft(as.vector(x)) |>
+        dplyr::mutate(dim_1 = .fourier_frequencies(x) * strides) |>
+        structure(.tsp = attr(x, "tsp")) |>
+        reducted_repr()
 }
 
 #' Perform FFT for array inputs
@@ -54,9 +55,10 @@ tidy_fft.ts <- function(x) {
 #' tidy_fft(arr)
 #' @export
 tidy_fft.array <- function(x) {
-  fourier_frequencies(x) |>
-    dplyr::mutate(fx = as.vector(stats::fft(x))) |>
-    .as_tidy_fft_obj(is_complex = is.complex(x), .dim = dim(x))
+    fourier_frequencies(x) |>
+        dplyr::mutate(fx = as.vector(stats::fft(x))) |>
+        .as_tidy_fft_obj(.is_complex = is.complex(x), .dim = dim(x)) |>
+        reduced_repr()
 }
 
 #' Perform inverse FFT on a tidy result
@@ -67,12 +69,12 @@ tidy_fft.array <- function(x) {
 #' @return A vector or time series object reconstructed from the FFT results.
 #' @export
 tidy_ifft <- function(x) {
-  UseMethod("tidy_ifft")
+    UseMethod("tidy_ifft")
 }
 
 #' @export
 tidy_ifft.default <- function(x) {
-  stats::fft(x, inverse = TRUE)
+    stats::fft(x, inverse = TRUE)
 }
 
 #' Perform inverse FFT for default inputs
@@ -86,18 +88,19 @@ tidy_ifft.default <- function(x) {
 #' tidy_ifft(fft_res)
 #' @export
 tidy_ifft.tidy_fft <- function(x) {
-  fx <- change_repr(x, "cplx")$fx
-  res <- if (!is.null(attr(x, ".dim"))) {
-    dim(fx) <- attr(x, ".dim")
-    stats::fft(fx, inverse = TRUE) / prod(dim(fx))
-  } else {
-    stats::fft(fx, inverse = TRUE) / length(fx)
-  }
-  if (attr(x, "is_complex") == FALSE)
-    res <- Re(res)
-  if (is.null(attr(x, ".tsp")) == FALSE) {
-    attr(res, "tsp") <- attr(x, ".tsp")
-    class(res) <- "ts"
-  }
-  res
+    fx <- get_fx(x)
+    res <- if (!is.null(attr(x, ".dim"))) {
+        dim(fx) <- attr(x, ".dim")
+        stats::fft(fx, inverse = TRUE) / prod(dim(fx))
+    } else {
+        stats::fft(fx, inverse = TRUE) / length(fx)
+    }
+    if (attr(x, ".is_complex") == FALSE) {
+        res <- Re(res)
+    }
+    if (is.null(attr(x, ".tsp")) == FALSE) {
+        attr(res, "tsp") <- attr(x, ".tsp")
+        class(res) <- "ts"
+    }
+    res
 }

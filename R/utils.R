@@ -30,8 +30,9 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
 #' @keywords internal
 .num_samples <- function(x) {
   input_len <- length(unlist(x))
-  if (input_len == 0)
+  if (input_len == 0) {
     stop("Input must not be empty")
+  }
   floor(ifelse(input_len == 1, x, NROW(x)))
 }
 
@@ -45,8 +46,9 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
 #' @keywords internal
 .fourier_frequencies <- function(x) {
   n <- .num_samples(x)
-  if (n < 2)
+  if (n < 2) {
     stop("Minimum length is 2")
+  }
   k <- 0:(n - 1)
   ifelse(k <= n / 2, k, k - n) / n
 }
@@ -54,34 +56,68 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
 #' Check if a `tidy_fft` object has a specific representation
 #'
 #' This function checks if the given `tidy_fft` object contains the specified
-#' representation: polar (`"polr"`), rectangular (`"rect"`), or complex (`"cplx"`).
+#' representation: polar (`'polr'`), rectangular (`'rect'`), or complex (`'cplx'`).
 #'
 #' @param x A `tidy_fft` object.
-#' @param repr The target representation to check (`"polr"`, `"rect"`, or `"cplx"`).
+#' @param repr The target representation to check (`'polr'`, `'rect'`, or `'cplx'`).
 #' @return A logical value (`TRUE` if the object has the specified representation, otherwise `FALSE`).
 #' @examples
 #' tft <- tidy_fft(c(1, 0, -1, 0))
-#' can_repr(tft, "cplx")  # Returns TRUE
-#' can_repr(tft, "rect")  # Returns FALSE
+#' can_repr(tft, "cplx") # Returns TRUE
+#' can_repr(tft, "rect") # Returns FALSE
 #' @export
-can_repr <- function(x, repr = c("polr", "rect", "cplx")) {
-  switch(
-    match.arg(repr),
-    polr = all(c("mod", "arg") %in% names(x)),
-    rect = all(c("re", "im") %in% names(x)),
-    cplx = "fx" %in% names(x)
-  )
-}
+# can_repr <- function(x, repr = c('polr', 'rect', 'cplx')) {
+# switch(match.arg(repr), polr = all(c('mod', 'arg') %in% names(x)), rect =
+# all(c('re', 'im') %in% names(x)), cplx = 'fx' %in% names(x) ) }
 
 #' Retrieve the current representation of a tidy_fft object
 #'
 #' @param x A `tidy_fft` object.
 #' @return A vector of possible representations
 #' @export
-get_repr <- function(x) {
-  reprs <- c("polr", "rect", "cplx")
-  reprs[sapply(reprs, function(repr)
-    can_repr(x, repr))]
+# get_repr <- function(x) { reprs <- c('polr', 'rect', 'cplx')
+# reprs[sapply(reprs, function(repr) { can_repr(x, repr) })] }
+
+has_cplx <- function(x) {
+  "fx" %in% names(x)
+}
+
+has_rect <- function(x) {
+  all(c("re", "im") %in% names(x))
+}
+
+has_polr <- function(x) {
+  all(c("mod", "arg") %in% names(x))
+}
+
+to_cplx <- function(x, .keep = "unused") {
+  if (has_rect(x)) {
+    dplyr::mutate(x, fx = complex(real = re, imaginary = im), .keep = .keep)
+  } else {
+    dplyr::mutate(x, fx = complex(modulus = mod, argument = arg), .keep = .keep)
+  }
+}
+
+to_rect <- function(x, .keep = "unused") {
+  if (has_cplx(x)) {
+    dplyr::mutate(x, re = Re(fx), im = Im(fx), .keep = .keep)
+  } else {
+    dplyr::mutate(x, re = Re(complex(modulus = mod, argument = arg)), im = Im(complex(
+      modulus = mod,
+      argument = arg
+    )), .keep = .keep)
+  }
+}
+
+to_polr <- function(x, .keep = "unused") {
+  if (has_cplx(x)) {
+    dplyr::mutate(x, mod = Mod(fx), arg = Arg(fx), .keep = .keep)
+  } else {
+    dplyr::mutate(x, re = Re(complex(real = re, imaginary = im)), im = Im(complex(
+      real = re,
+      imaginary = im
+    )), .keep = .keep)
+  }
 }
 
 #' Change the representation of FFT results
@@ -89,89 +125,52 @@ get_repr <- function(x) {
 #' Converts FFT results between different representations.
 #'
 #' @param x A `tidy_fft` object.
-#' @param repr The target representation (`"polr"`, `"rect"`, or `"cplx"`).
+#' @param repr The target representation (`'polr'`, `'rect'`, or `'cplx'`).
 #' @param .keep Determines which columns to retain in the output.
 #'   Passed directly to \code{dplyr::mutate}. Options include:
 #'   \itemize{
-#'     \item \code{"all"}: Keep all columns (default).
-#'     \item \code{"used"}: Keep only columns used in the computation, plus the new ones.
-#'     \item \code{"unused"}: Keep only columns not used in the computation, plus the new ones.
-#'     \item \code{"none"}: Keep only the new columns.
+#'     \item \code{'all'}: Keep all columns.
+#'     \item \code{'used'}: Keep only columns used
+#'           in the computation, plus the new ones.
+#'     \item \code{'unused'}: Keep only columns not
+#'            used in the computation, plus the new ones (default).
+#'     \item \code{'none'}: Keep only the new columns.
 #'   }
 #' @return The modified object with the new representation.
 #' @examples
 #' fft_res <- tidy_fft(c(1, 0, -1, 0))
 #' change_repr(fft_res, "rect", .keep = "none")
 #' @export
-change_repr <- function(x,
-                        repr = c("polr", "rect", "cplx"),
-                        .keep = "unused") {
-  to <- match.arg(repr)
-  if (can_repr(x, "cplx")) {
-    switch(to,
-           polr = return(dplyr::mutate(
-             x,
-             mod = Mod(fx),
-             arg = Arg(fx),
-             .keep = .keep
-           )),
-           rect = return(dplyr::mutate(
-             x,
-             re = Re(fx),
-             im = Im(fx),
-             .keep = .keep
-           )),
-           cplx = return(x))
-  }
-  if (can_repr(x, "rect")) {
-    switch(to,
-           polr = return(dplyr::mutate(
-             x,
-             mod = Mod(complex(
-               real = re, imaginary = im
-             )),
-             arg = Arg(complex(
-               real = re, imaginary = im
-             )),
-             .keep = .keep
-           )),
-           rect = return(x),
-           cplx = return(dplyr::mutate(
-             x, fx = complex(real = re, imaginary = im), .keep = .keep
-           )))
-  }
-  if (can_repr(x, "polr")) {
-    switch(to,
-           polr = return(x),
-           rect = return(dplyr::mutate(
-             x,
-             re = Re(complex(
-               argument = arg, modulus = mod
-             )),
-             im = Im(complex(
-               argument = arg, modulus = mod
-             )),
-             .keep = .keep
-           )),
-           cplx = return(dplyr::mutate(
-             x,
-             fx = complex(argument = arg, modulus = mod),
-             .keep = .keep
-           )))
-  }
-  stop("Cannot convert to ", to, " representation.")
-}
+# change_repr <- function(x, repr, .keep = 'unused') { stopifnot(inherits(x,
+# 'tidy_fft'), repr %in% c('cplx', 'polr', 'rect')) repr_orig <- get_repr(x) to
+# <- unique(repr[!repr %in% repr_orig]) if (!'cplx' %in% repr_orig) {
+
+# }
+
+# if (can_repr(x, 'cplx')) { if ('rect' %in% repr && !can_repr(x, 'rect')) }
+# for (to in repr) { x <- switch(to, polr = dplyr::mutate( x, mod = Mod(fx),
+# arg = Arg(fx), .keep = .keep ), rect = dplyr::mutate( x, re = Re(fx), im =
+# Im(fx), .keep = .keep ), cplx = x, stop('Unrecognized mode ', to) ) } } if
+# (can_repr(x, 'rect')) { switch(to, polr = return(dplyr::mutate( x, mod =
+# Mod(complex( real = re, imaginary = im )), arg = Arg(complex( real = re,
+# imaginary = im )), .keep = .keep )), rect = return(x), cplx =
+# return(dplyr::mutate( x, fx = complex(real = re, imaginary = im), .keep =
+# .keep )) ) } if (can_repr(x, 'polr')) { switch(to, polr = return(x), rect =
+# return(dplyr::mutate( x, re = Re(complex( argument = arg, modulus = mod )),
+# im = Im(complex( argument = arg, modulus = mod )), .keep = .keep )), cplx =
+# return(dplyr::mutate( x, fx = complex(argument = arg, modulus = mod), .keep =
+# .keep )) ) } }
 
 #' Extract Fourier Coefficients and Derived Components
 #'
 #' These utility functions convert a `tidy_fft` object to the desired representation
-#' (`"cplx"`, `"rect"`, or `"polr"`) and extract specific components.
+#' (`'cplx'`, `'rect'`, or `'polr'`) and extract specific components.
 #'
-#' - `get_fx()`: Extracts the complex Fourier coefficients (`fx`) from the `"cplx"` representation.
-#' - `get_re()`: Extracts the real part (`re`) of the Fourier coefficients from the `"rect"` representation.
-#' - `get_im()`: Extracts the imaginary part (`im`) of the Fourier coefficients from the `"rect"` representation.
-#' - `get_mod()`: Extracts the magnitude (`mod`) of the Fourier coefficients from the `"polr"` representation.
-#' - `get_arg()`: Extracts the phase angle (`arg`) of the Fourier coefficients from the `"polr"` representation.
+#' - `get_fx()`: Extracts the complex Fourier coefficients (`fx`) from the `'cplx'` representation.
+#' - `get_re()`: Extracts the real part (`re`) of the Fourier coefficients from the `'rect'` representation.
+#' - `get_im()`: Extracts the imaginary part (`im`) of the Fourier coefficients from the `'rect'` representation.
+#' - `get_mod()`: Extracts the magnitude (`mod`) of the Fourier coefficients from the `'polr'` representation.
+#' - `get_arg()`: Extracts the phase angle (`arg`) of the Fourier coefficients from the `'polr'` representation.
 #'
 #' @param x A `tidy_fft` object containing FFT results in any representation.
 #' @return Each function returns the requested component:
@@ -200,31 +199,43 @@ change_repr <- function(x,
 #' @seealso [change_repr()] for converting between FFT representations.
 #' @export
 get_fx <- function(x) {
-  change_repr(x, "cplx", .keep = "none")$fx
+  to_cplx(x, .keep = "none")$fx
+}
+
+#' @rdname get_fx
+#' @export
+get_rect <- function(x) {
+  to_rect(x, .keep = "none")
 }
 
 #' @rdname get_fx
 #' @export
 get_re <- function(x) {
-  change_repr(x, "rect", .keep = "none")$re
+  to_rect(x, .keep = "none")$re
 }
 
 #' @rdname get_fx
 #' @export
 get_im <- function(x) {
-  change_repr(x, "rect", .keep = "none")$im
+  to_rect(x, .keep = "none")$im
+}
+
+#' @rdname get_fx
+#' @export
+get_polr <- function(x) {
+  to_polr(x, .keep = "none")
 }
 
 #' @rdname get_fx
 #' @export
 get_mod <- function(x) {
-  change_repr(x, "polr", .keep = "none")$mod
+  to_polr(x, .keep = "none")$mod
 }
 
 #' @rdname get_fx
 #' @export
 get_arg <- function(x) {
-  change_repr(x, "polr", .keep = "none")$arg
+  to_polr(x, .keep = "none")$arg
 }
 
 #' Plot the modulus of FFT results
@@ -235,10 +246,47 @@ get_arg <- function(x) {
 #' @param ... passed to ggplot.
 #' @exportS3Method graphics::plot
 plot.tidy_fft <- function(x, ...) {
-  change_repr(x, "polr") |>
+  to_polr(x) |>
     ggplot2::ggplot(...) +
     ggplot2::aes(x = .data$dim_1, y = .data$mod) +
     ggplot2::geom_line() +
     ggplot2::ylab("modulus") +
     ggplot2::theme_classic()
+}
+
+reduced_repr <- function(x) {
+  stopifnot(inherits(x, "tidy_fft"))
+  if (attr(x, ".is_reduced")) {
+    return(x)
+  }
+  mu <- x |>
+    dplyr::filter(dplyr::if_all(dplyr::starts_with("dim_"), ~ . == 0)) |>
+    get_fx()
+  stopifnot(length(mu) == 1)
+  pred <- if (attr(x, ".is_complex")) {
+    ~ . != 0
+  } else {
+    ~ . > 0
+  }
+  structure(x, .is_reduced = TRUE, .mean = mu) |>
+    dplyr::filter(dplyr::if_all(dplyr::starts_with("dim_"), pred))
+}
+
+full_repr <- function(x) {
+  stopifnot(inherits(x, "tidy_fft"))
+  if (!attr(x, ".is_reduced")) {
+    return(x)
+  }
+  repr_orig <- get_repr(x)
+  res <- to_cplx(x) |>
+    dplyr::slice(1) |>
+    dplyr::mutate(dplyr::across(dplyr::starts_with("dim_1"), ~0), fx = attr(
+      x,
+      ".mean"
+    )) |>
+    rbind(to_cplx(x)) |>
+    structure(.is_reduced = FALSE)
+  if (!attr(x, ".is_complex")) {
+    res 
+  }
 }
