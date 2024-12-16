@@ -30,7 +30,7 @@ test_that("tidy_fft.ts computes FFT results with proper scaling", {
   expect_equal(res$fx, stats::fft(as.vector(ts_obj)))
 
   # Check original attributes are retained
-  expect_equal(attr(res, "tsp_orig"), attr(ts_obj, "tsp"))
+  expect_equal(attr(res, ".tsp"), attr(ts_obj, "tsp"))
 })
 
 test_that("tidy_fft.array computes FFT results correctly", {
@@ -47,7 +47,7 @@ test_that("tidy_fft.array computes FFT results correctly", {
   expect_equal(res_rect$im, Im(as.vector(stats::fft(arr))))
 
   # Original dimensions should be retained
-  expect_equal(attr(res, "dim_orig"), dim(arr))
+  expect_equal(attr(res, ".dim"), dim(arr))
 })
 
 test_that("tidy_ifft reconstructs original signal accurately", {
