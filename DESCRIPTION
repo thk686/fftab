@@ -4,7 +4,11 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Timothy", "Keitt", , "tkeitt@gmail.com", role = c("aut", "cre"))
 Description: Provides functions for storing fourier coefficients in a tibble and
-  manipulating them in various ways.
+  manipulating them in various ways. The main different between tidy_fft and base
+  R is that tidy_fft computes the normalized fourier frequencies in cycles per stride,
+  i.e., cycles per interval between samples, which is often a point of confusion for
+  new users and convenient for plotting, etc. Because the frequencies and coefficients
+  are stored in a tibble (data.frame), easy processing with, e.g., dplyr is facilitated.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -17,5 +21,5 @@ Imports:
     ggplot2,
     tibble,
     tidyr
-URL: https://github.com/thk686/tidyfft
+URL: https://github.com/thk686/tidyfft, https://thk686.github.io/tidyfft/
 BugReports: https://github.com/thk686/tidyfft/issues
