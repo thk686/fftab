@@ -200,31 +200,31 @@ change_repr <- function(x,
 #' @seealso [change_repr()] for converting between FFT representations.
 #' @export
 get_fx <- function(x) {
-  change_repr(x, "cplx")$fx
+  change_repr(x, "cplx", .keep = "none")$fx
 }
 
 #' @rdname get_fx
 #' @export
 get_re <- function(x) {
-  change_repr(x, "rect")$re
+  change_repr(x, "rect", .keep = "none")$re
 }
 
 #' @rdname get_fx
 #' @export
 get_im <- function(x) {
-  change_repr(x, "rect")$im
+  change_repr(x, "rect", .keep = "none")$im
 }
 
 #' @rdname get_fx
 #' @export
 get_mod <- function(x) {
-  change_repr(x, "polr")$mod
+  change_repr(x, "polr", .keep = "none")$mod
 }
 
 #' @rdname get_fx
 #' @export
 get_arg <- function(x) {
-  change_repr(x, "polr")$arg
+  change_repr(x, "polr", .keep = "none")$arg
 }
 
 #' Plot the modulus of FFT results
