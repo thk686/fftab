@@ -90,7 +90,14 @@ has_polr <- function(x) {
   all(c("mod", "arg") %in% names(x))
 }
 
+get_repr <- function(x) {
+  c("cplx", "rect", "polr")[c(has_cplx(x), has_rect(x), has_polr(x))]
+}
+
 to_cplx <- function(x, .keep = "unused") {
+  if (has_cplx(x)) {
+    return(x)
+  }
   if (has_rect(x)) {
     dplyr::mutate(x, fx = complex(real = re, imaginary = im), .keep = .keep)
   } else {
@@ -99,6 +106,9 @@ to_cplx <- function(x, .keep = "unused") {
 }
 
 to_rect <- function(x, .keep = "unused") {
+  if (has_rect(x)) {
+    return(x)
+  }
   if (has_cplx(x)) {
     dplyr::mutate(x, re = Re(fx), im = Im(fx), .keep = .keep)
   } else {
@@ -110,10 +120,13 @@ to_rect <- function(x, .keep = "unused") {
 }
 
 to_polr <- function(x, .keep = "unused") {
+  if (has_polr) {
+    return(x)
+  }
   if (has_cplx(x)) {
     dplyr::mutate(x, mod = Mod(fx), arg = Arg(fx), .keep = .keep)
   } else {
-    dplyr::mutate(x, re = Re(complex(real = re, imaginary = im)), im = Im(complex(
+    dplyr::mutate(x, mod = Mod(complex(real = re, imaginary = im)), arg = Arg(complex(
       real = re,
       imaginary = im
     )), .keep = .keep)
@@ -278,15 +291,19 @@ full_repr <- function(x) {
     return(x)
   }
   repr_orig <- get_repr(x)
+  res <- to_cplx(x)
+  if (!attr(x, ".is_complex")) {
+    res <- dplyr::bind_rows(res, res |>
+      dplyr::arrange(dplyr::desc(dplyr::row_number())) |>
+      dplyr::mutate(dplyr::across(dplyr::starts_with("dim_"), ~ . * -1), fx = Conj(fx)))
+  }
   res <- to_cplx(x) |>
     dplyr::slice(1) |>
     dplyr::mutate(dplyr::across(dplyr::starts_with("dim_1"), ~0), fx = attr(
       x,
       ".mean"
     )) |>
-    rbind(to_cplx(x)) |>
+    dplyr::bind_rows(res) |>
     structure(.is_reduced = FALSE)
-  if (!attr(x, ".is_complex")) {
-    res 
-  }
+  res
 }

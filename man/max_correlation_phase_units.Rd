@@ -36,7 +36,7 @@ fft_b <- tidy_fft(x2)
 
 # Compute maximum correlation and shift in original units
 result <- max_correlation_phase_units(fft_a, fft_b, freq_scale = 1)
-print(result)  # Returns max correlation and shift in original units
+print(result) # Returns max correlation and shift in original units
 
 }
 \seealso{

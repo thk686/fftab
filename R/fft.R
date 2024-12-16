@@ -22,7 +22,7 @@ tidy_fft.default <- function(x) {
     stopifnot(is.vector(x), is.numeric(x))
     fourier_frequencies(x) |>
         tibble::add_column(fx = stats::fft(x)) |>
-        .as_tidy_fft_obj(.is_complex = is.complex(x)) |>
+        .as_tidy_fft_obj(.is_complex = is.complex(x), .is_reduced = FALSE) |>
         reduced_repr()
 }
 
@@ -40,7 +40,7 @@ tidy_fft.ts <- function(x) {
     strides <- attr(x, "tsp")[3]
     tidy_fft(as.vector(x)) |>
         dplyr::mutate(dim_1 = .fourier_frequencies(x) * strides) |>
-        structure(.tsp = attr(x, "tsp")) |>
+        structure(.tsp = attr(x, "tsp"), .is_reduced = FALSE) |>
         reducted_repr()
 }
 
@@ -57,7 +57,7 @@ tidy_fft.ts <- function(x) {
 tidy_fft.array <- function(x) {
     fourier_frequencies(x) |>
         dplyr::mutate(fx = as.vector(stats::fft(x))) |>
-        .as_tidy_fft_obj(.is_complex = is.complex(x), .dim = dim(x)) |>
+        .as_tidy_fft_obj(.is_complex = is.complex(x), .dim = dim(x), .is_reduced = FALSE) |>
         reduced_repr()
 }
 

@@ -17,7 +17,7 @@ This function filters a \code{tidy_fft} object to find the frequency with the ma
 magnitude (\code{mod}), while respecting the dimensional and complex/real-valued structure.
 }
 \details{
-The function first converts the input to the polar representation (\code{"polr"}) using
+The function first converts the input to the polar representation (\code{'polr'}) using
 \code{\link[=change_repr]{change_repr()}}, then filters out rows where all frequency dimensions (\verb{dim_*}) are zero
 (for complex-valued input) or less than or equal to zero (for real-valued input).
 }
