@@ -133,4 +133,23 @@ test_that("can_repr and get_repr handle edge cases", {
   expect_false(can_repr(tft_unrelated, "polr"))
 })
 
+test_that("get_fx extracts complex Fourier coefficients correctly from a polar representation", {
+  # Input signal
+  x <- c(1, 0, -1, 0)
+
+  # Generate tidy_fft object
+  fft_result <- tidy_fft(x) |> change_repr("polr")  # Convert to polar representation
+
+  # Extract complex Fourier coefficients using get_fx
+  fx_values <- get_fx(fft_result)
+
+  # Expected FFT result
+  expected_fx <- fft(x)
+
+  # Test if extracted coefficients match the expected FFT result
+  expect_equal(fx_values, expected_fx)
+
+  # Test that the result is complex
+  expect_true(is.complex(fx_values))
+})
 

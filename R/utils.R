@@ -136,7 +136,7 @@ change_repr <- function(x,
              .keep = .keep
            )),
            rect = return(x),
-           cmplx = return(dplyr::mutate(
+           cplx = return(dplyr::mutate(
              x, fx = complex(real = re, imaginary = im), .keep = .keep
            )))
   }
@@ -160,6 +160,71 @@ change_repr <- function(x,
            )))
   }
   stop("Cannot convert to ", to, " representation.")
+}
+
+#' Extract Fourier Coefficients and Derived Components
+#'
+#' These utility functions convert a `tidy_fft` object to the desired representation
+#' (`"cplx"`, `"rect"`, or `"polr"`) and extract specific components.
+#'
+#' - `get_fx()`: Extracts the complex Fourier coefficients (`fx`) from the `"cplx"` representation.
+#' - `get_re()`: Extracts the real part (`re`) of the Fourier coefficients from the `"rect"` representation.
+#' - `get_im()`: Extracts the imaginary part (`im`) of the Fourier coefficients from the `"rect"` representation.
+#' - `get_mod()`: Extracts the magnitude (`mod`) of the Fourier coefficients from the `"polr"` representation.
+#' - `get_arg()`: Extracts the phase angle (`arg`) of the Fourier coefficients from the `"polr"` representation.
+#'
+#' @param x A `tidy_fft` object containing FFT results in any representation.
+#' @return Each function returns the requested component:
+#' - `get_fx()`: A complex vector of Fourier coefficients.
+#' - `get_re()`: A numeric vector of real parts.
+#' - `get_im()`: A numeric vector of imaginary parts.
+#' - `get_mod()`: A numeric vector of magnitudes.
+#' - `get_arg()`: A numeric vector of phase angles (in radians).
+#' @examples
+#' # Example usage
+#' fft_result <- tidy_fft(c(1, 0, -1, 0))
+#'
+#' # Extract components
+#' fx_values <- get_fx(fft_result)
+#' re_values <- get_re(fft_result)
+#' im_values <- get_im(fft_result)
+#' mod_values <- get_mod(fft_result)
+#' arg_values <- get_arg(fft_result)
+#'
+#' print(fx_values)
+#' print(re_values)
+#' print(im_values)
+#' print(mod_values)
+#' print(arg_values)
+#'
+#' @seealso [change_repr()] for converting between FFT representations.
+#' @export
+get_fx <- function(x) {
+  change_repr(x, "cplx")$fx
+}
+
+#' @rdname get_fx
+#' @export
+get_re <- function(x) {
+  change_repr(x, "rect")$re
+}
+
+#' @rdname get_fx
+#' @export
+get_im <- function(x) {
+  change_repr(x, "rect")$im
+}
+
+#' @rdname get_fx
+#' @export
+get_mod <- function(x) {
+  change_repr(x, "polr")$mod
+}
+
+#' @rdname get_fx
+#' @export
+get_arg <- function(x) {
+  change_repr(x, "polr")$arg
 }
 
 #' Plot the modulus of FFT results
