@@ -66,17 +66,22 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re"))
 #' can_repr(tft, "cplx") # Returns TRUE
 #' can_repr(tft, "rect") # Returns FALSE
 #' @export
-# can_repr <- function(x, repr = c('polr', 'rect', 'cplx')) {
-# switch(match.arg(repr), polr = all(c('mod', 'arg') %in% names(x)), rect =
-# all(c('re', 'im') %in% names(x)), cplx = 'fx' %in% names(x) ) }
+can_repr <- function(x, repr = c('cplx', 'rect', 'polr')) {
+  switch(match.arg(repr),
+         cplx = has_cplx(x),
+         rect = has_rect(x),
+         polr = has_polr(x))
+}
 
 #' Retrieve the current representation of a tidy_fft object
 #'
 #' @param x A `tidy_fft` object.
 #' @return A vector of possible representations
 #' @export
-# get_repr <- function(x) { reprs <- c('polr', 'rect', 'cplx')
-# reprs[sapply(reprs, function(repr) { can_repr(x, repr) })] }
+get_repr <- function(x) {
+  i <- c(has_cplx(x), has_rect(x), has_polr(x))
+  c('cplx', 'rect', 'polr')[i]
+}
 
 has_cplx <- function(x) {
   "fx" %in% names(x)
@@ -101,7 +106,9 @@ to_cplx <- function(x, .keep = "unused") {
   if (has_rect(x)) {
     dplyr::mutate(x, fx = complex(real = re, imaginary = im), .keep = .keep)
   } else {
-    dplyr::mutate(x, fx = complex(modulus = mod, argument = arg), .keep = .keep)
+    dplyr::mutate(x,
+                  fx = complex(modulus = mod, argument = arg),
+                  .keep = .keep)
   }
 }
 
@@ -110,26 +117,34 @@ to_rect <- function(x, .keep = "unused") {
     return(x)
   }
   if (has_cplx(x)) {
-    dplyr::mutate(x, re = Re(fx), im = Im(fx), .keep = .keep)
+    dplyr::mutate(x,
+                  re = Re(fx),
+                  im = Im(fx),
+                  .keep = .keep)
   } else {
-    dplyr::mutate(x, re = Re(complex(modulus = mod, argument = arg)), im = Im(complex(
-      modulus = mod,
-      argument = arg
-    )), .keep = .keep)
+    dplyr::mutate(x,
+                  re = mod * cos(arg),
+                  im = mod * sin(arg),
+                  .keep = .keep)
   }
 }
 
 to_polr <- function(x, .keep = "unused") {
-  if (has_polr) {
+  if (has_polr(x)) {
     return(x)
   }
   if (has_cplx(x)) {
-    dplyr::mutate(x, mod = Mod(fx), arg = Arg(fx), .keep = .keep)
+    dplyr::mutate(x,
+                  mod = Mod(fx),
+                  arg = Arg(fx),
+                  .keep = .keep)
   } else {
-    dplyr::mutate(x, mod = Mod(complex(real = re, imaginary = im)), arg = Arg(complex(
-      real = re,
-      imaginary = im
-    )), .keep = .keep)
+    dplyr::mutate(
+      x,
+      mod = sqrt(re ^ 2 + im ^ 2),
+      arg = atan2(im, re),
+      .keep = .keep
+    )
   }
 }
 
@@ -251,6 +266,24 @@ get_arg <- function(x) {
   to_polr(x, .keep = "none")$arg
 }
 
+drop_negf <- function(x) {
+  dplyr::filter(x, dplyr::if_all(dplyr::starts_with("dim_"), ~ . >= 0))
+}
+
+drop_posf <- function(x) {
+  dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . < 0))
+}
+
+# Generate negative frequency components from positive frequencies
+generate_negf <- function(x) {
+  # Drop nyquist frequency if odd number of rows
+  if (nrow(x) %% 2 == 1) {
+    x <- dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . != max(dim_1)))
+  }
+  dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . != 0)) |>
+  dplyr::mutate(dplyr::across(dplyr::starts_with("dim_"), ~ -.), fx = Conj(fx))
+}
+
 #' Plot the modulus of FFT results
 #'
 #' Plots the modulus of the FFT results against the frequencies.
@@ -265,45 +298,4 @@ plot.tidy_fft <- function(x, ...) {
     ggplot2::geom_line() +
     ggplot2::ylab("modulus") +
     ggplot2::theme_classic()
-}
-
-reduced_repr <- function(x) {
-  stopifnot(inherits(x, "tidy_fft"))
-  if (attr(x, ".is_reduced")) {
-    return(x)
-  }
-  mu <- x |>
-    dplyr::filter(dplyr::if_all(dplyr::starts_with("dim_"), ~ . == 0)) |>
-    get_fx()
-  stopifnot(length(mu) == 1)
-  pred <- if (attr(x, ".is_complex")) {
-    ~ . != 0
-  } else {
-    ~ . > 0
-  }
-  structure(x, .is_reduced = TRUE, .mean = mu) |>
-    dplyr::filter(dplyr::if_all(dplyr::starts_with("dim_"), pred))
-}
-
-full_repr <- function(x) {
-  stopifnot(inherits(x, "tidy_fft"))
-  if (!attr(x, ".is_reduced")) {
-    return(x)
-  }
-  repr_orig <- get_repr(x)
-  res <- to_cplx(x)
-  if (!attr(x, ".is_complex")) {
-    res <- dplyr::bind_rows(res, res |>
-      dplyr::arrange(dplyr::desc(dplyr::row_number())) |>
-      dplyr::mutate(dplyr::across(dplyr::starts_with("dim_"), ~ . * -1), fx = Conj(fx)))
-  }
-  res <- to_cplx(x) |>
-    dplyr::slice(1) |>
-    dplyr::mutate(dplyr::across(dplyr::starts_with("dim_1"), ~0), fx = attr(
-      x,
-      ".mean"
-    )) |>
-    dplyr::bind_rows(res) |>
-    structure(.is_reduced = FALSE)
-  res
 }

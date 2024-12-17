@@ -79,7 +79,7 @@ test_that("get_repr works correctly for multiple representations", {
     mod = c(1, 1, 1, 1),
     arg = c(0, pi/2, -pi, -pi/2)
   )
-  expect_equal(get_repr(tft_all), c("polr", "rect", "cplx"))
+  expect_setequal(get_repr(tft_all), c("cplx", "rect", "polr"))
 })
 
 test_that("can_repr works correctly for single representation checks", {
@@ -138,7 +138,7 @@ test_that("get_fx extracts complex Fourier coefficients correctly from a polar r
   x <- c(1, 0, -1, 0)
 
   # Generate tidy_fft object
-  fft_result <- tidy_fft(x) |> change_repr("polr")  # Convert to polar representation
+  fft_result <- tidy_fft(x) |> to_polr()  # Convert to polar representation
 
   # Extract complex Fourier coefficients using get_fx
   fx_values <- get_fx(fft_result)

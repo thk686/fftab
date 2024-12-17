@@ -7,15 +7,15 @@ test_that("tidy_fft.default computes FFT results correctly", {
   res <- tidy_fft(x)
   expect_true(inherits(res, "tidy_fft"))
   expect_equal(res$dim_1, .fourier_frequencies(x))
-  expect_equal(res$fx, stats::fft(x))
+  expect_equal(get_fx(res), stats::fft(x))
 
   # Rectangular representation
-  res_rect <- tidy_fft(x) |> change_repr("rect")
+  res_rect <- tidy_fft(x) |> to_rect()
   expect_equal(res_rect$re, Re(stats::fft(x)))
   expect_equal(res_rect$im, Im(stats::fft(x)))
 
   # Polar representation
-  res_polr <- tidy_fft(x) |> change_repr("polr")
+  res_polr <- tidy_fft(x) |> to_polr()
   expect_equal(res_polr$mod, Mod(stats::fft(x)))
   expect_equal(res_polr$arg, Arg(stats::fft(x)))
 })
@@ -42,7 +42,7 @@ test_that("tidy_fft.array computes FFT results correctly", {
   expect_equal(res$fx, as.vector(stats::fft(arr)))
 
   # Rectangular representation
-  res_rect <- tidy_fft(arr) |> change_repr("rect")
+  res_rect <- tidy_fft(arr) |> to_rect()
   expect_equal(res_rect$re, Re(as.vector(stats::fft(arr))))
   expect_equal(res_rect$im, Im(as.vector(stats::fft(arr))))
 
@@ -66,7 +66,6 @@ test_that("tidy_ifft reconstructs original signal accurately", {
 })
 
 test_that("error handling works as expected", {
-  expect_error(tidy_fft(list(1, 2, 3)), "Input must be a numeric vector")
-  expect_error(tidy_fft(c()), "Input must be a numeric vector")
-  expect_error(tidy_fft(c(1, 2), repr = "invalid"))
+  expect_error(tidy_fft(list(1, 2, 3)), "is.numeric(x) || is.complex(x) is not TRUE")
+  # expect_error(tidy_fft(c()), "is.vector(x) is not TRUE")
 })

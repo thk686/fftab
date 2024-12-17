@@ -85,7 +85,7 @@ test_that("Impulse position matches expected frequency for row sine wave", {
   x <- matrix(sin(dim_row * t), nrow = dims[1], ncol = dims[2])  # Input sine wave
 
   # Perform FFT
-  y <- tidy_fft(x) |> change_repr("polr")
+  y <- tidy_fft(x) |> to_polr()
 
   # Find the frequencies grid
   dim_grid <- fourier_frequencies(x)
@@ -105,7 +105,7 @@ test_that("Impulse position matches expected frequency for column sine wave", {
   x <- matrix(sin(dim_col * t), nrow = dims[1], ncol = dims[2], byrow = TRUE)  # Input sine wave
 
   # Perform FFT
-  y <- tidy_fft(x) |> change_repr("polr")
+  y <- tidy_fft(x) |> to_polr()
 
   # Find max impulse
   impulse <- y[which.max(y$mod), ]
@@ -122,7 +122,7 @@ test_that("Impulse position matches expected frequency for array", {
   for (i in 1:3) {
     x <- x + slice.index(x, i) / clen[i]
   }
-  y <- tidy_fft(sin(2 * pi * x)) |> change_repr("polr")
+  y <- tidy_fft(sin(2 * pi * x)) |> to_polr()
 
   # Find max impulse
   y |>
