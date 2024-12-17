@@ -148,47 +148,6 @@ to_polr <- function(x, .keep = "unused") {
   }
 }
 
-#' Change the representation of FFT results
-#'
-#' Converts FFT results between different representations.
-#'
-#' @param x A `tidy_fft` object.
-#' @param repr The target representation (`'polr'`, `'rect'`, or `'cplx'`).
-#' @param .keep Determines which columns to retain in the output.
-#'   Passed directly to \code{dplyr::mutate}. Options include:
-#'   \itemize{
-#'     \item \code{'all'}: Keep all columns.
-#'     \item \code{'used'}: Keep only columns used
-#'           in the computation, plus the new ones.
-#'     \item \code{'unused'}: Keep only columns not
-#'            used in the computation, plus the new ones (default).
-#'     \item \code{'none'}: Keep only the new columns.
-#'   }
-#' @return The modified object with the new representation.
-#' @examples
-#' fft_res <- tidy_fft(c(1, 0, -1, 0))
-#' change_repr(fft_res, "rect", .keep = "none")
-#' @export
-# change_repr <- function(x, repr, .keep = 'unused') { stopifnot(inherits(x,
-# 'tidy_fft'), repr %in% c('cplx', 'polr', 'rect')) repr_orig <- get_repr(x) to
-# <- unique(repr[!repr %in% repr_orig]) if (!'cplx' %in% repr_orig) {
-
-# }
-
-# if (can_repr(x, 'cplx')) { if ('rect' %in% repr && !can_repr(x, 'rect')) }
-# for (to in repr) { x <- switch(to, polr = dplyr::mutate( x, mod = Mod(fx),
-# arg = Arg(fx), .keep = .keep ), rect = dplyr::mutate( x, re = Re(fx), im =
-# Im(fx), .keep = .keep ), cplx = x, stop('Unrecognized mode ', to) ) } } if
-# (can_repr(x, 'rect')) { switch(to, polr = return(dplyr::mutate( x, mod =
-# Mod(complex( real = re, imaginary = im )), arg = Arg(complex( real = re,
-# imaginary = im )), .keep = .keep )), rect = return(x), cplx =
-# return(dplyr::mutate( x, fx = complex(real = re, imaginary = im), .keep =
-# .keep )) ) } if (can_repr(x, 'polr')) { switch(to, polr = return(x), rect =
-# return(dplyr::mutate( x, re = Re(complex( argument = arg, modulus = mod )),
-# im = Im(complex( argument = arg, modulus = mod )), .keep = .keep )), cplx =
-# return(dplyr::mutate( x, fx = complex(argument = arg, modulus = mod), .keep =
-# .keep )) ) } }
-
 #' Extract Fourier Coefficients and Derived Components
 #'
 #' These utility functions convert a `tidy_fft` object to the desired representation
@@ -224,7 +183,6 @@ to_polr <- function(x, .keep = "unused") {
 #' print(mod_values)
 #' print(arg_values)
 #'
-#' @seealso [change_repr()] for converting between FFT representations.
 #' @export
 get_fx <- function(x) {
   to_cplx(x, .keep = "none")$fx

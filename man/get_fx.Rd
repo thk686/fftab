@@ -8,7 +8,7 @@
 \alias{get_polr}
 \alias{get_mod}
 \alias{get_arg}
-\title{Change the representation of FFT results}
+\title{Extract Fourier Coefficients and Derived Components}
 \usage{
 get_fx(x)
 
@@ -26,23 +26,8 @@ get_arg(x)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object containing FFT results in any representation.}
-
-\item{repr}{The target representation (\code{'polr'}, \code{'rect'}, or \code{'cplx'}).}
-
-\item{.keep}{Determines which columns to retain in the output.
-Passed directly to \code{dplyr::mutate}. Options include:
-\itemize{
-\item \code{'all'}: Keep all columns.
-\item \code{'used'}: Keep only columns used
-in the computation, plus the new ones.
-\item \code{'unused'}: Keep only columns not
-used in the computation, plus the new ones (default).
-\item \code{'none'}: Keep only the new columns.
-}}
 }
 \value{
-The modified object with the new representation.
-
 Each function returns the requested component:
 \itemize{
 \item \code{get_fx()}: A complex vector of Fourier coefficients.
@@ -53,11 +38,19 @@ Each function returns the requested component:
 }
 }
 \description{
-Converts FFT results between different representations.
+These utility functions convert a \code{tidy_fft} object to the desired representation
+(\code{'cplx'}, \code{'rect'}, or \code{'polr'}) and extract specific components.
+}
+\details{
+\itemize{
+\item \code{get_fx()}: Extracts the complex Fourier coefficients (\code{fx}) from the \code{'cplx'} representation.
+\item \code{get_re()}: Extracts the real part (\code{re}) of the Fourier coefficients from the \code{'rect'} representation.
+\item \code{get_im()}: Extracts the imaginary part (\code{im}) of the Fourier coefficients from the \code{'rect'} representation.
+\item \code{get_mod()}: Extracts the magnitude (\code{mod}) of the Fourier coefficients from the \code{'polr'} representation.
+\item \code{get_arg()}: Extracts the phase angle (\code{arg}) of the Fourier coefficients from the \code{'polr'} representation.
+}
 }
 \examples{
-fft_res <- tidy_fft(c(1, 0, -1, 0))
-change_repr(fft_res, "rect", .keep = "none")
 # Example usage
 fft_result <- tidy_fft(c(1, 0, -1, 0))
 
@@ -74,7 +67,4 @@ print(im_values)
 print(mod_values)
 print(arg_values)
 
-}
-\seealso{
-\code{\link[=change_repr]{change_repr()}} for converting between FFT representations.
 }
