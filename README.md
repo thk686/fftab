@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidyfft
+# tidyfft <a href="https://github.com/thk686/tidyfft"><img src="inst/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
 
