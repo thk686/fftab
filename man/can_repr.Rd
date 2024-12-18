@@ -2,24 +2,56 @@
 % Please edit documentation in R/utils.R
 \name{can_repr}
 \alias{can_repr}
-\title{Check if a \code{tidy_fft} object has a specific representation}
+\alias{get_repr}
+\alias{has_cplx}
+\alias{has_rect}
+\alias{has_polr}
+\title{Check and Retrieve Representations of a \code{tidy_fft} Object}
 \usage{
-can_repr(x, repr = c("cplx", "rect", "polr"))
+can_repr(x, repr)
+
+get_repr(x)
+
+has_cplx(x)
+
+has_rect(x)
+
+has_polr(x)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object.}
 
-\item{repr}{The target representation to check (\code{'polr'}, \code{'rect'}, or \code{'cplx'}).}
+\item{repr}{For \code{can_repr()}, the target representation to check. A character string (\code{"polr"}, \code{"rect"}, or \code{"cplx"}).}
 }
 \value{
-A logical value (\code{TRUE} if the object has the specified representation, otherwise \code{FALSE}).
+\itemize{
+\item \strong{\code{can_repr()}}: A logical value (\code{TRUE} or \code{FALSE}) indicating if the object has the specified representation.
+\item \strong{\code{get_repr()}}: A character vector of representations present in the object.
+\item \strong{\code{has_cplx()}, \code{has_rect()}, \code{has_polr()}}: Logical values (\code{TRUE} or \code{FALSE}) indicating the presence of specific representations.
+}
 }
 \description{
-This function checks if the given \code{tidy_fft} object contains the specified
-representation: polar (\code{'polr'}), rectangular (\code{'rect'}), or complex (\code{'cplx'}).
+These functions check and retrieve specific representations of a \code{tidy_fft} object.
+Supported representations include:
+\itemize{
+\item \strong{Complex (\code{"cplx"})}: Contains a column \code{fx} with complex Fourier coefficients.
+\item \strong{Rectangular (\code{"rect"})}: Contains columns \code{re} (real) and \code{im} (imaginary) components.
+\item \strong{Polar (\code{"polr"})}: Contains columns \code{mod} (modulus) and \code{arg} (argument).
+}
 }
 \examples{
 tft <- tidy_fft(c(1, 0, -1, 0))
-can_repr(tft, "cplx") # Returns TRUE
-can_repr(tft, "rect") # Returns FALSE
+
+# Check specific representations
+can_repr(tft, "cplx") # TRUE
+can_repr(tft, "rect") # FALSE
+
+# Retrieve current representations
+get_repr(tft) # "cplx"
+
+# Check individual representations
+has_cplx(tft) # TRUE
+has_rect(tft) # FALSE
+has_polr(tft) # FALSE
+
 }

@@ -1,5 +1,7 @@
 library(testthat)
 
+base_fft_norm <- function(x) stats::fft(x) / length(x)
+
 test_that("tidy_fft.default computes FFT results correctly", {
   x <- c(1, 0, -1, 0)
 
@@ -7,17 +9,17 @@ test_that("tidy_fft.default computes FFT results correctly", {
   res <- tidy_fft(x)
   expect_true(inherits(res, "tidy_fft"))
   expect_equal(res$dim_1, .fourier_frequencies(x))
-  expect_equal(get_fx(res), stats::fft(x))
+  expect_equal(get_fx(res), base_fft_norm(x))
 
   # Rectangular representation
   res_rect <- tidy_fft(x) |> to_rect()
-  expect_equal(res_rect$re, Re(stats::fft(x)))
-  expect_equal(res_rect$im, Im(stats::fft(x)))
+  expect_equal(res_rect$re, Re(base_fft_norm(x)))
+  expect_equal(res_rect$im, Im(base_fft_norm(x)))
 
   # Polar representation
   res_polr <- tidy_fft(x) |> to_polr()
-  expect_equal(res_polr$mod, Mod(stats::fft(x)))
-  expect_equal(res_polr$arg, Arg(stats::fft(x)))
+  expect_equal(res_polr$mod, Mod(base_fft_norm(x)))
+  expect_equal(res_polr$arg, Arg(base_fft_norm(x)))
 })
 
 test_that("tidy_fft.ts computes FFT results with proper scaling", {
@@ -27,7 +29,7 @@ test_that("tidy_fft.ts computes FFT results with proper scaling", {
   res <- tidy_fft(ts_obj)
   expect_true(inherits(res, "tidy_fft"))
   expect_equal(res$dim_1, .fourier_frequencies(ts_obj) * 4)  # Scaled by frequency
-  expect_equal(res$fx, stats::fft(as.vector(ts_obj)))
+  expect_equal(res$fx, base_fft_norm(as.vector(ts_obj)))
 
   # Check original attributes are retained
   expect_equal(attr(res, ".tsp"), attr(ts_obj, "tsp"))
@@ -39,12 +41,12 @@ test_that("tidy_fft.array computes FFT results correctly", {
   # Complex representation
   res <- tidy_fft(arr)
   expect_true(inherits(res, "tidy_fft"))
-  expect_equal(res$fx, as.vector(stats::fft(arr)))
+  expect_equal(res$fx, as.vector(base_fft_norm(arr)))
 
   # Rectangular representation
   res_rect <- tidy_fft(arr) |> to_rect()
-  expect_equal(res_rect$re, Re(as.vector(stats::fft(arr))))
-  expect_equal(res_rect$im, Im(as.vector(stats::fft(arr))))
+  expect_equal(res_rect$re, Re(as.vector(base_fft_norm(arr))))
+  expect_equal(res_rect$im, Im(as.vector(base_fft_norm(arr))))
 
   # Original dimensions should be retained
   expect_equal(attr(res, ".dim"), dim(arr))

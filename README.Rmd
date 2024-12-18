@@ -39,7 +39,7 @@ library(tidyfft)
 (
     tidy_fft(sunspot.month) |>
     to_rect(.keep = "all") |>
-    to_polr.keep = "all") -> sunspot.month.fft
+    to_polr(.keep = "all") -> sunspot.month.fft
 )
 ```
 

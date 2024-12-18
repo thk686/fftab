@@ -2,18 +2,64 @@
 % Please edit documentation in R/frequency.R
 \name{fourier_frequencies}
 \alias{fourier_frequencies}
-\title{Compute Fourier frequencies}
+\alias{fourier_frequencies.default}
+\alias{fourier_frequencies.ts}
+\alias{fourier_frequencies.array}
+\title{Compute Fourier Frequencies}
 \usage{
 fourier_frequencies(x)
+
+\method{fourier_frequencies}{default}(x)
+
+\method{fourier_frequencies}{ts}(x)
+
+\method{fourier_frequencies}{array}(x)
 }
 \arguments{
-\item{x}{The input object (scalar, vector, matrix, time series, or array).}
+\item{x}{The input object. Supported input types:
+\itemize{
+\item \strong{Scalar or vector}: The length of the sequence.
+\item \strong{Time series (\code{ts})}: Frequencies are scaled based on the sampling rate.
+\item \strong{Multidimensional array or matrix}: Frequencies are computed for each dimension.
+}}
 }
 \value{
-A numeric vector for 1D inputs or a tibble for multidimensional inputs,
-containing the Fourier frequencies normalized or scaled based on the input type.
+A numeric vector for 1D inputs or a tibble for multidimensional inputs, where:
+\itemize{
+\item \code{dim_1}, \code{dim_2}, ..., represent the Fourier frequencies for each dimension.
+}
 }
 \description{
-This is a generic function for computing Fourier frequencies for various
-types of inputs, such as scalars, vectors, matrices, time series, or arrays.
+Computes Fourier frequencies for various types of inputs, such as scalars, vectors, matrices, time series, or arrays.
+This generic function dispatches appropriate methods based on the input type.
+}
+\details{
+This function has the following methods:
+\itemize{
+\item \strong{Default Input (\code{fourier_frequencies.default})}: Computes normalized Fourier frequencies for scalar or vector inputs.
+\item \strong{Time Series Input (\code{fourier_frequencies.ts})}: Computes frequencies scaled by the frequency attribute of a \code{ts} object.
+\item \strong{Multidimensional Arrays (\code{fourier_frequencies.array})}: Computes frequencies for each dimension of a matrix or array.
+}
+
+See the examples for details on each case.
+}
+\examples{
+# Default input (vector)
+fourier_frequencies(8)
+
+# Time series input
+ts_obj <- ts(rnorm(36), frequency = 12)
+fourier_frequencies(ts_obj)
+
+# Multidimensional array input
+array_input <- array(1:27, dim = c(3, 3, 3))
+fourier_frequencies(array_input)
+
+# Matrix input
+matrix_input <- matrix(1:9, nrow = 3, ncol = 3)
+fourier_frequencies(matrix_input)
+
+}
+\seealso{
+\code{\link[tidyr:expand_grid]{tidyr::expand_grid()}}, \code{\link[=frequency]{frequency()}}
 }

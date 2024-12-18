@@ -2,16 +2,67 @@
 % Please edit documentation in R/fft.R
 \name{tidy_fft}
 \alias{tidy_fft}
-\title{Perform FFT and return a tidy result}
+\alias{tidy_fft.default}
+\alias{tidy_fft.ts}
+\alias{tidy_fft.array}
+\title{Compute FFT and Return a Tidy Result with Normalized Coefficients}
 \usage{
 tidy_fft(x)
+
+\method{tidy_fft}{default}(x)
+
+\method{tidy_fft}{ts}(x)
+
+\method{tidy_fft}{array}(x)
 }
 \arguments{
-\item{x}{Input object (vector, time series, or array).}
+\item{x}{Input object for which to compute the FFT. This can be:
+\itemize{
+\item A numeric vector (default method).
+\item A time series object (\code{ts}).
+\item A multidimensional numeric array.
+}}
 }
 \value{
-A tibble containing Fourier frequencies and FFT values in the specified format.
+A tibble containing:
+\itemize{
+\item \strong{Fourier frequencies}: Represented by columns \code{dim_1}, \code{dim_2}, ..., depending on the input dimensions.
+\item \strong{Normalized FFT values}: Stored in the \code{fx} column as complex values, normalized by the input size.
+}
 }
 \description{
-This is a generic function to compute the FFT and return the result in a tidy format.
+Computes the Fast Fourier Transform (FFT) for various input types, including vectors,
+time series (\code{ts}), and arrays. The FFT values are normalized by the length of the input
+(or its product of dimensions for arrays). The result is returned as a tidy tibble containing
+the Fourier frequencies and normalized FFT values.
+}
+\details{
+This is a generic function with methods for specific input types:
+\itemize{
+\item \strong{Default Input (\code{tidy_fft.default})}: Computes the FFT for a numeric vector and normalizes
+the result by the vector length.
+\item \strong{Time Series Input (\code{tidy_fft.ts})}: Computes the FFT for a \code{ts} object, scaling the frequencies
+by the time series frequency attribute and normalizing the FFT values.
+\item \strong{Array Input (\code{tidy_fft.array})}: Computes the FFT for a multidimensional array and normalizes
+the FFT values by the product of the array dimensions.
+}
+
+Each method returns a tidy tibble where the Fourier frequencies (\code{dim_1}, \code{dim_2}, etc.) are paired
+with their corresponding normalized FFT values.
+}
+\examples{
+# FFT for a numeric vector
+tidy_fft(c(1, 0, -1, 0))
+
+# FFT for a time series
+ts_obj <- ts(sin(1:10), frequency = 12)
+tidy_fft(ts_obj)
+
+# FFT for a multidimensional array
+arr <- array(1:8, dim = c(2, 2, 2))
+tidy_fft(arr)
+
+}
+\seealso{
+\code{\link[=fourier_frequencies]{fourier_frequencies()}}, \code{\link[stats:fft]{stats::fft()}}
 }

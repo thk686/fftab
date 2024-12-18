@@ -30,8 +30,8 @@ Using tidy_fft with ggplot.
 library(tidyfft)
 (
     tidy_fft(sunspot.month) |>
-    change_repr("rect", .keep = "all") |>
-    change_repr("polr", .keep = "all") -> sunspot.month.fft
+    to_rect(.keep = "all") |>
+    to_polr(.keep = "all") -> sunspot.month.fft
 )
 #> # A tibble: 3,177 × 6
 #>      dim_1 fx                          re      im     mod    arg
