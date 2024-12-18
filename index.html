@@ -67,8 +67,8 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thk686/tidyfft" class="external-link">tidyfft</a></span><span class="op">)</span></span>
 <span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="reference/tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">sunspot.month</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">change_repr</span><span class="op">(</span><span class="st">"rect"</span>, .keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">change_repr</span><span class="op">(</span><span class="st">"polr"</span>, .keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">sunspot.month.fft</span></span>
+<span>    <span class="fu"><a href="reference/to_cplx.html">to_rect</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="reference/to_cplx.html">to_polr</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">sunspot.month.fft</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 3,177 × 6</span></span>
 <span><span class="co">#&gt;      dim_1 fx                          re      im     mod    arg</span></span>
