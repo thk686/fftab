@@ -10,64 +10,34 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 #' attributes used to represent Fourier Transform results in a tidy format.
 #'
 #' @param x The input object to convert, typically a tibble or data frame.
-#' @param ... Additional attributes to include in the structured object, such
-#'   as metadata or specific attributes required for Fourier Transform analysis.
+#' @param ... Additional attributes to include in the structured object, such as
+#'   metadata or specific attributes required for Fourier Transform analysis.
 #' @return The input object `x`, with the `tidy_fft` class and any additional
 #'   attributes provided in `...`.
 #' @keywords internal
 .as_tidy_fft_obj <- function(x, ...) {
-  structure(x, ..., class = c("tidy_fft", "tbl_df", "tbl", "data.frame"))
-}
-
-#' Compute the number of samples in an input
-#'
-#' This helper function determines the number of samples in the input object.
-#' For a vector, it returns its length. For a matrix or data frame, it returns
-#' the number of rows.
-#'
-#' @param x An input object (scalar, vector, matrix, or data frame).
-#' @return An integer representing the number of samples (rows) in the input object.
-#' @keywords internal
-.num_samples <- function(x) {
-  input_len <- length(unlist(x))
-  if (input_len == 0) {
-    stop("Input must not be empty")
-  }
-  floor(ifelse(input_len == 1, x, NROW(x)))
-}
-
-#' Compute Fourier frequencies for default inputs
-#'
-#' Computes normalized Fourier frequencies for scalar or vector inputs, which
-#' are evenly spaced between -0.5 and 0.5.
-#'
-#' @param x A scalar or vector representing the length of the sequence.
-#' @return A numeric vector containing the normalized Fourier frequencies.
-#' @keywords internal
-.fourier_frequencies <- function(x) {
-  n <- .num_samples(x)
-  if (n < 2) {
-    stop("Minimum length is 2")
-  }
-  k <- 0:(n - 1)
-  ifelse(k <= n / 2, k, k - n) / n
+  x <- tibble::as_tibble(x)
+  structure(x, ..., class = c("tidy_fft", class(x)))
 }
 
 #' Check and Retrieve Representations of a `tidy_fft` Object
 #'
-#' These functions check and retrieve specific representations of a `tidy_fft` object.
-#' Supported representations include:
+#' These functions check and retrieve specific representations of a `tidy_fft`
+#' object. Supported representations include:
 #' - **Complex (`"cplx"`)**: Contains a column `fx` with complex Fourier coefficients.
 #' - **Rectangular (`"rect"`)**: Contains columns `re` (real) and `im` (imaginary) components.
 #' - **Polar (`"polr"`)**: Contains columns `mod` (modulus) and `arg` (argument).
 #'
 #' @param x A `tidy_fft` object.
-#' @param repr For `can_repr()`, the target representation to check. A character string (`"polr"`, `"rect"`, or `"cplx"`).
+#' @param repr For `can_repr()`, the target representation to check. A character
+#'   vector with one or more of (`"polr"`, `"rect"`, or `"cplx"`).
 #'
 #' @return
-#' - **`can_repr()`**: A logical value (`TRUE` or `FALSE`) indicating if the object has the specified representation.
+#' - **`can_repr()`**: A logical value (`TRUE` or `FALSE`) indicating if the object
+#' has any of the specified representations.
 #' - **`get_repr()`**: A character vector of representations present in the object.
-#' - **`has_cplx()`, `has_rect()`, `has_polr()`**: Logical values (`TRUE` or `FALSE`) indicating the presence of specific representations.
+#' - **`has_cplx()`, `has_rect()`, `has_polr()`**: Logical values (`TRUE` or `FALSE`)
+#' indicating the presence of specific representations.
 #'
 #' @examples
 #' tft <- tidy_fft(c(1, 0, -1, 0))
@@ -128,7 +98,7 @@ has_polr <- function(x) {
 #' - **`to_polr()`**: Converts to polar representation (`mod`, `arg`).
 #'
 #' @param x A `tidy_fft` object.
-#' @param .keep Specifies which columns to retain. Defaults to `"unused"`.
+#' @param .keep Specifies which columns to retain. See [mutate()].
 #'
 #' @return A modified `tidy_fft` object containing the specified representation:
 #' - **`to_cplx()`**: Adds the `fx` column for complex values.
@@ -210,8 +180,9 @@ to_polr <- function(x, .keep = "unused") {
 
 #' Extract Fourier Coefficients and Derived Components
 #'
-#' These utility functions extract or convert a `tidy_fft` object to the desired representation
-#' (`'cplx'`, `'rect'`, or `'polr'`) and extract specific components.
+#' These utility functions extract or convert a `tidy_fft` object to the desired
+#' representation (`'cplx'`, `'rect'`, or `'polr'`) and extract specific
+#' components.
 #'
 #' @param x A `tidy_fft` object containing FFT results in any representation.
 #'
@@ -311,3 +282,38 @@ plot.tidy_fft <- function(x, ...) {
     ggplot2::ylab("modulus") +
     ggplot2::theme_classic()
 }
+
+# .gen_indices <- function(dims) {
+#   ff <- lapply(dims, seq_len) # Generate sequences for each dimension
+#   do.call(expand.grid, ff) # Expand the grid in row-major order
+# }
+#
+# # Function to compute conjugate indices with modulo
+# find_cc_2d <- function(i, j, ni, nj) {
+#   c((ni - i + 1) %% ni + 1, (nj - j + 1) %% nj + 1)
+# }
+#
+# # Function to check if an entry is unique
+# is_unique <- function(i, j, ni, nj) {
+#   # Row-major index of current entry
+#   k <- (i - 1) * nj + j
+#   # Row-major index of its conjugate
+#   cc <- find_cc_2d(i, j, ni, nj)
+#   kc <- (cc[1] - 1) * nj + cc[2]
+#   # Keep if kc >= k
+#   kc >= k
+# }
+#
+# # Filter unique indices in a matrix of size ni x nj
+# filter_unique <- function(ni, nj) {
+#   # Generate all indices
+#   indices <- .gen_indices(c(4, 4))
+#
+#   # Apply uniqueness check
+#   unique_indices <- indices[apply(indices, 1, function(row) {
+#     is_unique(row[1], row[2], ni, nj)
+#   }), ]
+#
+#   unique_indices
+# }
+

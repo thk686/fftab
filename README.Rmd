@@ -21,6 +21,14 @@ knitr::opts_chunk$set(
 
 The goal of tidyfft is to make working with fft's in R easier and more consistent. It follows the tidy philosophy by storing output in a tibble.
 
+Features:
+
+1. Provides frequencies in each dimension in cycles per sample-interval.
+1. Caches attributes sufficient to allow reconstruction of original object when computing the inverse transform.
+1. Tracks complex versus real valued input.
+1. Computes the size-normalized forward transform.
+1. Easy conversion between complex, rectangular, and polar representations.
+
 ## Installation
 
 You can install the development version of tidyfft from [GitHub](https://github.com/) with:

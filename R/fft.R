@@ -1,9 +1,10 @@
 #' Compute FFT and Return a Tidy Result with Normalized Coefficients
 #'
-#' Computes the Fast Fourier Transform (FFT) for various input types, including vectors,
-#' time series (`ts`), and arrays. The FFT values are normalized by the length of the input
-#' (or its product of dimensions for arrays). The result is returned as a tidy tibble containing
-#' the Fourier frequencies and normalized FFT values.
+#' Computes the Fast Fourier Transform (FFT) for various input types, including
+#' vectors, time series (`ts`), and arrays. The FFT values are normalized by the
+#' length of the input (or its product of dimensions for arrays). The result is
+#' returned as a tidy tibble containing the Fourier frequencies and normalized
+#' FFT values.
 #'
 #' @param x Input object for which to compute the FFT. This can be:
 #'   - A numeric vector (default method).
@@ -14,18 +15,17 @@
 #'   - **Fourier frequencies**: Represented by columns `dim_1`, `dim_2`, ..., depending on the input dimensions.
 #'   - **Normalized FFT values**: Stored in the `fx` column as complex values, normalized by the input size.
 #'
-#' @details
-#' This is a generic function with methods for specific input types:
+#' @details This is a generic function with methods for specific input types:
 #'
 #' - **Default Input (`tidy_fft.default`)**: Computes the FFT for a numeric vector and normalizes
-#'   the result by the vector length.
+#' the result by the vector length.
 #' - **Time Series Input (`tidy_fft.ts`)**: Computes the FFT for a `ts` object, scaling the frequencies
-#'   by the time series frequency attribute and normalizing the FFT values.
+#' by the time series frequency attribute and normalizing the FFT values.
 #' - **Array Input (`tidy_fft.array`)**: Computes the FFT for a multidimensional array and normalizes
-#'   the FFT values by the product of the array dimensions.
+#' the FFT values by the product of the array dimensions.
 #'
-#' Each method returns a tidy tibble where the Fourier frequencies (`dim_1`, `dim_2`, etc.) are paired
-#' with their corresponding normalized FFT values.
+#' Each method returns a tidy tibble where the Fourier frequencies (`dim_1`,
+#' `dim_2`, etc.) are paired with their corresponding normalized FFT values.
 #'
 #' @examples
 #' # FFT for a numeric vector
@@ -72,9 +72,9 @@ tidy_fft.array <- function(x) {
 
 #' Perform Inverse FFT on a Tidy Result
 #'
-#' Computes the inverse Fast Fourier Transform (IFFT) to reconstruct the original signal
-#' from a `tidy_fft` object or other FFT results. This is a generic function with methods
-#' for default inputs and `tidy_fft` objects.
+#' Computes the inverse Fast Fourier Transform (IFFT) to reconstruct the
+#' original signal from a `tidy_fft` object or other FFT results. This is a
+#' generic function with methods for default inputs and `tidy_fft` objects.
 #'
 #' @param x Input object containing FFT results. This can be:
 #'   - A numeric vector of FFT coefficients.
@@ -84,11 +84,11 @@ tidy_fft.array <- function(x) {
 #'   from the FFT results. If the original signal was real-valued, the IFFT
 #'   returns the real part of the reconstruction.
 #'
-#' @details
-#' ### Methods:
-#' - **Default Input (`tidy_ifft.default`)**: Performs the inverse FFT on a numeric vector of FFT coefficients.
+#' @details ### Methods:
+#' - **Default Input (`tidy_ifft.default`)**: Performs the inverse FFT on a numeric vector of FFT coefficients (with a warning).
 #' - **Tidy FFT Input (`tidy_ifft.tidy_fft`)**: Reconstructs the original signal from a `tidy_fft` object,
-#'   restoring attributes such as dimensions (`.dim`) and time series properties (`.tsp`), if present.
+#' restoring attributes such as dimensions (`.dim`) and time series properties
+#' (`.tsp`), if present.
 #'
 #' @examples
 #' # Example with FFT and inverse FFT

@@ -12,6 +12,17 @@ The goal of tidyfft is to make working with fft’s in R easier and more
 consistent. It follows the tidy philosophy by storing output in a
 tibble.
 
+Features:
+
+1.  Provides frequencies in each dimension in cycles per
+    sample-interval.
+2.  Caches attributes sufficient to allow reconstruction of original
+    object when computing the inverse transform.
+3.  Tracks complex versus real valued input.
+4.  Computes the size-normalized forward transform.
+5.  Easy conversion between complex, rectangular, and polar
+    representations.
+
 ## Installation
 
 You can install the development version of tidyfft from
@@ -34,18 +45,18 @@ library(tidyfft)
     to_polr(.keep = "all") -> sunspot.month.fft
 )
 #> # A tibble: 3,177 × 6
-#>      dim_1 fx                          re      im     mod    arg
-#>      <dbl> <cpl>                    <dbl>   <dbl>   <dbl>  <dbl>
-#>  1 0       165092.2000+    0.000i 165092.      0  165092.  0    
-#>  2 0.00378  13876.3375+15850.464i  13876.  15850.  21066.  0.852
-#>  3 0.00755  -2733.7209+16131.802i  -2734.  16132.  16362.  1.74 
-#>  4 0.0113   -8428.2640-18110.753i  -8428. -18111.  19976. -2.01 
-#>  5 0.0151  -14755.1410- 1860.878i -14755.  -1861.  14872. -3.02 
-#>  6 0.0189   -7986.8153+12940.843i  -7987.  12941.  15207.  2.12 
-#>  7 0.0227   -2173.4245+ 7168.128i  -2173.   7168.   7490.  1.87 
-#>  8 0.0264   -3395.5271- 7055.326i  -3396.  -7055.   7830. -2.02 
-#>  9 0.0302     572.7342- 4329.374i    573.  -4329.   4367. -1.44 
-#> 10 0.0340    7811.7219- 3510.364i   7812.  -3510.   8564. -0.422
+#>      dim_1 fx                        re     im   mod    arg
+#>      <dbl> <cpl>                  <dbl>  <dbl> <dbl>  <dbl>
+#>  1 0       51.9648096+0.0000000i 52.0    0     52.0   0    
+#>  2 0.00378  4.3677486+4.9891293i  4.37   4.99   6.63  0.852
+#>  3 0.00755 -0.8604724+5.0776840i -0.860  5.08   5.15  1.74 
+#>  4 0.0113  -2.6529002-5.7005834i -2.65  -5.70   6.29 -2.01 
+#>  5 0.0151  -4.6443629-0.5857344i -4.64  -0.586  4.68 -3.02 
+#>  6 0.0189  -2.5139488+4.0732903i -2.51   4.07   4.79  2.12 
+#>  7 0.0227  -0.6841122+2.2562569i -0.684  2.26   2.36  1.87 
+#>  8 0.0264  -1.0687841-2.2207510i -1.07  -2.22   2.46 -2.02 
+#>  9 0.0302   0.1802752-1.3627241i  0.180 -1.36   1.37 -1.44 
+#> 10 0.0340   2.4588360-1.1049305i  2.46  -1.10   2.70 -0.422
 #> # ℹ 3,167 more rows
 ```
 

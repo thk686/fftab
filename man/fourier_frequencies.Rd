@@ -24,14 +24,15 @@ fourier_frequencies(x)
 }}
 }
 \value{
-A numeric vector for 1D inputs or a tibble for multidimensional inputs, where:
+A tibble where:
 \itemize{
 \item \code{dim_1}, \code{dim_2}, ..., represent the Fourier frequencies for each dimension.
 }
 }
 \description{
-Computes Fourier frequencies for various types of inputs, such as scalars, vectors, matrices, time series, or arrays.
-This generic function dispatches appropriate methods based on the input type.
+Computes Fourier frequencies for various types of inputs, such as scalars,
+vectors, matrices, time series, or arrays. This generic function dispatches
+appropriate methods based on the input type.
 }
 \details{
 This function has the following methods:

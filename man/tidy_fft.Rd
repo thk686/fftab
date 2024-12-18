@@ -31,10 +31,11 @@ A tibble containing:
 }
 }
 \description{
-Computes the Fast Fourier Transform (FFT) for various input types, including vectors,
-time series (\code{ts}), and arrays. The FFT values are normalized by the length of the input
-(or its product of dimensions for arrays). The result is returned as a tidy tibble containing
-the Fourier frequencies and normalized FFT values.
+Computes the Fast Fourier Transform (FFT) for various input types, including
+vectors, time series (\code{ts}), and arrays. The FFT values are normalized by the
+length of the input (or its product of dimensions for arrays). The result is
+returned as a tidy tibble containing the Fourier frequencies and normalized
+FFT values.
 }
 \details{
 This is a generic function with methods for specific input types:
@@ -47,8 +48,8 @@ by the time series frequency attribute and normalizing the FFT values.
 the FFT values by the product of the array dimensions.
 }
 
-Each method returns a tidy tibble where the Fourier frequencies (\code{dim_1}, \code{dim_2}, etc.) are paired
-with their corresponding normalized FFT values.
+Each method returns a tidy tibble where the Fourier frequencies (\code{dim_1},
+\code{dim_2}, etc.) are paired with their corresponding normalized FFT values.
 }
 \examples{
 # FFT for a numeric vector

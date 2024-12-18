@@ -15,7 +15,7 @@ to_polr(x, .keep = "unused")
 \arguments{
 \item{x}{A \code{tidy_fft} object.}
 
-\item{.keep}{Specifies which columns to retain. Defaults to \code{"unused"}.}
+\item{.keep}{Specifies which columns to retain. See \code{\link[=mutate]{mutate()}}.}
 }
 \value{
 A modified \code{tidy_fft} object containing the specified representation:

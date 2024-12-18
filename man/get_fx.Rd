@@ -40,8 +40,9 @@ The requested components or converted representations:
 }
 }
 \description{
-These utility functions extract or convert a \code{tidy_fft} object to the desired representation
-(\code{'cplx'}, \code{'rect'}, or \code{'polr'}) and extract specific components.
+These utility functions extract or convert a \code{tidy_fft} object to the desired
+representation (\code{'cplx'}, \code{'rect'}, or \code{'polr'}) and extract specific
+components.
 }
 \details{
 \itemize{

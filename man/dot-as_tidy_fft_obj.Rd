@@ -9,8 +9,8 @@
 \arguments{
 \item{x}{The input object to convert, typically a tibble or data frame.}
 
-\item{...}{Additional attributes to include in the structured object, such
-as metadata or specific attributes required for Fourier Transform analysis.}
+\item{...}{Additional attributes to include in the structured object, such as
+metadata or specific attributes required for Fourier Transform analysis.}
 }
 \value{
 The input object \code{x}, with the \code{tidy_fft} class and any additional

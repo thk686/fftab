@@ -21,18 +21,21 @@ has_polr(x)
 \arguments{
 \item{x}{A \code{tidy_fft} object.}
 
-\item{repr}{For \code{can_repr()}, the target representation to check. A character string (\code{"polr"}, \code{"rect"}, or \code{"cplx"}).}
+\item{repr}{For \code{can_repr()}, the target representation to check. A character
+vector with one or more of (\code{"polr"}, \code{"rect"}, or \code{"cplx"}).}
 }
 \value{
 \itemize{
-\item \strong{\code{can_repr()}}: A logical value (\code{TRUE} or \code{FALSE}) indicating if the object has the specified representation.
+\item \strong{\code{can_repr()}}: A logical value (\code{TRUE} or \code{FALSE}) indicating if the object
+has any of the specified representations.
 \item \strong{\code{get_repr()}}: A character vector of representations present in the object.
-\item \strong{\code{has_cplx()}, \code{has_rect()}, \code{has_polr()}}: Logical values (\code{TRUE} or \code{FALSE}) indicating the presence of specific representations.
+\item \strong{\code{has_cplx()}, \code{has_rect()}, \code{has_polr()}}: Logical values (\code{TRUE} or \code{FALSE})
+indicating the presence of specific representations.
 }
 }
 \description{
-These functions check and retrieve specific representations of a \code{tidy_fft} object.
-Supported representations include:
+These functions check and retrieve specific representations of a \code{tidy_fft}
+object. Supported representations include:
 \itemize{
 \item \strong{Complex (\code{"cplx"})}: Contains a column \code{fx} with complex Fourier coefficients.
 \item \strong{Rectangular (\code{"rect"})}: Contains columns \code{re} (real) and \code{im} (imaginary) components.

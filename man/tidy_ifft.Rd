@@ -25,16 +25,17 @@ from the FFT results. If the original signal was real-valued, the IFFT
 returns the real part of the reconstruction.
 }
 \description{
-Computes the inverse Fast Fourier Transform (IFFT) to reconstruct the original signal
-from a \code{tidy_fft} object or other FFT results. This is a generic function with methods
-for default inputs and \code{tidy_fft} objects.
+Computes the inverse Fast Fourier Transform (IFFT) to reconstruct the
+original signal from a \code{tidy_fft} object or other FFT results. This is a
+generic function with methods for default inputs and \code{tidy_fft} objects.
 }
 \details{
 \subsection{Methods:}{
 \itemize{
-\item \strong{Default Input (\code{tidy_ifft.default})}: Performs the inverse FFT on a numeric vector of FFT coefficients.
+\item \strong{Default Input (\code{tidy_ifft.default})}: Performs the inverse FFT on a numeric vector of FFT coefficients (with a warning).
 \item \strong{Tidy FFT Input (\code{tidy_ifft.tidy_fft})}: Reconstructs the original signal from a \code{tidy_fft} object,
-restoring attributes such as dimensions (\code{.dim}) and time series properties (\code{.tsp}), if present.
+restoring attributes such as dimensions (\code{.dim}) and time series properties
+(\code{.tsp}), if present.
 }
 }
 }

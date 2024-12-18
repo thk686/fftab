@@ -22,10 +22,6 @@ test_that(".num_samples computes correctly", {
 test_that(".fourier_frequencies computes correctly", {
   # Basic input
   expect_equal(.fourier_frequencies(4), c(0, 0.25, 0.5, -0.25))
-
-  # Minimum size input
-  expect_error(.fourier_frequencies(numeric(0)), "Input must not be empty")
-  expect_error(.fourier_frequencies(1), "Minimum length is 2")
 })
 
 test_that("can_repr and get_repr work correctly", {
