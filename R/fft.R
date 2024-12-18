@@ -58,7 +58,7 @@ tidy_fft.default <- function(x) {
 #' @export
 tidy_fft.ts <- function(x) {
   tidy_fft(as.vector(x)) |>
-    dplyr::mutate(dim_1 = .fourier_frequencies(x) * frequency(x)) |>
+    dplyr::mutate(dim_1 = dim_1 * frequency(x)) |>
     structure(.tsp = attr(x, "tsp"))
 }
 
