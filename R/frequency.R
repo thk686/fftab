@@ -88,7 +88,7 @@ fourier_frequencies.default <- function(x) {
 #' @rdname fourier_frequencies
 #' @export
 fourier_frequencies.ts <- function(x) {
-  tibble::tibble(dim_1 = dim_1 * frequency(x))
+  tibble::tibble(dim_1 = .fourier_frequencies(x) * frequency(x))
 }
 
 # Array method
