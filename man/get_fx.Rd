@@ -31,10 +31,10 @@ get_arg(x)
 The requested components or converted representations:
 \itemize{
 \item \strong{\code{get_fx()}}: A complex vector of Fourier coefficients (\code{fx}).
-\item \strong{\code{get_rect()}}: A tibble containing rectangular representation (\code{re}, \code{im}).
+\item \strong{\code{get_rect()}}: A matrix containing rectangular representation (\code{re}, \code{im}).
 \item \strong{\code{get_re()}}: A numeric vector of real parts (\code{re}).
 \item \strong{\code{get_im()}}: A numeric vector of imaginary parts (\code{im}).
-\item \strong{\code{get_polr()}}: A tibble containing polar representation (\code{mod}, \code{arg}).
+\item \strong{\code{get_polr()}}: A matrix containing polar representation (\code{mod}, \code{arg}).
 \item \strong{\code{get_mod()}}: A numeric vector of magnitudes (\code{mod}).
 \item \strong{\code{get_arg()}}: A numeric vector of phase angles (\code{arg}), in radians.
 }

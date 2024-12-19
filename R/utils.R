@@ -47,7 +47,10 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 #' @keywords internal
 .as_tidy_fft_obj <- function(x, ...) {
   x <- tibble::as_tibble(x)
-  structure(x, ..., .size = nrow(x), class = c("tidy_fft", class(x)))
+  structure(x,
+            ...,
+            .size = nrow(x),
+            class = c("tidy_fft", class(x)))
 }
 
 #' Check and Retrieve Representations of a `tidy_fft` Object
@@ -218,10 +221,10 @@ to_polr <- function(x, .keep = "unused") {
 #'
 #' @return The requested components or converted representations:
 #' - **`get_fx()`**: A complex vector of Fourier coefficients (`fx`).
-#' - **`get_rect()`**: A tibble containing rectangular representation (`re`, `im`).
+#' - **`get_rect()`**: A matrix containing rectangular representation (`re`, `im`).
 #' - **`get_re()`**: A numeric vector of real parts (`re`).
 #' - **`get_im()`**: A numeric vector of imaginary parts (`im`).
-#' - **`get_polr()`**: A tibble containing polar representation (`mod`, `arg`).
+#' - **`get_polr()`**: A matrix containing polar representation (`mod`, `arg`).
 #' - **`get_mod()`**: A numeric vector of magnitudes (`mod`).
 #' - **`get_arg()`**: A numeric vector of phase angles (`arg`), in radians.
 #'
@@ -264,7 +267,7 @@ get_fx <- function(x) {
 #' @rdname get_fx
 #' @export
 get_rect <- function(x) {
-  to_rect(x, .keep = "none")
+  to_rect(x, .keep = "none") |> as.matrix()
 }
 
 #' @rdname get_fx
@@ -282,7 +285,7 @@ get_im <- function(x) {
 #' @rdname get_fx
 #' @export
 get_polr <- function(x) {
-  to_polr(x, .keep = "none")
+  to_polr(x, .keep = "none") |> as.matrix()
 }
 
 #' @rdname get_fx
@@ -346,4 +349,3 @@ plot.tidy_fft <- function(x, ...) {
 #
 #   unique_indices
 # }
-
