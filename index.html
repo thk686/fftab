@@ -59,9 +59,8 @@
 <ol style="list-style-type: decimal">
 <li>Provides frequencies in each dimension in cycles per sample-interval.</li>
 <li>Caches attributes sufficient to allow reconstruction of original object when computing the inverse transform.</li>
-<li>Tracks complex versus real valued input.</li>
-<li>Computes the size-normalized forward transform.</li>
 <li>Easy conversion between complex, rectangular, and polar representations.</li>
+<li>Tracks complex versus real valued input.</li>
 </ol>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -76,54 +75,51 @@
 </h2>
 <p>Using tidy_fft with ggplot.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thk686/tidyfft" class="external-link">tidyfft</a></span><span class="op">)</span></span>
-<span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="reference/tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">sunspot.month</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="reference/to_cplx.html">to_rect</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="reference/to_cplx.html">to_polr</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">sunspot.month.fft</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">sunspot.month</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>fx <span class="op">=</span> <span class="va">fx</span> <span class="op">/</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/to_cplx.html">to_rect</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/to_cplx.html">to_polr</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span></span>
+<span>  <span class="va">ssm.fft</span></span>
 <span><span class="co">#&gt; # A tibble: 3,177 × 6</span></span>
-<span><span class="co">#&gt;      dim_1 fx                          re      im     mod    arg</span></span>
-<span><span class="co">#&gt;      &lt;dbl&gt; &lt;cpl&gt;                    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 0       165092.2000+    0.000i 165092.      0  165092.  0    </span></span>
-<span><span class="co">#&gt;  2 0.00378  13876.3375+15850.464i  13876.  15850.  21066.  0.852</span></span>
-<span><span class="co">#&gt;  3 0.00755  -2733.7209+16131.802i  -2734.  16132.  16362.  1.74 </span></span>
-<span><span class="co">#&gt;  4 0.0113   -8428.2640-18110.753i  -8428. -18111.  19976. -2.01 </span></span>
-<span><span class="co">#&gt;  5 0.0151  -14755.1410- 1860.878i -14755.  -1861.  14872. -3.02 </span></span>
-<span><span class="co">#&gt;  6 0.0189   -7986.8153+12940.843i  -7987.  12941.  15207.  2.12 </span></span>
-<span><span class="co">#&gt;  7 0.0227   -2173.4245+ 7168.128i  -2173.   7168.   7490.  1.87 </span></span>
-<span><span class="co">#&gt;  8 0.0264   -3395.5271- 7055.326i  -3396.  -7055.   7830. -2.02 </span></span>
-<span><span class="co">#&gt;  9 0.0302     572.7342- 4329.374i    573.  -4329.   4367. -1.44 </span></span>
-<span><span class="co">#&gt; 10 0.0340    7811.7219- 3510.364i   7812.  -3510.   8564. -0.422</span></span>
+<span><span class="co">#&gt;      dim_1 fx              re     im   mod    arg</span></span>
+<span><span class="co">#&gt;      &lt;dbl&gt; &lt;cpl&gt;        &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 0       51.96+0.00i 52.0    0     52.0   0    </span></span>
+<span><span class="co">#&gt;  2 0.00378  4.37+4.99i  4.37   4.99   6.63  0.852</span></span>
+<span><span class="co">#&gt;  3 0.00755 -0.86+5.08i -0.860  5.08   5.15  1.74 </span></span>
+<span><span class="co">#&gt;  4 0.0113  -2.65-5.70i -2.65  -5.70   6.29 -2.01 </span></span>
+<span><span class="co">#&gt;  5 0.0151  -4.64-0.59i -4.64  -0.586  4.68 -3.02 </span></span>
+<span><span class="co">#&gt;  6 0.0189  -2.51+4.07i -2.51   4.07   4.79  2.12 </span></span>
+<span><span class="co">#&gt;  7 0.0227  -0.68+2.26i -0.684  2.26   2.36  1.87 </span></span>
+<span><span class="co">#&gt;  8 0.0264  -1.07-2.22i -1.07  -2.22   2.46 -2.02 </span></span>
+<span><span class="co">#&gt;  9 0.0302   0.18-1.36i  0.180 -1.36   1.37 -1.44 </span></span>
+<span><span class="co">#&gt; 10 0.0340   2.46-1.10i  2.46  -1.10   2.70 -0.422</span></span>
 <span><span class="co">#&gt; # ℹ 3,167 more rows</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sinhrks/ggfortify" class="external-link">ggfortify</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">fortify</span><span class="op">(</span><span class="va">sunspot.month</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Index</span>, y <span class="op">=</span> <span class="va">Data</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">fortify</span><span class="op">(</span><span class="va">sunspot.month</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Index</span>, y <span class="op">=</span> <span class="va">Data</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Sunspot count"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p1</span></span>
+<span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span></span>
+<span>  <span class="va">p1</span></span>
 <span></span>
 <span><span class="va">xlocs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="va">xlabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"10"</span>, <span class="st">"100"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sunspot.month.fft</span> <span class="op">|&gt;</span></span>
+<span><span class="va">ssm.fft</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">dim_1</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">dim_1</span>, y <span class="op">=</span> <span class="va">mod</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_y_continuous</span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"log"</span>, labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">dim_1</span>, y <span class="op">=</span> <span class="va">mod</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">geom_smooth</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">dim_1</span>, y <span class="op">=</span> <span class="va">mod</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">scale_y_continuous</span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"log"</span>, labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">y</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">scale_x_continuous</span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"log"</span>, breaks <span class="op">=</span> <span class="va">xlocs</span>, labels <span class="op">=</span> <span class="va">xlabs</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">xlab</span><span class="op">(</span><span class="st">"Cycle duration (years)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ylab</span><span class="op">(</span><span class="st">"Cycle amplitude"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_smooth</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p2</span></span>
+<span>    <span class="fu">ylab</span><span class="op">(</span><span class="st">"Mean amplitude"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span></span>
+<span>    <span class="va">p2</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p1</span> <span class="op">/</span> <span class="va">p2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
