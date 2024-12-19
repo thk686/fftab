@@ -1,5 +1,106 @@
-# library(testthat)
-#
+library(testthat)
+
+fourier_stdev <- function(x) {
+  sqrt((sum(Mod(x) ^ 2) - Re(x[1]) ^ 2) / length(x) ^ 2)
+}
+
+test_that("Can compute forier stats using base fft",{
+  x <- rnorm(100, mean = 5, sd = 2)
+  fx <- stats::fft(x)
+  expect_equal(fourier_stdev(fx), sd(x), tolerance = 0.1)
+  expect_equal(Re(fx[1])/length(fx), mean(x))
+})
+
+test_that("Can compute correlation using base fft without inverse transform", {
+  n <- 256
+  freq <- 8
+  t <- seq(-pi, pi, len = n)
+  a <- sin(freq * t)
+  b <- sin(freq * t + pi / 4)
+
+  # Standardize signals
+  a <- scale(a)
+  b <- scale(b)
+
+  # Compute FFT of signals
+  fft_a <- fft(a)
+  fft_b <- fft(b)
+
+  # Compute the cross-spectrum (element-wise product)
+  cross_spectrum <- fft_a * Conj(fft_b)
+
+  # Compute the zero-lag correlation directly in the frequency domain
+  computed_correlation <- Re(sum(cross_spectrum)) / n^2
+
+  # Compare with cor() result
+  expect_equal(computed_correlation, drop(cor(a, b)), tolerance = 0.01)
+})
+
+test_that("Can compute maximum correlation and phase shift using base fft", {
+  n <- 256
+  freq <- 8
+  t <- seq(-pi, pi, len = n)
+  a <- sin(freq * t)
+  b <- sin(freq * t + pi / 4)
+
+  # Standardize signals
+  a <- scale(a)
+  b <- scale(b)
+
+  # Compute FFT of signals
+  fft_a <- fft(a)
+  fft_b <- fft(b)
+
+  # Compute cross-correlation via FFT
+  cross_correlation <- fft(fft_a * Conj(fft_b), inverse = TRUE) / n^2
+  cross_correlation <- Re(cross_correlation)
+
+  # Find the maximum correlation and its index
+  max_correlation <- max(cross_correlation)
+  max_index <- which.max(cross_correlation)
+
+  # Compute the lag and phase shift
+  lag <- ifelse(max_index > n / 2, max_index - n, max_index - 1) # Adjust for cyclic shifts
+  phase_shift <- 2 * pi * lag * freq / n
+
+  # Compare results
+  expect_equal(max_correlation, 1, tolerance = 0.01)
+  expect_equal(phase_shift, pi / 4, tolerance = 0.01)
+})
+
+test_that("Can compute maximum correlation and phase shift using base fft without inverse transform", {
+  n <- 256
+  freq <- 8
+  t <- seq(-pi, pi, len = n)
+  a <- sin(freq * t)
+  b <- sin(freq * t + pi / 4)
+
+  # Standardize signals
+  a <- scale(a)
+  b <- scale(b)
+
+  # Compute FFT of signals
+  fft_a <- fft(a)
+  fft_b <- fft(b)
+
+  # Compute the cross-spectrum
+  cross_spectrum <- fft_a * Conj(fft_b)
+
+  # Find the maximum correlation and corresponding phase
+  magnitudes <- Mod(cross_spectrum)  # Magnitudes of the cross-spectrum
+  max_index <- which.max(magnitudes)  # Index of the maximum magnitude
+  max_correlation <- 2 * magnitudes[max_index] / n^2  # Normalize by n^2 and scale by 2
+  phase_shift <- Arg(cross_spectrum[max_index])  # Phase of the maximum value
+
+  # Adjust the phase shift for the frequency and lag
+  lag <- ifelse(max_index > n / 2, max_index - n, max_index - 1)  # Adjust for cyclic shifts
+  adjusted_phase_shift <- 8 * pi * lag / n  # Corrected phase shift formula
+
+  # Compare results
+  expect_equal(max_correlation, 1, tolerance = 0.01)
+  expect_equal(adjusted_phase_shift, pi / 4, tolerance = 0.01)
+})
+
 # test_that("filter_max_mod finds the correct frequency", {
 #   # Input: simple tidy_fft object
 #   a <- tidy_fft(c(1, 0, -1, 0))

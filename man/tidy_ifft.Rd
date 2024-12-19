@@ -2,42 +2,21 @@
 % Please edit documentation in R/fft.R
 \name{tidy_ifft}
 \alias{tidy_ifft}
-\alias{tidy_ifft.default}
-\alias{tidy_ifft.tidy_fft}
 \title{Perform Inverse FFT on a Tidy Result}
 \usage{
 tidy_ifft(x)
-
-\method{tidy_ifft}{default}(x)
-
-\method{tidy_ifft}{tidy_fft}(x)
 }
 \arguments{
-\item{x}{Input object containing FFT results. This can be:
-\itemize{
-\item A numeric vector of FFT coefficients.
-\item A \code{tidy_fft} object with stored FFT results.
-}}
+\item{x}{A \code{tidy_fft} object with stored FFT results.}
 }
 \value{
-A vector or time series object representing the reconstructed signal
-from the FFT results. If the original signal was real-valued, the IFFT
-returns the real part of the reconstruction.
+A vector, array, or time series object representing the reconstructed
+signal from the FFT results. If the original signal was real-valued, the
+IFFT returns the real part of the reconstruction.
 }
 \description{
 Computes the inverse Fast Fourier Transform (IFFT) to reconstruct the
-original signal from a \code{tidy_fft} object or other FFT results. This is a
-generic function with methods for default inputs and \code{tidy_fft} objects.
-}
-\details{
-\subsection{Methods:}{
-\itemize{
-\item \strong{Default Input (\code{tidy_ifft.default})}: Performs the inverse FFT on a numeric vector of FFT coefficients (with a warning).
-\item \strong{Tidy FFT Input (\code{tidy_ifft.tidy_fft})}: Reconstructs the original signal from a \code{tidy_fft} object,
-restoring attributes such as dimensions (\code{.dim}) and time series properties
-(\code{.tsp}), if present.
-}
-}
+original signal from a \code{tidy_fft} object.
 }
 \examples{
 # Example with FFT and inverse FFT

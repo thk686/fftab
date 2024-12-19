@@ -5,7 +5,7 @@
 \alias{tidy_fft.default}
 \alias{tidy_fft.ts}
 \alias{tidy_fft.array}
-\title{Compute FFT and Return a Tidy Result with Normalized Coefficients}
+\title{Compute FFT and Return a Tidy Result}
 \usage{
 tidy_fft(x)
 
@@ -27,29 +27,26 @@ tidy_fft(x)
 A tibble containing:
 \itemize{
 \item \strong{Fourier frequencies}: Represented by columns \code{dim_1}, \code{dim_2}, ..., depending on the input dimensions.
-\item \strong{Normalized FFT values}: Stored in the \code{fx} column as complex values, normalized by the input size.
+\item \strong{FFT values}: Stored in the \code{fx} column as complex values.
 }
 }
 \description{
 Computes the Fast Fourier Transform (FFT) for various input types, including
-vectors, time series (\code{ts}), and arrays. The FFT values are normalized by the
-length of the input (or its product of dimensions for arrays). The result is
-returned as a tidy tibble containing the Fourier frequencies and normalized
+vectors, time series (\code{ts}), and arrays. The result is
+returned as a tidy tibble containing the Fourier frequencies and
 FFT values.
 }
 \details{
 This is a generic function with methods for specific input types:
 \itemize{
-\item \strong{Default Input (\code{tidy_fft.default})}: Computes the FFT for a numeric vector and normalizes
-the result by the vector length.
+\item \strong{Default Input (\code{tidy_fft.default})}: Computes the FFT for a numeric vector.
 \item \strong{Time Series Input (\code{tidy_fft.ts})}: Computes the FFT for a \code{ts} object, scaling the frequencies
-by the time series frequency attribute and normalizing the FFT values.
-\item \strong{Array Input (\code{tidy_fft.array})}: Computes the FFT for a multidimensional array and normalizes
-the FFT values by the product of the array dimensions.
+by the time series frequency attribute.
+\item \strong{Array Input (\code{tidy_fft.array})}: Computes the FFT for a multidimensional array.
 }
 
 Each method returns a tidy tibble where the Fourier frequencies (\code{dim_1},
-\code{dim_2}, etc.) are paired with their corresponding normalized FFT values.
+\code{dim_2}, etc.) are paired with their corresponding FFT values.
 }
 \examples{
 # FFT for a numeric vector

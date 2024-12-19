@@ -6,6 +6,8 @@
 \alias{tidyfft-package}
 \title{tidyfft: Tidy manipulation of fourier transformed data}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Provides functions for storing fourier coefficients in a tibble and manipulating them in various ways. The main different between tidy_fft and base R is that tidy_fft computes the normalized fourier frequencies in cycles per stride, i.e., cycles per interval between samples, which is often a point of confusion for new users and convenient for plotting, etc. Because the frequencies and coefficients are stored in a tibble (data.frame), easy processing with, e.g., dplyr is facilitated.
 }
 \seealso{

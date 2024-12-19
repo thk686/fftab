@@ -140,7 +140,7 @@ test_that("get_fx extracts complex Fourier coefficients correctly from a polar r
   fx_values <- get_fx(fft_result)
 
   # Expected FFT result
-  expected_fx <- fft(x) / length(x)
+  expected_fx <- fft(x)
 
   # Test if extracted coefficients match the expected FFT result
   expect_equal(fx_values, expected_fx)

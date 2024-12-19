@@ -1,9 +1,8 @@
-#' Compute FFT and Return a Tidy Result with Normalized Coefficients
+#' Compute FFT and Return a Tidy Result
 #'
 #' Computes the Fast Fourier Transform (FFT) for various input types, including
-#' vectors, time series (`ts`), and arrays. The FFT values are normalized by the
-#' length of the input (or its product of dimensions for arrays). The result is
-#' returned as a tidy tibble containing the Fourier frequencies and normalized
+#' vectors, time series (`ts`), and arrays. The result is
+#' returned as a tidy tibble containing the Fourier frequencies and
 #' FFT values.
 #'
 #' @param x Input object for which to compute the FFT. This can be:
@@ -13,19 +12,17 @@
 #'
 #' @return A tibble containing:
 #'   - **Fourier frequencies**: Represented by columns `dim_1`, `dim_2`, ..., depending on the input dimensions.
-#'   - **Normalized FFT values**: Stored in the `fx` column as complex values, normalized by the input size.
+#'   - **FFT values**: Stored in the `fx` column as complex values.
 #'
 #' @details This is a generic function with methods for specific input types:
 #'
-#' - **Default Input (`tidy_fft.default`)**: Computes the FFT for a numeric vector and normalizes
-#' the result by the vector length.
+#' - **Default Input (`tidy_fft.default`)**: Computes the FFT for a numeric vector.
 #' - **Time Series Input (`tidy_fft.ts`)**: Computes the FFT for a `ts` object, scaling the frequencies
-#' by the time series frequency attribute and normalizing the FFT values.
-#' - **Array Input (`tidy_fft.array`)**: Computes the FFT for a multidimensional array and normalizes
-#' the FFT values by the product of the array dimensions.
+#' by the time series frequency attribute.
+#' - **Array Input (`tidy_fft.array`)**: Computes the FFT for a multidimensional array.
 #'
 #' Each method returns a tidy tibble where the Fourier frequencies (`dim_1`,
-#' `dim_2`, etc.) are paired with their corresponding normalized FFT values.
+#' `dim_2`, etc.) are paired with their corresponding FFT values.
 #'
 #' @examples
 #' # FFT for a numeric vector
@@ -50,7 +47,7 @@ tidy_fft <- function(x) {
 tidy_fft.default <- function(x) {
   stopifnot(is.vector(x), is.numeric(x) || is.complex(x))
   fourier_frequencies(x) |>
-    tibble::add_column(fx = stats::fft(x) / length(x)) |>
+    tibble::add_column(fx = stats::fft(x)) |>
     .as_tidy_fft_obj(.is_complex = is.complex(x))
 }
 
@@ -66,29 +63,20 @@ tidy_fft.ts <- function(x) {
 #' @export
 tidy_fft.array <- function(x) {
   fourier_frequencies(x) |>
-    dplyr::mutate(fx = as.vector(stats::fft(x)) / prod(dim(x))) |>
+    dplyr::mutate(fx = as.vector(stats::fft(x))) |>
     .as_tidy_fft_obj(.is_complex = is.complex(x), .dim = dim(x))
 }
 
 #' Perform Inverse FFT on a Tidy Result
 #'
 #' Computes the inverse Fast Fourier Transform (IFFT) to reconstruct the
-#' original signal from a `tidy_fft` object or other FFT results. This is a
-#' generic function with methods for default inputs and `tidy_fft` objects.
+#' original signal from a `tidy_fft` object.
 #'
-#' @param x Input object containing FFT results. This can be:
-#'   - A numeric vector of FFT coefficients.
-#'   - A `tidy_fft` object with stored FFT results.
+#' @param x A `tidy_fft` object with stored FFT results.
 #'
-#' @return A vector or time series object representing the reconstructed signal
-#'   from the FFT results. If the original signal was real-valued, the IFFT
-#'   returns the real part of the reconstruction.
-#'
-#' @details ### Methods:
-#' - **Default Input (`tidy_ifft.default`)**: Performs the inverse FFT on a numeric vector of FFT coefficients (with a warning).
-#' - **Tidy FFT Input (`tidy_ifft.tidy_fft`)**: Reconstructs the original signal from a `tidy_fft` object,
-#' restoring attributes such as dimensions (`.dim`) and time series properties
-#' (`.tsp`), if present.
+#' @return A vector, array, or time series object representing the reconstructed
+#'   signal from the FFT results. If the original signal was real-valued, the
+#'   IFFT returns the real part of the reconstruction.
 #'
 #' @examples
 #' # Example with FFT and inverse FFT
@@ -99,26 +87,12 @@ tidy_fft.array <- function(x) {
 #' @seealso [stats::fft()], [tidy_fft()]
 #' @export
 tidy_ifft <- function(x) {
-  UseMethod("tidy_ifft")
-}
-
-#' @rdname tidy_ifft
-#' @export
-tidy_ifft.default <- function(x) {
-  warning("Function tidy_ifft called on a non-tidy-fft object.")
-  stats::fft(x, inverse = TRUE)
-}
-
-#' @rdname tidy_ifft
-#' @export
-tidy_ifft.tidy_fft <- function(x) {
+  stopifnot(inherits(x, "tidy_fft"))
   fx <- get_fx(x)
-  res <- if (!is.null(attr(x, ".dim"))) {
+  if (!is.null(attr(x, ".dim"))) {
     dim(fx) <- attr(x, ".dim")
-    stats::fft(fx, inverse = TRUE)
-  } else {
-    stats::fft(fx, inverse = TRUE)
   }
+  res <- stats::fft(fx, inverse = TRUE)
   if (attr(x, ".is_complex") == FALSE) {
     res <- Re(res)
   }
@@ -126,5 +100,5 @@ tidy_ifft.tidy_fft <- function(x) {
     attr(res, "tsp") <- attr(x, ".tsp")
     class(res) <- "ts"
   }
-  res
+  res / length(fx)
 }
