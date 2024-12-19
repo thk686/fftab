@@ -88,16 +88,17 @@ tidy_fft.array <- function(x) {
 #' @export
 tidy_ifft <- function(x) {
   stopifnot(inherits(x, "tidy_fft"))
+  if (nrow(x) != .size(x))
+    warning("Number of rows does not match the original object size.")
   fx <- get_fx(x)
-  if (!is.null(attr(x, ".dim"))) {
-    dim(fx) <- attr(x, ".dim")
-  }
+  if (.is_array(x))
+    dim(fx) <- .dim(x)
   res <- stats::fft(fx, inverse = TRUE)
-  if (attr(x, ".is_complex") == FALSE) {
+  if (!.is_complex(x)) {
     res <- Re(res)
   }
-  if (!is.null(attr(x, ".tsp"))) {
-    attr(res, "tsp") <- attr(x, ".tsp")
+  if (.is_ts(x)) {
+    attr(res, "tsp") <- .tsp(x)
     class(res) <- "ts"
   }
   res / length(fx)

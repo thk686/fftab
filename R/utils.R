@@ -1,6 +1,36 @@
 # Declare .data as a global variable to avoid R CMD check NOTE
 utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "frequency"))
 
+#' @keywords internal
+.is_complex <- function(x) {
+  attr(x, ".is_complex")
+}
+
+#' @keywords internal
+.dim <- function(x) {
+  attr(x, ".dim")
+}
+
+#' @keywords internal
+.is_array <- function(x) {
+  !is.null(attr(x, ".dim"))
+}
+
+#' @keywords internal
+.size <- function(x) {
+  attr(x, ".size")
+}
+
+#' @keywords internal
+.tsp <- function(x) {
+  attr(x, ".tsp")
+}
+
+#' @keywords internal
+.is_ts <- function(x) {
+  !is.null(.tsp(x))
+}
+
 #' Convert an Object to a Tidy FFT Object
 #'
 #' This internal helper function applies the necessary structure and class
@@ -17,7 +47,7 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 #' @keywords internal
 .as_tidy_fft_obj <- function(x, ...) {
   x <- tibble::as_tibble(x)
-  structure(x, ..., class = c("tidy_fft", class(x)))
+  structure(x, ..., .size = nrow(x), class = c("tidy_fft", class(x)))
 }
 
 #' Check and Retrieve Representations of a `tidy_fft` Object

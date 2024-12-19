@@ -25,9 +25,8 @@ Features:
 
 1. Provides frequencies in each dimension in cycles per sample-interval.
 1. Caches attributes sufficient to allow reconstruction of original object when computing the inverse transform.
-1. Tracks complex versus real valued input.
-1. Computes the size-normalized forward transform.
 1. Easy conversion between complex, rectangular, and polar representations.
+1. Tracks complex versus real valued input.
 
 ## Installation
 
@@ -42,40 +41,44 @@ pak::pak("thk686/tidyfft")
 
 Using tidy_fft with ggplot.
 
-```{r, warning=FALSE, message=FALSE}
+```{r include=FALSE}
+options(digits = 2)
+library(ggfortify)
+library(patchwork)
 library(tidyfft)
-(
-    tidy_fft(sunspot.month) |>
-    to_rect(.keep = "all") |>
-    to_polr(.keep = "all") -> sunspot.month.fft
-)
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-library(ggfortify)
-library(patchwork)
+tidy_fft(sunspot.month) |>
+  dplyr::mutate(fx = fx / dplyr::n()) |>
+  to_rect(.keep = "all") |>
+  to_polr(.keep = "all") |>
+  print() ->
+  ssm.fft
+```
 
+```{r, warning=FALSE, message=FALSE}
 ggplot(fortify(sunspot.month)) + 
-  aes(x = Index, y = Data) + 
-  geom_line() +
-  xlab("Year") +
+  geom_line(aes(x = Index, y = Data)) +
   ylab("Sunspot count") +
-  theme_bw() -> p1
+  xlab("Year") +
+  theme_bw() ->
+  p1
 
 xlocs <- c(1, 0.1, 0.01)
 xlabs <- c("1", "10", "100")
 
-sunspot.month.fft |>
+ssm.fft |>
   dplyr::filter(dim_1 > 0) |>
   ggplot() +
-    aes(x = dim_1, y = mod) +
-    geom_point() +
-    scale_y_continuous(trans = "log", labels = function(y) round(y)) +
+    geom_point(aes(x = dim_1, y = mod)) +
+    geom_smooth(aes(x = dim_1, y = mod)) +
+    scale_y_continuous(trans = "log", labels = function(y) signif(y, 1)) +
     scale_x_continuous(trans = "log", breaks = xlocs, labels = xlabs) +
     xlab("Cycle duration (years)") +
-    ylab("Cycle amplitude") +
-    geom_smooth() +
-    theme_bw() -> p2
+    ylab("Mean amplitude") +
+    theme_bw() ->
+    p2
 
 print(p1 / p2)
 ```

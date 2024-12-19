@@ -1,35 +1,26 @@
-#' #' Compute the Cross-Spectrum
-#' #'
-#' #' This function computes the cross-spectrum between two `tidy_fft` objects by
-#' #' multiplying the Fourier coefficients (`fx`) of the first object (`a`) with
-#' #' the conjugate of the coefficients from the second object (`b`).
-#' #'
-#' #' @param a A `tidy_fft` object.
-#' #' @param b A `tidy_fft` object with the same number of rows as `a`.
-#' #' @return A `tidy_fft` object with updated `fx` values representing the cross-spectrum.
-#' #' @details
-#' #' The cross-spectrum is calculated as:
-#' #' \deqn{S_{ab}(k) = X_a(k) \cdot \overline{X_b(k)}}
-#' #' where \eqn{X_a(k)} and \eqn{X_b(k)} are the Fourier coefficients of `a` and `b`,
-#' #' respectively, and \eqn{\overline{X_b(k)}} is the complex conjugate of \eqn{X_b(k)}.
-#' #'
-#' #' @examples
-#' #' # Generate example tidy_fft objects
-#' #' a <- tidy_fft(c(1, 0, -1, 0))
-#' #' b <- tidy_fft(c(0, 1, 0, -1))
-#' #'
-#' #' # Compute the cross-spectrum
-#' #' cross_result <- cross_spec(a, b)
-#' #' print(cross_result)
-#' #'
-#' #' @seealso [filter_max_mod()] to filter the resulting cross-spectrum for the maximum magnitude.
-#' #' @export
-#' cross_spec <- function(a, b) {
-#'   stopifnot(inherits(a, "tidy_fft"),
-#'             inherits(b, "tidy_fft"),
-#'             identical(nrow(a), nrow(b)))
-#'   dplyr::mutate(a, fx = get_fx(a) * Conj(get_fx(b)))
-#' }
+cross_spectrum <- function(a, b) {
+  UseMethod("cross_spectrum")
+}
+
+cross_spectrum.default <- function(a, b) {
+  cross_spectrum(tidy_fft(a), tidy_fft(b))
+}
+
+cross_spectrum.ts <- function(a, b) {
+  cross_spectrum(tidy_fft(a), tidy_fft(b))
+}
+
+cross_spectrum.array <- function(a, b) {
+  cross_spectrum(tidy_fft(a), tidy_fft(b))
+}
+
+cross_spectrum.tidy_fft <- function(a, b) {
+  stopifnot(nrow(a) == nrow(b))
+  fourier_frequencies(nrow(a)) |>
+    tibble::add_column(fx = get_fx(a) * Conj(get_fx(b))) |>
+    .as_tidy_fft_obj(.is_complex = .is_complex(a) | .is_complex(b))
+}
+
 #'
 #' #' Filter for Maximum Magnitude in a `tidy_fft` Object
 #' #'
