@@ -7,11 +7,15 @@ cross_spectrum.default <- function(a, b) {
 }
 
 cross_spectrum.ts <- function(a, b) {
-  cross_spectrum(tidy_fft(a), tidy_fft(b))
+  stopifnot(frequency(a) == frequency(b))
+  cross_spectrum(tidy_fft(a), tidy_fft(b)) |>
+    structure(.tsp = attr(a, "tsp"))
 }
 
 cross_spectrum.array <- function(a, b) {
-  cross_spectrum(tidy_fft(a), tidy_fft(b))
+  stopifnot(dim(a) == dim(b))
+  cross_spectrum(tidy_fft(a), tidy_fft(b)) |>
+    structure(.dim = .dim(a))
 }
 
 cross_spectrum.tidy_fft <- function(a, b) {
