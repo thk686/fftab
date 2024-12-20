@@ -41,7 +41,7 @@ attributes to convert a given object into a <code>tidy_fft</code> object.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.as_tidy_fft_obj</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.as_tidy_fft_obj</span><span class="op">(</span><span class="va">x</span>, <span class="va">.is_normalized</span>, <span class="va">.is_complex</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -55,6 +55,14 @@ attributes to convert a given object into a <code>tidy_fft</code> object.</p>
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional attributes to include in the structured object, such as
 metadata or specific attributes required for Fourier Transform analysis.</p></dd>
+
+
+<dt id="arg--norm">.norm<a class="anchor" aria-label="anchor" href="#arg--norm"></a></dt>
+<dd><p>Is the input normalized?</p></dd>
+
+
+<dt id="arg--complex">.complex<a class="anchor" aria-label="anchor" href="#arg--complex"></a></dt>
+<dd><p>Was the original data complex?</p></dd>
 
 </dl></div>
     <div class="section level2">
