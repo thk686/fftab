@@ -2,62 +2,42 @@
 % Please edit documentation in R/utils.R
 \name{get_fx}
 \alias{get_fx}
-\alias{get_rect}
 \alias{get_re}
 \alias{get_im}
-\alias{get_polr}
 \alias{get_mod}
 \alias{get_arg}
-\title{Extract Fourier Coefficients and Derived Components}
+\title{Extract Fourier Coefficients and Components}
 \usage{
 get_fx(x)
-
-get_rect(x)
 
 get_re(x)
 
 get_im(x)
-
-get_polr(x)
 
 get_mod(x)
 
 get_arg(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object containing FFT results in any representation.}
+\item{x}{A \code{tidy_fft} object containing FFT results.}
 }
 \value{
-The requested components or converted representations:
+The requested components:
 \itemize{
-\item \strong{\code{get_fx()}}: A complex vector of Fourier coefficients (\code{fx}).
-\item \strong{\code{get_rect()}}: A matrix containing rectangular representation (\code{re}, \code{im}).
-\item \strong{\code{get_re()}}: A numeric vector of real parts (\code{re}).
-\item \strong{\code{get_im()}}: A numeric vector of imaginary parts (\code{im}).
-\item \strong{\code{get_polr()}}: A matrix containing polar representation (\code{mod}, \code{arg}).
-\item \strong{\code{get_mod()}}: A numeric vector of magnitudes (\code{mod}).
-\item \strong{\code{get_arg()}}: A numeric vector of phase angles (\code{arg}), in radians.
+\item \strong{\code{get_fx}}: A complex vector of Fourier coefficients (\code{fx}).
+\item \strong{\code{get_re}}: A numeric vector of real parts (\code{re}).
+\item \strong{\code{get_im}}: A numeric vector of imaginary parts (\code{im}).
+\item \strong{\code{get_mod}}: A numeric vector of magnitudes (\code{mod}).
+\item \strong{\code{get_arg}}: A numeric vector of phase angles (\code{arg}), in radians.
 }
 }
 \description{
-These utility functions extract or convert a \code{tidy_fft} object to the desired
-representation (\code{'cplx'}, \code{'rect'}, or \code{'polr'}) and extract specific
-components.
-}
-\details{
-\itemize{
-\item \strong{\code{get_fx()}}: Extracts the complex Fourier coefficients from the \code{'cplx'} representation.
-\item \strong{\code{get_rect()}}: Converts to the rectangular form and returns a tibble with \code{re} (real) and \code{im} (imaginary) components.
-\item \strong{\code{get_re()}}: Extracts the real part from the rectangular representation.
-\item \strong{\code{get_im()}}: Extracts the imaginary part from the rectangular representation.
-\item \strong{\code{get_polr()}}: Converts to the polar form and returns a tibble with \code{mod} (magnitude) and \code{arg} (phase angle).
-\item \strong{\code{get_mod()}}: Extracts the magnitude from the polar representation.
-\item \strong{\code{get_arg()}}: Extracts the phase angle (in radians) from the polar representation.
-}
+These utility functions extract specific components from a \code{tidy_fft} object.
 }
 \examples{
-# Example usage
-fft_result <- tidy_fft(c(1, 0, -1, 0))
+fft_result <- tidy_fft(c(1, 0, -1, 0)) |>
+  to_rect(.keep = "all") |>
+  to_polr(.keep = "all")
 
 # Extract components
 fx_values <- get_fx(fft_result)
@@ -65,18 +45,14 @@ re_values <- get_re(fft_result)
 im_values <- get_im(fft_result)
 mod_values <- get_mod(fft_result)
 arg_values <- get_arg(fft_result)
-rect_values <- get_rect(fft_result)
-polr_values <- get_polr(fft_result)
 
 print(fx_values)
 print(re_values)
 print(im_values)
 print(mod_values)
 print(arg_values)
-print(rect_values)
-print(polr_values)
 
 }
 \seealso{
-\code{\link[=to_cplx]{to_cplx()}}, \code{\link[=to_rect]{to_rect()}}, \code{\link[=to_polr]{to_polr()}}
+\code{\link[=to_cplx]{to_cplx()}}
 }

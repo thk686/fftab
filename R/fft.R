@@ -38,33 +38,39 @@
 #'
 #' @seealso [fourier_frequencies()], [stats::fft()]
 #' @export
-tidy_fft <- function(x) {
+tidy_fft <- function(x, norm = FALSE) {
   UseMethod("tidy_fft")
 }
 
 #' @rdname tidy_fft
 #' @export
-tidy_fft.default <- function(x) {
+tidy_fft.default <- function(x, norm = FALSE) {
   stopifnot(is.vector(x), is.numeric(x) || is.complex(x))
   fourier_frequencies(x) |>
     tibble::add_column(fx = stats::fft(x)) |>
-    .as_tidy_fft_obj(.is_complex = is.complex(x))
+    .conditional_norm_fx(norm) |>
+    .as_tidy_fft_obj(
+      .is_normalized = norm,
+      .is_complex = is.complex(x))
 }
 
 #' @rdname tidy_fft
 #' @export
-tidy_fft.ts <- function(x) {
-  tidy_fft(as.vector(x)) |>
+tidy_fft.ts <- function(x, norm = FALSE) {
+  tidy_fft(as.vector(x), norm = norm) |>
     dplyr::mutate(dim_1 = dim_1 * frequency(x)) |>
     structure(.tsp = attr(x, "tsp"))
 }
 
 #' @rdname tidy_fft
 #' @export
-tidy_fft.array <- function(x) {
+tidy_fft.array <- function(x, norm = FALSE) {
   fourier_frequencies(x) |>
     dplyr::mutate(fx = as.vector(stats::fft(x))) |>
-    .as_tidy_fft_obj(.is_complex = is.complex(x), .dim = dim(x))
+    .conditional_norm_fx(norm) |>
+    .as_tidy_fft_obj(.is_normalized = norm,
+                     .is_complex = is.complex(x),
+                     .dim = dim(x))
 }
 
 #' Perform Inverse FFT on a Tidy Result
@@ -91,6 +97,8 @@ tidy_ifft <- function(x) {
   if (nrow(x) != .size(x))
     warning("Number of rows does not match the original object size.")
   fx <- get_fx(x)
+  if (!.is_normalized(x))
+    fx <- fx / length(fx)
   if (.is_array(x))
     dim(fx) <- .dim(x)
   res <- stats::fft(fx, inverse = TRUE)
@@ -101,5 +109,5 @@ tidy_ifft <- function(x) {
     attr(res, "tsp") <- .tsp(x)
     class(res) <- "ts"
   }
-  res / length(fx)
+  res
 }

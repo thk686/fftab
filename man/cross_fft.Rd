@@ -2,13 +2,14 @@
 % Please edit documentation in R/cross.R
 \name{cross_fft}
 \alias{cross_fft}
+\alias{\%cfft\%}
 \alias{cross_fft.default}
 \alias{cross_fft.ts}
 \alias{cross_fft.array}
 \alias{cross_fft.tidy_fft}
 \title{Compute the Cross-Frequency Transform (Cross FFT)}
 \usage{
-cross_fft(a, b)
+cross_fft(a, b, conj = TRUE)
 
 \method{cross_fft}{default}(a, b, conj = TRUE)
 
@@ -17,6 +18,8 @@ cross_fft(a, b)
 \method{cross_fft}{array}(a, b, conj = TRUE)
 
 \method{cross_fft}{tidy_fft}(a, b, conj = TRUE)
+
+a \%cfft\% b
 }
 \arguments{
 \item{a}{The first input for the cross FFT. Type depends on the method.}
@@ -35,6 +38,15 @@ depends on the method used:
 \item \code{array}: A \code{tidy_fft} object with \code{dim} attributes inherited from \code{a}.
 \item \code{tidy_fft}: A \code{tidy_fft} object combining the cross-frequency transform of \code{a} and \code{b}.
 }
+
+An object representing the cross-frequency transform. The structure of the output
+depends on the method used:
+\itemize{
+\item \code{default}: A \code{tidy_fft} object.
+\item \code{ts}: A \code{tidy_fft} object with \code{tsp} attributes inherited from \code{a}.
+\item \code{array}: A \code{tidy_fft} object with \code{dim} attributes inherited from \code{a}.
+\item \code{tidy_fft}: A \code{tidy_fft} object combining the cross-frequency transform of \code{a} and \code{b}.
+}
 }
 \description{
 The \code{cross_fft} function computes the cross-frequency transform between two inputs
@@ -44,7 +56,20 @@ parameter to control whether the conjugate of the second input is used.
 }
 \details{
 The \code{cross_fft} function is generic and relies on specific methods for different input types.
+Compute the Cross-Frequency Transform (Cross FFT)
+
+The \code{cross_fft} function computes the cross-frequency transform between two inputs
+using the Fourier transform. Methods are provided for various input types, including
+default, \code{ts}, \code{array}, and \code{tidy_fft} objects. The function allows an optional
+parameter to control whether the conjugate of the second input is used.
+
+The \verb{\%cfft\%} operator is a shorthand for calling the \code{cross_fft} function.
+
+The \code{cross_fft} function is generic and relies on specific methods for different input types.
 For real-valued time series (\code{ts}) or arrays, additional attributes are preserved where applicable.
+
+The \verb{\%cfft\%} operator provides a concise syntax for computing the cross FFT, equivalent to
+calling \code{cross_fft(a, b)}.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -61,11 +86,20 @@ Ensures dimensions are consistent and preserves the \code{dim} attribute.
 Performs the cross-frequency transform directly using the Fourier transforms of \code{a} and \code{b}.
 
 }}
+\section{Functions}{
+\itemize{
+\item \code{a \%cfft\% b}: Infix operator for cross FFT.
+Equivalent to calling \code{cross_fft(a, b)}.
+
+}}
 \examples{
 # Example with default method
 a <- rnorm(8)
 b <- rnorm(8)
 result <- cross_fft(a, b)
+
+# Example with infix operator
+result <- a \%cfft\% b
 
 # Example with time series
 ts_a <- ts(rnorm(8), frequency = 4)
