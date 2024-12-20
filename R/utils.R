@@ -2,13 +2,11 @@
 utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "frequency"))
 
 #' @keywords internal
-.conditional_norm_fx <- function(x, flag) {
-  n <- .size(x)
-  if (flag) {
-    dplyr::mutate(x, fx = fx / n)
-  } else {
-    x
-  }
+.fft <- function(x, norm = FALSE) {
+  if (norm)
+    stats::fft(x) / length(x)
+  else
+    stats::fft(x)
 }
 
 #' @export

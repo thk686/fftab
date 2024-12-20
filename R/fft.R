@@ -47,8 +47,7 @@ tidy_fft <- function(x, norm = FALSE) {
 tidy_fft.default <- function(x, norm = FALSE) {
   stopifnot(is.vector(x), is.numeric(x) || is.complex(x))
   fourier_frequencies(x) |>
-    tibble::add_column(fx = stats::fft(x)) |>
-    .conditional_norm_fx(norm) |>
+    tibble::add_column(fx = .fft(x, norm)) |>
     .as_tidy_fft_obj(
       .is_normalized = norm,
       .is_complex = is.complex(x))
@@ -66,8 +65,7 @@ tidy_fft.ts <- function(x, norm = FALSE) {
 #' @export
 tidy_fft.array <- function(x, norm = FALSE) {
   fourier_frequencies(x) |>
-    dplyr::mutate(fx = as.vector(stats::fft(x))) |>
-    .conditional_norm_fx(norm) |>
+    dplyr::mutate(fx = as.vector(.fft(x, norm))) |>
     .as_tidy_fft_obj(.is_normalized = norm,
                      .is_complex = is.complex(x),
                      .dim = dim(x))

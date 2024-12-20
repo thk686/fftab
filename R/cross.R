@@ -96,4 +96,15 @@ cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
               .is_complex = .is_complex(a) | .is_complex(b))
 }
 
-
+cross_correlation <- function(a, b) {
+  fft_a <- tidy_fft(a, norm = TRUE)
+  fft_b <- tidy_fft(b, norm = TRUE)
+  fft_ab <- cross_spec(fft_a, fft_b)
+  i <- which.max(get_mod(fft_ab))
+  print(i)
+  mm_a <- get_mod(fft_a)[i]
+  mm_b <- get_mod(fft_b)[i]
+  cross_spec(fft_a, fft_b) |>
+    to_polr() |>
+    dplyr::mutate(mod = mod / sqrt(mm_a * mm_b) / 2)
+}
