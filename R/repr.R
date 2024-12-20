@@ -1,4 +1,3 @@
-
 #' Check and Retrieve Representations of a `tidy_fft` Object
 #'
 #' These functions check and retrieve specific representations of a `tidy_fft`
@@ -106,7 +105,7 @@ has_polr <- function(x) {
 #' @export
 to_cplx <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
-    dplyr::mutate(x, fx = fx, .keep = .keep)
+    x
   } else {
     if (has_rect(x)) {
       dplyr::mutate(x,
@@ -134,7 +133,7 @@ to_rect <- function(x, .keep = "unused") {
                   .keep = .keep)
   } else {
     if (has_rect(x)) {
-      dplyr::mutate(x, fx = fx, .keep = .keep)
+      x
     } else {
       if (has_polr(x)) {
         dplyr::mutate(
@@ -162,16 +161,35 @@ to_polr <- function(x, .keep = "unused") {
     if (has_rect(x)) {
       dplyr::mutate(
         x,
-        mod = sqrt(re ^ 2 + im ^ 2),
+        mod = sqrt(re^2 + im^2),
         arg = atan2(im, re),
         .keep = .keep
       )
     } else {
       if (has_polr(x)) {
-        dplyr::mutate(x, fx = fx, .keep = .keep)
+        x
       } else {
         stop("No valid fft representation.")
       }
     }
   }
+}
+
+#' @keywords internal
+.set_repr <- function(x, repr, .keep = "unused") {
+  if (repr == "cplx") return(to_cplx(x, .keep = .keep))
+  if (repr == "rect") return(to_rect(x, .keep = .keep))
+  if (repr == "polr") return(to_polr(x, .keep = .keep))
+  stop("Invalid representation.")
+}
+
+#' @export
+set_repr <- function(x, repr) {
+  res <- .get_dim_cols(x) |>
+    dplyr::mutate(fx = get_fx(x))
+  res <- .set_repr(res, repr[1])
+  if (length(repr) > 1)
+    for (i in 2:length(repr))
+      res <- .set_repr(res, repr[i], .keep = "all")
+  res
 }

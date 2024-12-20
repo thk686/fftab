@@ -7,13 +7,13 @@
 \alias{tidy_fft.array}
 \title{Compute FFT and Return a Tidy Result}
 \usage{
-tidy_fft(x)
+tidy_fft(x, norm = FALSE)
 
-\method{tidy_fft}{default}(x)
+\method{tidy_fft}{default}(x, norm = FALSE)
 
-\method{tidy_fft}{ts}(x)
+\method{tidy_fft}{ts}(x, norm = FALSE)
 
-\method{tidy_fft}{array}(x)
+\method{tidy_fft}{array}(x, norm = FALSE)
 }
 \arguments{
 \item{x}{Input object for which to compute the FFT. This can be:

@@ -1,14 +1,29 @@
 # Declare .data as a global variable to avoid R CMD check NOTE
 utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "frequency"))
 
+#' @keywords internal
 .conditional_norm_fx <- function(x, flag) {
+  n <- .size(x)
   if (flag) {
-    dplyr::mutate(x, fx = fx / dplyr::n())
+    dplyr::mutate(x, fx = fx / n)
   } else {
     x
   }
 }
 
+#' @export
+scale_by_max_mod <- function(x) {
+  repr_orig <- get_repr(x)
+  to_polr(x) |>
+    dplyr::mutate(mod = mod / max(mod)) |>
+    set_repr(repr_orig)
+}
+
+.get_dim_cols <- function(x) {
+  dplyr::select(x, dplyr::starts_with("dim_"))
+}
+
+#' @keywords internal
 .is_normalized <- function(x) {
   attr(x, ".is_normalized")
 }

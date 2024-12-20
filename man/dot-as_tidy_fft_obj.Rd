@@ -4,13 +4,17 @@
 \alias{.as_tidy_fft_obj}
 \title{Convert an Object to a Tidy FFT Object}
 \usage{
-.as_tidy_fft_obj(x, ...)
+.as_tidy_fft_obj(x, .is_normalized, .is_complex, ...)
 }
 \arguments{
 \item{x}{The input object to convert, typically a tibble or data frame.}
 
 \item{...}{Additional attributes to include in the structured object, such as
 metadata or specific attributes required for Fourier Transform analysis.}
+
+\item{.norm}{Is the input normalized?}
+
+\item{.complex}{Was the original data complex?}
 }
 \value{
 The input object \code{x}, with the \code{tidy_fft} class and any additional

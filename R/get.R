@@ -59,6 +59,16 @@ get_arg <- function(x) {
   to_polr(x, .keep = "none")$arg
 }
 
+#' @rdname get_fx
+#' @export
+get_fx_norm <- function(x) {
+  if (.is_normalized(x))
+    get_fx(x)
+  else
+    get_fx(x) / .size(x)
+}
+
+
 #' Extract Rectangular or Polar Components
 #'
 #' The `get_rect` and `get_polr` functions extract specific components from a
@@ -97,3 +107,4 @@ get_rect <- function(x) {
 get_polr <- function(x) {
   to_polr(x, .keep = "none") |> as.matrix()
 }
+
