@@ -5,7 +5,7 @@ default, ts, array, and tidy_fft objects. The function allows an optional
 parameter to control whether the conjugate of the second input is used."><meta property="og:description" content="The cross_fft function computes the cross-frequency transform between two inputs
 using the Fourier transform. Methods are provided for various input types, including
 default, ts, array, and tidy_fft objects. The function allows an optional
-parameter to control whether the conjugate of the second input is used."><meta property="og:image" content="https://thk686.github.io/tidyfft/logo.png"></head><body>
+parameter to control whether the conjugate of the second input is used."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -32,7 +32,8 @@ parameter to control whether the conjugate of the second input is used."><meta p
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Compute the Cross-Frequency Transform (Cross FFT)</h1>
+
+      <h1>Compute the Cross-Frequency Transform (Cross FFT)</h1>
       <small class="dont-index">Source: <a href="https://github.com/thk686/tidyfft/blob/master/R/cross.R" class="external-link"><code>R/cross.R</code></a></small>
       <div class="d-none name"><code>cross_fft.Rd</code></div>
     </div>
@@ -46,7 +47,7 @@ parameter to control whether the conjugate of the second input is used.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cross_fft</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cross_fft</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, conj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Default S3 method</span></span>
 <span><span class="fu">cross_fft</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, conj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -58,7 +59,9 @@ parameter to control whether the conjugate of the second input is used.</p>
 <span><span class="fu">cross_fft</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, conj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'tidy_fft'</span></span>
-<span><span class="fu">cross_fft</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, conj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">cross_fft</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, conj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">a</span> <span class="op">%cfft%</span> <span class="va">b</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,11 +88,25 @@ depends on the method used:</p><ul><li><p><code>default</code>: A <code>tidy_fft
 <li><p><code>ts</code>: A <code>tidy_fft</code> object with <code>tsp</code> attributes inherited from <code>a</code>.</p></li>
 <li><p><code>array</code>: A <code>tidy_fft</code> object with <code>dim</code> attributes inherited from <code>a</code>.</p></li>
 <li><p><code>tidy_fft</code>: A <code>tidy_fft</code> object combining the cross-frequency transform of <code>a</code> and <code>b</code>.</p></li>
+</ul><p>An object representing the cross-frequency transform. The structure of the output
+depends on the method used:</p><ul><li><p><code>default</code>: A <code>tidy_fft</code> object.</p></li>
+<li><p><code>ts</code>: A <code>tidy_fft</code> object with <code>tsp</code> attributes inherited from <code>a</code>.</p></li>
+<li><p><code>array</code>: A <code>tidy_fft</code> object with <code>dim</code> attributes inherited from <code>a</code>.</p></li>
+<li><p><code>tidy_fft</code>: A <code>tidy_fft</code> object combining the cross-frequency transform of <code>a</code> and <code>b</code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The <code>cross_fft</code> function is generic and relies on specific methods for different input types.
+Compute the Cross-Frequency Transform (Cross FFT)</p>
+<p>The <code>cross_fft</code> function computes the cross-frequency transform between two inputs
+using the Fourier transform. Methods are provided for various input types, including
+default, <code>ts</code>, <code>array</code>, and <code>tidy_fft</code> objects. The function allows an optional
+parameter to control whether the conjugate of the second input is used.</p>
+<p>The <code>%cfft%</code> operator is a shorthand for calling the <code>cross_fft</code> function.</p>
+<p>The <code>cross_fft</code> function is generic and relies on specific methods for different input types.
 For real-valued time series (<code>ts</code>) or arrays, additional attributes are preserved where applicable.</p>
+<p>The <code>%cfft%</code> operator provides a concise syntax for computing the cross FFT, equivalent to
+calling <code>cross_fft(a, b)</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="methods-by-class-">Methods (by class)<a class="anchor" aria-label="anchor" href="#methods-by-class-"></a></h2>
@@ -104,6 +121,12 @@ Ensures dimensions are consistent and preserves the <code>dim</code> attribute.<
 Performs the cross-frequency transform directly using the Fourier transforms of <code>a</code> and <code>b</code>.</p></li>
 </ul></div>
     <div class="section level2">
+    <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
+
+<ul><li><p><code>a %cfft% b</code>: Infix operator for cross FFT.
+Equivalent to calling <code>cross_fft(a, b)</code>.</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="tidy_fft.html">tidy_fft()</a></code></p></div>
     </div>
@@ -114,6 +137,9 @@ Performs the cross-frequency transform directly using the Fourier transforms of 
 <span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">cross_fft</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example with infix operator</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">a</span> <span class="op">%cfft%</span> <span class="va">b</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example with time series</span></span></span>
 <span class="r-in"><span><span class="va">ts_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
