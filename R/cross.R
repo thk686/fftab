@@ -88,7 +88,7 @@ cross_spec.array <- function(a, b, norm = FALSE, conj = TRUE) {
 cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
   stopifnot(nrow(a) == nrow(b))
   fx_a <- if (norm) get_fx_norm(a) else get_fx(a)
-  fx_b <- if (norm) get_fx_norm(b) else get_fx(a)
+  fx_b <- if (norm) get_fx_norm(b) else get_fx(b)
   if (conj) fx_b <- Conj(fx_b)
   .get_dim_cols(a) |>
     tibble::add_column(fx = fx_a * fx_b) |>
