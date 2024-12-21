@@ -159,30 +159,33 @@ test_that("Can calculate unshifted correlation function in frequency domain", {
 test_that("Can calculate shifted correlation function in frequency domain", {
   set.seed(42)  # For reproducibility
 
-  t <- seq(-pi, pi, len = 256)
-  a <- sin(8 * t) + rnorm(length(t), sd = 0.25)
-  b <- sin(8 * t + pi / 4) + rnorm(length(t), sd = 0.25)
+  n <- 256
+  nn <- ceiling(n / 2)
+  pdiff <- pi / 4
+  t <- seq(-pi, pi, len = n)
+  a <- sin(8 * t) + rnorm(length(t), sd = 0.1)
+  b <- sin(8 * t + pdiff) + rnorm(length(t), sd = 0.1)
 
   # Perform FFT
   fft_a <- stats::fft(a)
   fft_b <- stats::fft(b)
 
   # Cross-Power Spectrum
-  cross_power <- fft_a * Conj(fft_b)
+  cross_power <- fft_b * Conj(fft_a)
 
-  # Compute weighted average phase difference across all frequencies
-  weights <- Mod(cross_power)  # Use magnitude as weights
-  phase_diffs <- Arg(cross_power)  # Phase differences
-
-  # Avoid DC component (index 1)
-  weights <- weights[-1]
-  phase_diffs <- phase_diffs[-1]
+  # Compute weighted average phase difference across positive frequencies
+  weights <- Mod(cross_power[2:ceiling(n / 2)])  # Use magnitude as weights
+  phase_diffs <- Arg(cross_power[2:ceiling(n / 2)])  # Phase differences
 
   # Calculate weighted phase shift
   weighted_phase_diff <- sum(weights * phase_diffs) / sum(weights)
 
+  expect_equal(weighted_phase_diff, pdiff, tolerance = 0.1)
+
   # Apply global phase shift to fft_b
-  shifted_fft_b <- fft_b * exp(1i * weighted_phase_diff)
+  shifted_fft_b <- complex(modulus = Mod(fft_b),
+                           argument = Arg(fft_b) + weighted_phase_diff)
+  shifted_fft_b[2:nn] <- Conj(shifted_fft_b[2 + n - 2:nn])
 
   # Compute variance using Parseval's theorem
   var_a <- sum((Mod(fft_a)[-1])^2) / length(a)^2

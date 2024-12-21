@@ -118,8 +118,34 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
   stop("Invalid representation.")
 }
 
+#' @export
 remove_dc <- function(x) {
   dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . != 0))
+}
+
+#' @export
+remove_symmetric <- function(x) {
+  if (.is_complex(x))
+    return(x)
+  if (.is_array(x)) {
+    .NotYetImplemented()
+  } else {
+    dplyr::filter(x, dim_1 >= 0)
+  }
+}
+
+#' @export
+shift_phase <- function(x, shift) {
+  if (.is_array(x)) {
+    .NotYetImplemented()
+  } else {
+    if (.is_complex(x)) {
+      dplyr::mutate(x, arg = ifelse(dim_1 != 0, arg = arg + shift, arg))
+    } else {
+      dplyr::mutate(x, arg = ifelse(dim_1 > 0, arg = arg + shift, arg)) |>
+        dplyr::mutate(x, arg = ifelse(dim_1 < 0, arg = arg - shift, arg))
+    }
+  }
 }
 
 #' Plot the modulus of FFT results

@@ -104,9 +104,12 @@ cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
 }
 
 lagged_cross_correlation <- function(a, b) {
-  phase_diff <- cross_spec(a, b) |> remove_dc() |>
+  fa <- tidy_fft(a)
+  fb <- tidy_fft(b)
+  phase_diff <- cross_spec(fb, fa) |> remove_symmetric() |> remove_dc() |>
     to_polr() |> dplyr::mutate(arg = mod * arg / sum(mod)) |>
     get_arg() |> sum()
+  fb <- fb |> to_polr() |> dplyr::mutate(arg = arg + phase_diff)
   phase_diff
 }
 
