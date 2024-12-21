@@ -87,24 +87,26 @@ cross_spec.array <- function(a, b, norm = FALSE, conj = TRUE) {
 #' @export
 cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
   stopifnot(nrow(a) == nrow(b))
-  fx_a <- if (norm) get_fx_norm(a) else get_fx(a)
-  fx_b <- if (norm) get_fx_norm(b) else get_fx(b)
-  if (conj) fx_b <- Conj(fx_b)
+  fx_a <- if (norm)
+    get_fx_norm(a)
+  else
+    get_fx(a)
+  fx_b <- if (norm)
+    get_fx_norm(b)
+  else
+    get_fx(b)
+  if (conj)
+    fx_b <- Conj(fx_b)
   .get_dim_cols(a) |>
     tibble::add_column(fx = fx_a * fx_b) |>
     structure(.is_normalized = norm,
               .is_complex = .is_complex(a) | .is_complex(b))
 }
 
-cross_correlation <- function(a, b) {
-  fft_a <- tidy_fft(a, norm = TRUE)
-  fft_b <- tidy_fft(b, norm = TRUE)
-  fft_ab <- cross_spec(fft_a, fft_b)
-  i <- which.max(get_mod(fft_ab))
-  print(i)
-  mm_a <- get_mod(fft_a)[i]
-  mm_b <- get_mod(fft_b)[i]
-  cross_spec(fft_a, fft_b) |>
-    to_polr() |>
-    dplyr::mutate(mod = mod / sqrt(mm_a * mm_b) / 2)
+lagged_cross_correlation <- function(a, b) {
+  phase_diff <- cross_spec(a, b) |> remove_dc() |>
+    to_polr() |> dplyr::mutate(arg = mod * arg / sum(mod)) |>
+    get_arg() |> sum()
+  phase_diff
 }
+

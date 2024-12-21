@@ -175,14 +175,6 @@ to_polr <- function(x, .keep = "unused") {
   }
 }
 
-#' @keywords internal
-.set_repr <- function(x, repr, .keep = "unused") {
-  if (repr == "cplx") return(to_cplx(x, .keep = .keep))
-  if (repr == "rect") return(to_rect(x, .keep = .keep))
-  if (repr == "polr") return(to_polr(x, .keep = .keep))
-  stop("Invalid representation.")
-}
-
 #' @export
 set_repr <- function(x, repr) {
   res <- .get_dim_cols(x) |>

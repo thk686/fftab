@@ -100,3 +100,103 @@ test_that("cross_spec produces expected results for known inputs", {
   # Assert modulus is near zero for all other frequencies
   expect_true(all(Mod(get_fx(result)[remaining_indices]) < 1e-6))
 })
+
+test_that("Can find lag and correlation for sinusoid", {
+  t <- seq(-pi, pi, len = 256)
+  a <- sin(8 * t)
+  b <- sin(8 * t + pi / 4)
+
+  # Perform FFT
+  fft_a <- stats::fft(a)
+  fft_b <- stats::fft(b)
+
+  # Identify the dominant frequency (skip DC component)
+  freq_idx <- which.max(Mod(fft_a)[2:(length(t)/2)]) + 1
+
+  # Calculate phase difference at dominant frequency
+  phase_diff <- Arg(fft_b[freq_idx]) - Arg(fft_a[freq_idx])
+  phase_diff <- (phase_diff + pi) %% (2 * pi) - pi  # Normalize to [-π, π]
+
+  # Calculate lag in radians
+  lag_ab <- phase_diff
+
+  # Calculate normalized cross-power spectrum for correlation
+  cross_power <- fft_a[freq_idx] * Conj(fft_b[freq_idx])
+  cor_ab <- Mod(cross_power) / (Mod(fft_a[freq_idx]) * Mod(fft_b[freq_idx]))
+
+  expect_equal(lag_ab, pi / 4, tolerance = 0.01)
+  expect_equal(cor_ab, 1, tolerance = 0.01)
+})
+
+test_that("Can calculate unshifted correlation function in frequency domain", {
+  a <- rnorm(256)
+  b <- rnorm(256)
+
+  fft_a <- stats::fft(a)
+  fft_b <- stats::fft(b)
+
+  # Compute mean of signals from DC component (first FFT coefficient)
+  mean_a <- Re(fft_a[1]) / length(a)
+  mean_b <- Re(fft_b[1]) / length(b)
+
+  # Remove mean (DC component set to zero)
+  fft_a[1] <- 0
+  fft_b[1] <- 0
+
+  # Compute variance using Parseval's theorem
+  var_a <- sum(Mod(fft_a)^2) / length(a)^2
+  var_b <- sum(Mod(fft_b)^2) / length(b)^2
+
+  # Compute cross-correlation (inner product in frequency domain)
+  cross_corr <- sum(fft_a * Conj(fft_b)) / length(a)^2
+
+  # Compute correlation coefficient
+  cor_ab <- Re(cross_corr) / sqrt(var_a * var_b)
+
+  expect_equal(cor_ab, cor(a, b), tolerance = 0.01)
+})
+
+test_that("Can calculate shifted correlation function in frequency domain", {
+  set.seed(42)  # For reproducibility
+
+  t <- seq(-pi, pi, len = 256)
+  a <- sin(8 * t) + rnorm(length(t), sd = 0.25)
+  b <- sin(8 * t + pi / 4) + rnorm(length(t), sd = 0.25)
+
+  # Perform FFT
+  fft_a <- stats::fft(a)
+  fft_b <- stats::fft(b)
+
+  # Cross-Power Spectrum
+  cross_power <- fft_a * Conj(fft_b)
+
+  # Compute weighted average phase difference across all frequencies
+  weights <- Mod(cross_power)  # Use magnitude as weights
+  phase_diffs <- Arg(cross_power)  # Phase differences
+
+  # Avoid DC component (index 1)
+  weights <- weights[-1]
+  phase_diffs <- phase_diffs[-1]
+
+  # Calculate weighted phase shift
+  weighted_phase_diff <- sum(weights * phase_diffs) / sum(weights)
+
+  # Apply global phase shift to fft_b
+  shifted_fft_b <- fft_b * exp(1i * weighted_phase_diff)
+
+  # Compute variance using Parseval's theorem
+  var_a <- sum((Mod(fft_a)[-1])^2) / length(a)^2
+  var_b <- sum((Mod(shifted_fft_b)[-1])^2) / length(b)^2
+
+  # Compute cross-correlation (inner product in frequency domain)
+  cross_corr <- sum(fft_a * Conj(shifted_fft_b)) / length(a)^2
+
+  # Compute correlation coefficient
+  cor_ab <- Re(cross_corr) / sqrt(var_a * var_b)
+
+  # Inverse FFT to reconstruct shifted signal
+  shifted_b <- Re(stats::fft(shifted_fft_b, inverse = TRUE) / length(a))
+
+  expect_equal(cor_ab, cor(a, shifted_b), tolerance = 0.01)
+})
+

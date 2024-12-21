@@ -9,14 +9,6 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
     stats::fft(x)
 }
 
-#' @export
-scale_by_max_mod <- function(x) {
-  repr_orig <- get_repr(x)
-  to_polr(x) |>
-    dplyr::mutate(mod = mod / max(mod)) |>
-    set_repr(repr_orig)
-}
-
 .get_dim_cols <- function(x) {
   dplyr::select(x, dplyr::starts_with("dim_"))
 }
@@ -116,6 +108,18 @@ scale_by_max_mod <- function(x) {
             .is_complex = .is_complex,
             .is_normalized = .is_normalized,
             class = c("tidy_fft", class(x)))
+}
+
+#' @keywords internal
+.set_repr <- function(x, repr, .keep = "unused") {
+  if (repr == "cplx") return(to_cplx(x, .keep = .keep))
+  if (repr == "rect") return(to_rect(x, .keep = .keep))
+  if (repr == "polr") return(to_polr(x, .keep = .keep))
+  stop("Invalid representation.")
+}
+
+remove_dc <- function(x) {
+  dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . != 0))
 }
 
 #' Plot the modulus of FFT results
