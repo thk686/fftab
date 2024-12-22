@@ -62,10 +62,11 @@ get_arg <- function(x) {
 #' @rdname get_fx
 #' @export
 get_fx_norm <- function(x) {
-  if (.is_normalized(x))
+  if (.is_normalized(x)) {
     get_fx(x)
-  else
+  } else {
     get_fx(x) / .size(x)
+  }
 }
 
 
@@ -107,4 +108,3 @@ get_rect <- function(x) {
 get_polr <- function(x) {
   to_polr(x, .keep = "none") |> as.matrix()
 }
-

@@ -42,7 +42,7 @@ tidy_fft(sunspot.month) |>
   to_rect(.keep = "all") |>
   to_polr(.keep = "all") |>
   print() ->
-  ssm.fft
+ssm.fft
 #> # A tibble: 3,177 × 6
 #>      dim_1 fx              re     im   mod    arg
 #>      <dbl> <cpl>        <dbl>  <dbl> <dbl>  <dbl>
@@ -60,12 +60,12 @@ tidy_fft(sunspot.month) |>
 ```
 
 ``` r
-ggplot(fortify(sunspot.month)) + 
+ggplot(fortify(sunspot.month)) +
   geom_line(aes(x = Index, y = Data)) +
   ylab("Sunspot count") +
   xlab("Year") +
   theme_bw() ->
-  p1
+p1
 
 xlocs <- c(1, 0.1, 0.01)
 xlabs <- c("1", "10", "100")
@@ -73,14 +73,14 @@ xlabs <- c("1", "10", "100")
 ssm.fft |>
   dplyr::filter(dim_1 > 0) |>
   ggplot() +
-    geom_point(aes(x = dim_1, y = mod)) +
-    geom_smooth(aes(x = dim_1, y = mod)) +
-    scale_y_continuous(trans = "log", labels = function(y) signif(y, 1)) +
-    scale_x_continuous(trans = "log", breaks = xlocs, labels = xlabs) +
-    xlab("Cycle duration (years)") +
-    ylab("Mean amplitude") +
-    theme_bw() ->
-    p2
+  geom_point(aes(x = dim_1, y = mod)) +
+  geom_smooth(aes(x = dim_1, y = mod)) +
+  scale_y_continuous(trans = "log", labels = function(y) signif(y, 1)) +
+  scale_x_continuous(trans = "log", breaks = xlocs, labels = xlabs) +
+  xlab("Cycle duration (years)") +
+  ylab("Mean amplitude") +
+  theme_bw() ->
+p2
 
 print(p1 / p2)
 ```

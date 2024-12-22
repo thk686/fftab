@@ -20,21 +20,26 @@ test_that("fourier_frequencies.default computes correctly", {
 
 test_that("fourier_frequencies.ts scales frequencies correctly", {
   ts_obj <- ts(c(1, 2, 3, 4, 5, 6),
-               start = c(2000, 1),
-               frequency = 12)
+    start = c(2000, 1),
+    frequency = 12
+  )
 
   # Check scaled frequencies
   freqs <- fourier_frequencies.ts(ts_obj)
-  expect_equal(freqs,
-               fourier_frequencies(6) |> dplyr::mutate(dim_1 = 12 * dim_1))
+  expect_equal(
+    freqs,
+    fourier_frequencies(6) |> dplyr::mutate(dim_1 = 12 * dim_1)
+  )
 })
 
 test_that("fourier_frequencies.array computes frequencies for arrays", {
   # 2D matrix input
   mat <- matrix(1:9, nrow = 3, ncol = 3)
   res <- fourier_frequencies(mat)
-  ex <- rev(tidyr::expand_grid(dim_2 = c(0, 1 / 3, -1 / 3),
-                     dim_1 = c(0, 1 / 3, -1 / 3)))
+  ex <- rev(tidyr::expand_grid(
+    dim_2 = c(0, 1 / 3, -1 / 3),
+    dim_1 = c(0, 1 / 3, -1 / 3)
+  ))
   expect_equal(res, ex)
 
   # 3D array input
@@ -50,9 +55,11 @@ test_that("fourier_frequencies.array computes frequencies for arrays", {
 
 test_that("fft(x) matches fourier frequencies for arrays of varying sizes", {
   # Test with various dimensions
-  dims_list <- list(c(2, 3), # 2D array
-                    c(3, 4, 5), # 3D array
-                    c(1, 5, 2, 3))  # 4D array)
+  dims_list <- list(
+    c(2, 3), # 2D array
+    c(3, 4, 5), # 3D array
+    c(1, 5, 2, 3)
+  ) # 4D array)
 
   for (dims in dims_list) {
     # Create an array with the specified dimensions
@@ -64,23 +71,25 @@ test_that("fft(x) matches fourier frequencies for arrays of varying sizes", {
 
     # Check that the order matches
     expect_equal(length(fft_res),
-                 nrow(dim_grid),
-                 info = paste("Length mismatch for dims", toString(dims)))
+      nrow(dim_grid),
+      info = paste("Length mismatch for dims", toString(dims))
+    )
 
     # Verify that the frequencies match expected combinations
     expected_freqs <- rev(do.call(tidyr::expand_grid, lapply(rev(dims), .fourier_frequencies)))
     names(expected_freqs) <- names(dim_grid)
     expect_equal(dim_grid,
-                 expected_freqs,
-                 info = paste("Frequency mismatch for dims", toString(dims)))
+      expected_freqs,
+      info = paste("Frequency mismatch for dims", toString(dims))
+    )
   }
 })
 
 test_that("Impulse position matches expected frequency for row sine wave", {
-  dims <- c(32, 40)  # Row-major input dimensions
-  dim_row <- 8       # Frequency of the sine wave along rows
-  t <- seq(0, 2 * pi, length.out = dims[1])  # Time vector for rows
-  x <- matrix(sin(dim_row * t), nrow = dims[1], ncol = dims[2])  # Input sine wave
+  dims <- c(32, 40) # Row-major input dimensions
+  dim_row <- 8 # Frequency of the sine wave along rows
+  t <- seq(0, 2 * pi, length.out = dims[1]) # Time vector for rows
+  x <- matrix(sin(dim_row * t), nrow = dims[1], ncol = dims[2]) # Input sine wave
 
   # Perform FFT
   y <- tidy_fft(x) |> to_polr()
@@ -92,30 +101,30 @@ test_that("Impulse position matches expected frequency for row sine wave", {
   impulse <- y[which.max(y$mod), ]
 
   # Assertions
-  expect_equal(impulse$dim_2, 0, tolerance = 1e-6)             # No variation along columns
-  expect_equal(impulse$dim_1, dim_row / dims[1], tolerance = 1e-6)  # Expected frequency along rows
+  expect_equal(impulse$dim_2, 0, tolerance = 1e-6) # No variation along columns
+  expect_equal(impulse$dim_1, dim_row / dims[1], tolerance = 1e-6) # Expected frequency along rows
 })
 
-test_that("Impulse position matches expected frequency for column sine wave",
-          {
-            dims <- c(32, 40)  # Matrix dimensions
-            dim_col <- 10      # Frequency of sine wave along columns
-            t <- seq(0, 2 * pi, length.out = dims[2])  # Time vector for columns
-            x <- matrix(sin(dim_col * t),
-                        nrow = dims[1],
-                        ncol = dims[2],
-                        byrow = TRUE)  # Input sine wave
+test_that("Impulse position matches expected frequency for column sine wave", {
+  dims <- c(32, 40) # Matrix dimensions
+  dim_col <- 10 # Frequency of sine wave along columns
+  t <- seq(0, 2 * pi, length.out = dims[2]) # Time vector for columns
+  x <- matrix(sin(dim_col * t),
+    nrow = dims[1],
+    ncol = dims[2],
+    byrow = TRUE
+  ) # Input sine wave
 
-            # Perform FFT
-            y <- tidy_fft(x) |> to_polr()
+  # Perform FFT
+  y <- tidy_fft(x) |> to_polr()
 
-            # Find max impulse
-            impulse <- y[which.max(y$mod), ]
+  # Find max impulse
+  impulse <- y[which.max(y$mod), ]
 
-            # Assertions
-            expect_equal(impulse$dim_1, 0, tolerance = 1e-6)             # No variation along rows
-            expect_equal(impulse$dim_2, dim_col / dims[2], tolerance = 1e-6)  # Expected column frequency
-          })
+  # Assertions
+  expect_equal(impulse$dim_1, 0, tolerance = 1e-6) # No variation along rows
+  expect_equal(impulse$dim_2, dim_col / dims[2], tolerance = 1e-6) # Expected column frequency
+})
 
 test_that("Impulse position matches expected frequency for array", {
   dims <- c(16, 32, 64)

@@ -27,7 +27,9 @@
 .fourier_frequencies <- function(x) {
   n <- .num_samples(x)
   stopifnot(n > 0)
-  if (n == 1) return(0)
+  if (n == 1) {
+    return(0)
+  }
   k <- 0:(n - 1)
   ifelse(k <= n / 2, k, k - n) / n
 }

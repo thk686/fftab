@@ -23,5 +23,3 @@ test_that(".fourier_frequencies computes correctly", {
   # Basic input
   expect_equal(.fourier_frequencies(4), c(0, 0.25, 0.5, -0.25))
 })
-
-

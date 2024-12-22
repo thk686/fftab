@@ -26,7 +26,7 @@ test_that("tidy_fft.ts computes FFT results with proper scaling", {
   # Complex representation
   res <- tidy_fft(ts_obj)
   expect_true(inherits(res, "tidy_fft"))
-  expect_equal(res$dim_1, .fourier_frequencies(ts_obj) * 4)  # Scaled by frequency
+  expect_equal(res$dim_1, .fourier_frequencies(ts_obj) * 4) # Scaled by frequency
   expect_equal(res$fx, stats::fft(as.vector(ts_obj)))
 
   # Check original attributes are retained
@@ -56,7 +56,7 @@ test_that("tidy_ifft reconstructs original signal accurately", {
 
   # Reconstruct signal
   recon <- tidy_ifft(fft_res)
-  expect_equal(Re(recon), x)  # Ensures rounding errors are accounted for
+  expect_equal(Re(recon), x) # Ensures rounding errors are accounted for
 
   # Test with array
   arr <- array(1:8, dim = c(2, 2, 2))

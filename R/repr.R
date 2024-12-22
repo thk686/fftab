@@ -37,9 +37,10 @@ can_repr <- function(x, repr) {
   res <- 0
   for (r in repr) {
     res <- res + switch(r,
-                        cplx = has_cplx(x),
-                        rect = has_rect(x),
-                        polr = has_polr(x))
+      cplx = has_cplx(x),
+      rect = has_rect(x),
+      polr = has_polr(x)
+    )
   }
   res > 0
 }
@@ -109,13 +110,15 @@ to_cplx <- function(x, .keep = "unused") {
   } else {
     if (has_rect(x)) {
       dplyr::mutate(x,
-                    fx = complex(real = re, imaginary = im),
-                    .keep = .keep)
+        fx = complex(real = re, imaginary = im),
+        .keep = .keep
+      )
     } else {
       if (has_polr(x)) {
         dplyr::mutate(x,
-                      fx = complex(modulus = mod, argument = arg),
-                      .keep = .keep)
+          fx = complex(modulus = mod, argument = arg),
+          .keep = .keep
+        )
       } else {
         stop("No valid fft representation.")
       }
@@ -128,9 +131,10 @@ to_cplx <- function(x, .keep = "unused") {
 to_rect <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
     dplyr::mutate(x,
-                  re = Re(fx),
-                  im = Im(fx),
-                  .keep = .keep)
+      re = Re(fx),
+      im = Im(fx),
+      .keep = .keep
+    )
   } else {
     if (has_rect(x)) {
       x
@@ -154,9 +158,10 @@ to_rect <- function(x, .keep = "unused") {
 to_polr <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
     dplyr::mutate(x,
-                  mod = Mod(fx),
-                  arg = Arg(fx),
-                  .keep = .keep)
+      mod = Mod(fx),
+      arg = Arg(fx),
+      .keep = .keep
+    )
   } else {
     if (has_rect(x)) {
       dplyr::mutate(
@@ -180,8 +185,10 @@ set_repr <- function(x, repr) {
   res <- .get_dim_cols(x) |>
     dplyr::mutate(fx = get_fx(x))
   res <- .set_repr(res, repr[1])
-  if (length(repr) > 1)
-    for (i in 2:length(repr))
+  if (length(repr) > 1) {
+    for (i in 2:length(repr)) {
       res <- .set_repr(res, repr[i], .keep = "all")
+    }
+  }
   res
 }

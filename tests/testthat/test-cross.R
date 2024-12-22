@@ -111,11 +111,11 @@ test_that("Can find lag and correlation for sinusoid", {
   fft_b <- stats::fft(b)
 
   # Identify the dominant frequency (skip DC component)
-  freq_idx <- which.max(Mod(fft_a)[2:(length(t)/2)]) + 1
+  freq_idx <- which.max(Mod(fft_a)[2:(length(t) / 2)]) + 1
 
   # Calculate phase difference at dominant frequency
   phase_diff <- Arg(fft_b[freq_idx]) - Arg(fft_a[freq_idx])
-  phase_diff <- (phase_diff + pi) %% (2 * pi) - pi  # Normalize to [-π, π]
+  phase_diff <- (phase_diff + pi) %% (2 * pi) - pi # Normalize to [-π, π]
 
   # Calculate lag in radians
   lag_ab <- phase_diff
@@ -157,7 +157,7 @@ test_that("Can calculate unshifted correlation function in frequency domain", {
 })
 
 test_that("Can calculate shifted correlation function in frequency domain", {
-  set.seed(42)  # For reproducibility
+  set.seed(42) # For reproducibility
 
   n <- 256
   nn <- ceiling(n / 2)
@@ -174,8 +174,8 @@ test_that("Can calculate shifted correlation function in frequency domain", {
   cross_power <- fft_b * Conj(fft_a)
 
   # Compute weighted average phase difference across positive frequencies
-  weights <- Mod(cross_power[2:ceiling(n / 2)])  # Use magnitude as weights
-  phase_diffs <- Arg(cross_power[2:ceiling(n / 2)])  # Phase differences
+  weights <- Mod(cross_power[2:ceiling(n / 2)]) # Use magnitude as weights
+  phase_diffs <- Arg(cross_power[2:ceiling(n / 2)]) # Phase differences
 
   # Calculate weighted phase shift
   weighted_phase_diff <- sum(weights * phase_diffs) / sum(weights)
@@ -183,8 +183,10 @@ test_that("Can calculate shifted correlation function in frequency domain", {
   expect_equal(weighted_phase_diff, pdiff, tolerance = 0.1)
 
   # Apply global phase shift to fft_b
-  shifted_fft_b <- complex(modulus = Mod(fft_b),
-                           argument = Arg(fft_b) + weighted_phase_diff)
+  shifted_fft_b <- complex(
+    modulus = Mod(fft_b),
+    argument = Arg(fft_b) + weighted_phase_diff
+  )
   shifted_fft_b[2:nn] <- Conj(shifted_fft_b[2 + n - 2:nn])
 
   # Compute variance using Parseval's theorem
@@ -202,4 +204,3 @@ test_that("Can calculate shifted correlation function in frequency domain", {
 
   expect_equal(cor_ab, cor(a, shifted_b), tolerance = 0.01)
 })
-

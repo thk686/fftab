@@ -19,7 +19,7 @@ test_that("get_repr works correctly for multiple representations", {
   tft_polr <- tibble::tibble(
     dim_1 = c(0, 0.25, -0.5, -0.25),
     mod = c(1, 1, 1, 1),
-    arg = c(0, pi/2, -pi, -pi/2)
+    arg = c(0, pi / 2, -pi, -pi / 2)
   )
   expect_equal(get_repr(tft_polr), "polr")
 
@@ -47,7 +47,7 @@ test_that("get_repr works correctly for multiple representations", {
     re = c(1, 0, -1, 0),
     im = c(0, 1, 0, -1),
     mod = c(1, 1, 1, 1),
-    arg = c(0, pi/2, -pi, -pi/2)
+    arg = c(0, pi / 2, -pi, -pi / 2)
   )
   expect_setequal(get_repr(tft_all), c("cplx", "rect", "polr"))
 })
@@ -80,7 +80,7 @@ test_that("can_repr works correctly for single representation checks", {
     re = c(1, 0, -1, 0),
     im = c(0, 1, 0, -1),
     mod = c(1, 1, 1, 1),
-    arg = c(0, pi/2, -pi, -pi/2)
+    arg = c(0, pi / 2, -pi, -pi / 2)
   )
   expect_true(can_repr(tft_all, "cplx"))
   expect_true(can_repr(tft_all, "rect"))
@@ -108,7 +108,7 @@ test_that("get_fx extracts complex Fourier coefficients correctly from a polar r
   x <- c(1, 0, -1, 0)
 
   # Generate tidy_fft object
-  fft_result <- tidy_fft(x) |> to_polr()  # Convert to polar representation
+  fft_result <- tidy_fft(x) |> to_polr() # Convert to polar representation
 
   # Extract complex Fourier coefficients using get_fx
   fx_values <- get_fx(fft_result)

@@ -3,10 +3,11 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 
 #' @keywords internal
 .fft <- function(x, norm = FALSE) {
-  if (norm)
+  if (norm) {
     stats::fft(x) / length(x)
-  else
+  } else {
     stats::fft(x)
+  }
 }
 
 .get_dim_cols <- function(x) {
@@ -84,6 +85,11 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
   !is.null(.tsp(x))
 }
 
+#' @keywords internal
+.frequency <- function(x) {
+  .tsp(x)[3]
+}
+
 #' Convert an Object to a Tidy FFT Object
 #'
 #' This internal helper function applies the necessary structure and class
@@ -103,18 +109,25 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 .as_tidy_fft_obj <- function(x, .is_normalized, .is_complex, ...) {
   x <- tibble::as_tibble(x)
   structure(x,
-            ...,
-            .size = nrow(x),
-            .is_complex = .is_complex,
-            .is_normalized = .is_normalized,
-            class = c("tidy_fft", class(x)))
+    ...,
+    .size = nrow(x),
+    .is_complex = .is_complex,
+    .is_normalized = .is_normalized,
+    class = c("tidy_fft", class(x))
+  )
 }
 
 #' @keywords internal
 .set_repr <- function(x, repr, .keep = "unused") {
-  if (repr == "cplx") return(to_cplx(x, .keep = .keep))
-  if (repr == "rect") return(to_rect(x, .keep = .keep))
-  if (repr == "polr") return(to_polr(x, .keep = .keep))
+  if (repr == "cplx") {
+    return(to_cplx(x, .keep = .keep))
+  }
+  if (repr == "rect") {
+    return(to_rect(x, .keep = .keep))
+  }
+  if (repr == "polr") {
+    return(to_polr(x, .keep = .keep))
+  }
   stop("Invalid representation.")
 }
 
@@ -125,12 +138,21 @@ remove_dc <- function(x) {
 
 #' @export
 remove_symmetric <- function(x) {
-  if (.is_complex(x))
+  if (.is_complex(x)) {
     return(x)
+  }
   if (.is_array(x)) {
     .NotYetImplemented()
   } else {
     dplyr::filter(x, dim_1 >= 0)
+  }
+}
+
+.nyquist <- function(x) {
+  if (.is_ts(x)) {
+    .frequency(x) / 2
+  } else {
+    0.5
   }
 }
 
@@ -140,10 +162,18 @@ shift_phase <- function(x, shift) {
     .NotYetImplemented()
   } else {
     if (.is_complex(x)) {
-      dplyr::mutate(x, arg = ifelse(dim_1 != 0, arg = arg + shift, arg))
+      to_polr(x) |> dplyr::mutate(arg = arg + shift)
     } else {
-      dplyr::mutate(x, arg = ifelse(dim_1 > 0, arg = arg + shift, arg)) |>
-        dplyr::mutate(x, arg = ifelse(dim_1 < 0, arg = arg - shift, arg))
+      to_polr(x) |>
+        dplyr::mutate(
+          arg = dplyr::case_when(
+            dim_1 == 0.0 ~ arg,
+            dim_1 == .nyquist(x) ~ arg,
+            dim_1 > 0.0 ~ arg + shift,
+            dim_1 < 0.0 ~ arg - shift,
+            TRUE ~ arg
+          )
+        )
     }
   }
 }
@@ -197,3 +227,7 @@ plot.tidy_fft <- function(x, ...) {
 #
 #   unique_indices
 # }
+
+wrap <- function(x) {
+  (x + 0.5) %% 0.5
+}
