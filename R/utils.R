@@ -1,5 +1,5 @@
 # Declare .data as a global variable to avoid R CMD check NOTE
-utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "frequency"))
+utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "frequency"))
 
 #' Compute the Fast Fourier Transform (FFT) of a Vector
 #'
@@ -16,11 +16,6 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 #' The function wraps around the base R `stats::fft` function and provides an
 #' option for normalization.
 #'
-#' @examples
-#' x <- c(1, 2, 3, 4)
-#' .fft(x)
-#' .fft(x, norm = TRUE)
-#'
 #' @keywords internal
 #' @importFrom stats fft
 .fft <- function(x, norm = FALSE) {
@@ -31,11 +26,38 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
   }
 }
 
+#' Select Columns Starting with ".dim_"
+#'
+#' This internal function selects columns from a data frame whose names start with `".dim_"`.
+#'
+#' @param x A data frame or tibble from which to select columns.
+#'
+#' @return A data frame containing only the columns that start with `".dim_"`.
+#'
+#' @details
+#' This function uses `dplyr::select()` with `dplyr::starts_with()` to filter columns
+#' starting with the prefix `".dim_"`.
+#'
 #' @keywords internal
+#' @importFrom dplyr select starts_with
 .get_dim_cols <- function(x) {
-  dplyr::select(x, dplyr::starts_with("dim_"))
+  dplyr::select(x, dplyr::starts_with(".dim_"))
 }
 
+#' Check if an Object is Normalized
+#'
+#' This internal helper function checks whether an object has been marked as normalized
+#' by inspecting its `.is_normalized` attribute.
+#'
+#' @param x An R object to check for normalization.
+#'
+#' @return A logical value indicating whether the `.is_normalized` attribute is `TRUE`.
+#'         Returns `NULL` if the attribute does not exist.
+#'
+#' @details
+#' This function retrieves the value of the `.is_normalized` attribute from an object.
+#' It is primarily used for internal validation purposes.
+#'
 #' @keywords internal
 .is_normalized <- function(x) {
   attr(x, ".is_normalized")
@@ -172,10 +194,10 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
       to_polr(x) |>
         dplyr::mutate(
           arg = dplyr::case_when(
-            dim_1 == 0.0 ~ arg,
-            dim_1 == .nyquist(x) ~ arg,
-            dim_1 > 0.0 ~ arg + shift,
-            dim_1 < 0.0 ~ arg - shift,
+            .dim_1 == 0.0 ~ arg,
+            .dim_1 == .nyquist(x) ~ arg,
+            .dim_1 > 0.0 ~ arg + shift,
+            .dim_1 < 0.0 ~ arg - shift,
             TRUE ~ arg
           )
         )

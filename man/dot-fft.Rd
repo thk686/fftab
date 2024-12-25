@@ -23,10 +23,4 @@ Optionally, it normalizes the result by dividing it by the length of the input v
 The function wraps around the base R \code{stats::fft} function and provides an
 option for normalization.
 }
-\examples{
-x <- c(1, 2, 3, 4)
-.fft(x)
-.fft(x, norm = TRUE)
-
-}
 \keyword{internal}

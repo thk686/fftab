@@ -11,7 +11,7 @@
 #'   - A multidimensional numeric array.
 #'
 #' @return A tibble containing:
-#'   - **Fourier frequencies**: Represented by columns `dim_1`, `dim_2`, ..., depending on the input dimensions.
+#'   - **Fourier frequencies**: Represented by columns `.dim_1`, `.dim_2`, ..., depending on the input dimensions.
 #'   - **FFT values**: Stored in the `fx` column as complex values.
 #'
 #' @details This is a generic function with methods for specific input types:
@@ -21,8 +21,8 @@
 #' by the time series frequency attribute.
 #' - **Array Input (`tidy_fft.array`)**: Computes the FFT for a multidimensional array.
 #'
-#' Each method returns a tidy tibble where the Fourier frequencies (`dim_1`,
-#' `dim_2`, etc.) are paired with their corresponding FFT values.
+#' Each method returns a tidy tibble where the Fourier frequencies (`.dim_1`,
+#' `.dim_2`, etc.) are paired with their corresponding FFT values.
 #'
 #' @examples
 #' # FFT for a numeric vector
@@ -58,7 +58,7 @@ tidy_fft.default <- function(x, norm = FALSE) {
 #' @export
 tidy_fft.ts <- function(x, norm = FALSE) {
   tidy_fft(as.vector(x), norm = norm) |>
-    dplyr::mutate(dim_1 = dim_1 * frequency(x)) |>
+    dplyr::mutate(.dim_1 = .dim_1 * frequency(x)) |>
     structure(.tsp = attr(x, "tsp"))
 }
 

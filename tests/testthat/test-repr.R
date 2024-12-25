@@ -10,14 +10,14 @@ test_that("can_repr and get_repr work correctly", {
 test_that("get_repr works correctly for multiple representations", {
   # Example with only 'cplx' representation
   tft_cplx <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     fx = complex(real = c(1, 0, -1, 0), imaginary = c(0, 1, 0, -1))
   )
   expect_equal(get_repr(tft_cplx), "cplx")
 
   # Example with 'polr' representation only
   tft_polr <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     mod = c(1, 1, 1, 1),
     arg = c(0, pi / 2, -pi, -pi / 2)
   )
@@ -25,7 +25,7 @@ test_that("get_repr works correctly for multiple representations", {
 
   # Example with 'rect' representation only
   tft_rect <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     re = c(1, 0, -1, 0),
     im = c(0, 1, 0, -1)
   )
@@ -33,7 +33,7 @@ test_that("get_repr works correctly for multiple representations", {
 
   # Example with multiple representations: 'cplx' and 'rect'
   tft_multi <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     fx = complex(real = c(1, 0, -1, 0), imaginary = c(0, 1, 0, -1)),
     re = c(1, 0, -1, 0),
     im = c(0, 1, 0, -1)
@@ -42,7 +42,7 @@ test_that("get_repr works correctly for multiple representations", {
 
   # Example with all three representations
   tft_all <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     fx = complex(real = c(1, 0, -1, 0), imaginary = c(0, 1, 0, -1)),
     re = c(1, 0, -1, 0),
     im = c(0, 1, 0, -1),
@@ -55,7 +55,7 @@ test_that("get_repr works correctly for multiple representations", {
 test_that("can_repr works correctly for single representation checks", {
   # Example with only 'cplx' representation
   tft_cplx <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     fx = complex(real = c(1, 0, -1, 0), imaginary = c(0, 1, 0, -1))
   )
   expect_true(can_repr(tft_cplx, "cplx"))
@@ -64,7 +64,7 @@ test_that("can_repr works correctly for single representation checks", {
 
   # Example with multiple representations
   tft_multi <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     fx = complex(real = c(1, 0, -1, 0), imaginary = c(0, 1, 0, -1)),
     re = c(1, 0, -1, 0),
     im = c(0, 1, 0, -1)
@@ -75,7 +75,7 @@ test_that("can_repr works correctly for single representation checks", {
 
   # Example with all three representations
   tft_all <- tibble::tibble(
-    dim_1 = c(0, 0.25, -0.5, -0.25),
+    .dim_1 = c(0, 0.25, -0.5, -0.25),
     fx = complex(real = c(1, 0, -1, 0), imaginary = c(0, 1, 0, -1)),
     re = c(1, 0, -1, 0),
     im = c(0, 1, 0, -1),
@@ -96,7 +96,7 @@ test_that("can_repr and get_repr handle edge cases", {
   expect_false(can_repr(tft_empty, "polr"))
 
   # Tibble with unrelated columns
-  tft_unrelated <- tibble::tibble(dim_1 = c(0, 0.25, -0.5, -0.25), extra = 1:4)
+  tft_unrelated <- tibble::tibble(.dim_1 = c(0, 0.25, -0.5, -0.25), extra = 1:4)
   expect_equal(get_repr(tft_unrelated), character(0))
   expect_false(can_repr(tft_unrelated, "cplx"))
   expect_false(can_repr(tft_unrelated, "rect"))

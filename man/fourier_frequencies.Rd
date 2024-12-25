@@ -26,7 +26,7 @@ fourier_frequencies(x)
 \value{
 A tibble where:
 \itemize{
-\item \code{dim_1}, \code{dim_2}, ..., represent the Fourier frequencies for each dimension.
+\item \code{.dim_1}, \code{.dim_2}, ..., represent the Fourier frequencies for each dimension.
 }
 }
 \description{

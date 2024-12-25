@@ -6,7 +6,7 @@ test_that("tidy_fft.default computes FFT results correctly", {
   # Complex representation
   res <- tidy_fft(x)
   expect_true(inherits(res, "tidy_fft"))
-  expect_equal(res$dim_1, .fourier_frequencies(x))
+  expect_equal(res$.dim_1, .fourier_frequencies(x))
   expect_equal(get_fx(res), stats::fft(x))
 
   # Rectangular representation
@@ -26,7 +26,7 @@ test_that("tidy_fft.ts computes FFT results with proper scaling", {
   # Complex representation
   res <- tidy_fft(ts_obj)
   expect_true(inherits(res, "tidy_fft"))
-  expect_equal(res$dim_1, .fourier_frequencies(ts_obj) * 4) # Scaled by frequency
+  expect_equal(res$.dim_1, .fourier_frequencies(ts_obj) * 4) # Scaled by frequency
   expect_equal(res$fx, stats::fft(as.vector(ts_obj)))
 
   # Check original attributes are retained

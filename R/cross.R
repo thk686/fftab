@@ -36,9 +36,6 @@
 #' b <- rnorm(8)
 #' result <- cross_spec(a, b)
 #'
-#' # Example with the infix operator
-#' result <- a %cfft% b
-#'
 #' # Example with time series
 #' ts_a <- ts(rnorm(8), frequency = 4)
 #' ts_b <- ts(rnorm(8), frequency = 4)
@@ -98,6 +95,7 @@ cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
               .is_complex = .is_complex(a) | .is_complex(b))
 }
 
+#' @export
 phase_diff <- function(a, b) {
   fa <- tidy_fft(a)
   fb <- tidy_fft(b)
@@ -106,7 +104,7 @@ phase_diff <- function(a, b) {
     dplyr::mutate(arg = mod * arg / sum(mod)) |>
     get_arg() |>
     sum()
-  fb <- shift_phase(fb, phase_diff)
+  fb <- .shift_phase(fb, phase_diff)
   cor <- cross_spec(fa, fb, norm = TRUE) |>
     get_re() |>
     sum()

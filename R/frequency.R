@@ -46,7 +46,7 @@
 #'   - **Multidimensional array or matrix**: Frequencies are computed for each dimension.
 #'
 #' @return A tibble where:
-#'   - `dim_1`, `dim_2`, ..., represent the Fourier frequencies for each dimension.
+#'   - `.dim_1`, `.dim_2`, ..., represent the Fourier frequencies for each dimension.
 #'
 #' @details This function has the following methods:
 #'
@@ -83,14 +83,14 @@ fourier_frequencies <- function(x) {
 #' @rdname fourier_frequencies
 #' @export
 fourier_frequencies.default <- function(x) {
-  tibble::tibble(dim_1 = .fourier_frequencies(x))
+  tibble::tibble(.dim_1 = .fourier_frequencies(x))
 }
 
 # Time series method
 #' @rdname fourier_frequencies
 #' @export
 fourier_frequencies.ts <- function(x) {
-  tibble::tibble(dim_1 = .fourier_frequencies(x) * frequency(x))
+  tibble::tibble(.dim_1 = .fourier_frequencies(x) * frequency(x))
 }
 
 # Array method
@@ -100,14 +100,14 @@ fourier_frequencies.array <- function(x) {
   ff <- list()
   dims <- dim(x)
   for (i in rev(seq_along(dims))) {
-    ff[[paste0("dim_", i)]] <- .fourier_frequencies(dims[i])
+    ff[[paste0(".dim_", i)]] <- .fourier_frequencies(dims[i])
   }
   rev(tidyr::expand_grid(!!!ff))
 }
 
 #' @export
 remove_dc <- function(x) {
-  dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . != 0))
+  dplyr::filter(x, dplyr::if_any(dplyr::starts_with(".dim_"), ~ . != 0))
 }
 
 #' @export
@@ -118,6 +118,6 @@ remove_symmetric <- function(x) {
   if (.is_array(x)) {
     .NotYetImplemented()
   } else {
-    dplyr::filter(x, dim_1 >= 0)
+    dplyr::filter(x, .dim_1 >= 0)
   }
 }
