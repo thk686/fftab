@@ -180,6 +180,42 @@ to_polr <- function(x, .keep = "unused") {
   }
 }
 
+#' Set Representation of Fourier Coefficients
+#'
+#' Converts the representation format of Fourier coefficients in a `tidy_fft` object.
+#'
+#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
+#' @param repr A character vector specifying the desired representation(s) of the coefficients.
+#'   Supported representations include:
+#'   - `"cplx"`: Complex representation.
+#'   - `"rect"`: Rectangular representation.
+#'   - `"polr"`: Polar representation.
+#'
+#' @return A modified `tidy_fft` object with Fourier coefficients transformed into the specified representation(s).
+#'
+#' @details
+#' This function allows users to switch between different Fourier coefficient representations:
+#' - **`"cplx"`**: Keeps coefficients in their native complex form.
+#' - **`"rect"`**: Represents coefficients in rectangular format (`real` and `imaginary` parts).
+#' - **`"polr"`**: Represents coefficients in polar format (`magnitude` and `phase`).
+#'
+#' If multiple representations are specified in the `repr` vector, they are applied sequentially:
+#' - The first representation is applied directly.
+#' - Subsequent representations are applied using `.set_repr()` with `.keep = "all"`, preserving intermediate transformations.
+#'
+#' @seealso
+#' - [.set_repr()]
+#' - [tidy_fft()]
+#'
+#' @examples
+#' fft_x <- tidy_fft(sin(seq(0, 2 * pi, length.out = 128)))
+#'
+#' # Convert to polar representation
+#' fft_polar <- set_repr(fft_x, "polr")
+#'
+#' # Apply multiple representations
+#' fft_multi <- set_repr(fft_x, c("rect", "polr"))
+#'
 #' @export
 set_repr <- function(x, repr) {
   res <- .get_dim_cols(x) |>

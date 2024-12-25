@@ -2,30 +2,28 @@
 % Please edit documentation in R/utils.R
 \name{.as_tidy_fft_obj}
 \alias{.as_tidy_fft_obj}
-\title{Convert an Object to a Tidy FFT Object}
+\title{Build a Tidy FFT Object}
 \usage{
 .as_tidy_fft_obj(x, .is_normalized, .is_complex, ...)
 }
 \arguments{
 \item{x}{The input object to convert, typically a tibble or data frame.}
 
+\item{.is_normalized}{A logical value indicating if the input is normalized.}
+
+\item{.is_complex}{A logical value indicating if the original data was complex.}
+
 \item{...}{Additional attributes to include in the structured object, such as
 metadata or specific attributes required for Fourier Transform analysis.}
-
-\item{.norm}{Is the input normalized?}
-
-\item{.complex}{Was the original data complex?}
 }
 \value{
 The input object \code{x}, with the \code{tidy_fft} class and any additional
 attributes provided in \code{...}.
 }
 \description{
-This internal helper function applies the necessary structure and class
-attributes to convert a given object into a \code{tidy_fft} object.
+Converts an object into a \code{tidy_fft} object with additional metadata attributes.
 }
-\details{
-A \code{tidy_fft} object is a tibble-like structure with additional class
-attributes used to represent Fourier Transform results in a tidy format.
+\seealso{
+\code{\link[dplyr:reexports]{dplyr::tibble()}}
 }
 \keyword{internal}

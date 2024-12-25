@@ -14,11 +14,9 @@ A logical value indicating whether the \code{.is_normalized} attribute is \code{
 Returns \code{NULL} if the attribute does not exist.
 }
 \description{
-This internal helper function checks whether an object has been marked as normalized
-by inspecting its \code{.is_normalized} attribute.
+Checks whether an object has the \code{.is_normalized} attribute.
 }
-\details{
-This function retrieves the value of the \code{.is_normalized} attribute from an object.
-It is primarily used for internal validation purposes.
+\seealso{
+\code{\link[=.as_tidy_fft_obj]{.as_tidy_fft_obj()}}
 }
 \keyword{internal}

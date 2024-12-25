@@ -1,9 +1,3 @@
-# tests/testthat/test-fourier_frequencies.R
-
-library(testthat)
-library(dplyr)
-library(tidyr)
-
 # ---------------------------
 # .fourier_frequencies Tests
 # ---------------------------

@@ -37,14 +37,13 @@ pak::pak("thk686/tidyfft")
 Using tidy_fft with ggplot.
 
 ``` r
-tidy_fft(sunspot.month) |>
-  dplyr::mutate(fx = fx / dplyr::n()) |>
+tidy_fft(sunspot.month, norm = TRUE) |>
   to_rect(.keep = "all") |>
   to_polr(.keep = "all") |>
   print() ->
-ssm.fft
+  ssm.fft
 #> # A tibble: 3,177 × 6
-#>      dim_1 fx              re     im   mod    arg
+#>     .dim_1 fx              re     im   mod    arg
 #>      <dbl> <cpl>        <dbl>  <dbl> <dbl>  <dbl>
 #>  1 0       51.96+0.00i 52.0    0     52.0   0    
 #>  2 0.00378  4.37+4.99i  4.37   4.99   6.63  0.852
@@ -65,22 +64,22 @@ ggplot(fortify(sunspot.month)) +
   ylab("Sunspot count") +
   xlab("Year") +
   theme_bw() ->
-p1
+  p1
 
 xlocs <- c(1, 0.1, 0.01)
 xlabs <- c("1", "10", "100")
 
 ssm.fft |>
-  dplyr::filter(dim_1 > 0) |>
+  dplyr::filter(.dim_1 > 0) |>
   ggplot() +
-  geom_point(aes(x = dim_1, y = mod)) +
-  geom_smooth(aes(x = dim_1, y = mod)) +
+  geom_point(aes(x = .dim_1, y = mod)) +
+  geom_smooth(aes(x = .dim_1, y = mod)) +
   scale_y_continuous(trans = "log", labels = function(y) signif(y, 1)) +
   scale_x_continuous(trans = "log", breaks = xlocs, labels = xlabs) +
   xlab("Cycle duration (years)") +
   ylab("Mean amplitude") +
   theme_bw() ->
-p2
+  p2
 
 print(p1 / p2)
 ```

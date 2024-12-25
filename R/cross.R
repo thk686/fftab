@@ -95,19 +95,49 @@ cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
               .is_complex = .is_complex(a) | .is_complex(b))
 }
 
+#' Compute Phase Difference and Maximum Correlation Between Two Signals
+#'
+#' Computes the phase difference and maximum normalized correlation between two input signals
+#' after phase-aligning the second signal (`b`) to the first signal (`a`).
+#'
+#' @param a A numeric vector or time series representing the first signal.
+#' @param b A numeric vector or time series representing the second signal.
+#'
+#' @return A numeric vector of length two:
+#'   - The first element represents the **phase difference** (in radians) required to maximize alignment between the two signals.
+#'   - The second element represents the **maximum normalized correlation** achieved after phase alignment.
+#'
+#' @details
+#' This function performs the following steps:
+#' 1. Computes the Fourier Transform of both input signals using `tidy_fft`.
+#' 2. Calculates the **cross-spectrum** of the signals.
+#' 3. Converts the cross-spectrum to polar form and computes the weighted average phase difference.
+#' 4. Adjusts the phase of the second signal (`b`) using `.shift_phase` to maximize alignment with the first signal (`a`).
+#' 5. Computes the **normalized correlation** between the phase-aligned signals.
+#'
+#' The correlation is normalized using the variances of both signals and will generally be **higher** than the correlation
+#' between the original signals due to the optimal phase alignment.
+#'
+#' @seealso
+#' - [tidy_fft()]
+#' - [cross_spec()]
+#' - [.shift_phase()]
+#' - [.variance()]
+#'
+#' @examples
+#' signal_a <- sin(seq(0, 2 * pi, length.out = 128))
+#' signal_b <- cos(seq(0, 2 * pi, length.out = 128))
+#'
+#' phase_diff(signal_a, signal_b)
+#'
 #' @export
 phase_diff <- function(a, b) {
-  fa <- tidy_fft(a)
-  fb <- tidy_fft(b)
-  phase_diff <- cross_spec(fb, fa) |>
-    to_polr() |>
-    dplyr::mutate(arg = mod * arg / sum(mod)) |>
-    get_arg() |>
-    sum()
-  fb <- .shift_phase(fb, phase_diff)
-  cor <- cross_spec(fa, fb, norm = TRUE) |>
-    get_re() |>
-    sum()
-  cor <- cor / sqrt(.variance(fa) * .variance(fb))
-  c(phase_diff, cor)
+  if (!inherits(a, "tidy_fft"))
+    a <- tidy_fft(a)
+  if (!inherits(b, "tidy_fft"))
+    b <- tidy_fft(b)
+  phase_diff <- .phase_diff(a, b)
+  b <- .shift_phase(b, -phase_diff)
+  cor <- .correlation(a, b)
+  c(phase_diff = phase_diff, correlation = cor)
 }

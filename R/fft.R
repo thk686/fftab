@@ -9,6 +9,7 @@
 #'   - A numeric vector (default method).
 #'   - A time series object (`ts`).
 #'   - A multidimensional numeric array.
+#' @param norm Compute normalized coefficients if TRUE.
 #'
 #' @return A tibble containing:
 #'   - **Fourier frequencies**: Represented by columns `.dim_1`, `.dim_2`, ..., depending on the input dimensions.

@@ -122,3 +122,63 @@ test_that("get_fx extracts complex Fourier coefficients correctly from a polar r
   # Test that the result is complex
   expect_true(is.complex(fx_values))
 })
+
+test_that("set_repr correctly applies single representation", {
+  # Generate test data
+  x <- sin(seq(0, 2 * pi, length.out = 128))
+  fft_x <- tidy_fft(x)
+
+  # Test complex representation
+  cplx_repr <- set_repr(fft_x, "cplx")
+  expect_s3_class(cplx_repr, "tidy_fft")
+  expect_true("fx" %in% names(cplx_repr))
+
+  # Test rectangular representation
+  rect_repr <- set_repr(fft_x, "rect")
+  expect_s3_class(rect_repr, "tidy_fft")
+  expect_true(all(c("re", "im") %in% names(rect_repr)))
+
+  # Test polar representation
+  polr_repr <- set_repr(fft_x, "polr")
+  expect_s3_class(polr_repr, "tidy_fft")
+  expect_true(all(c("mod", "arg") %in% names(polr_repr)))
+})
+
+test_that("set_repr correctly applies multiple representations", {
+  # Generate test data
+  x <- sin(seq(0, 2 * pi, length.out = 128))
+  fft_x <- tidy_fft(x)
+
+  # Apply sequential representations
+  multi_repr <- set_repr(fft_x, c("rect", "polr"))
+
+  # Check final representation
+  expect_s3_class(multi_repr, "tidy_fft")
+  expect_true(all(c("mod", "arg") %in% names(multi_repr)))
+
+  # Check intermediate preservation
+  expect_true(all(c("re", "im") %in% names(multi_repr)))
+})
+
+test_that("set_repr handles invalid representation gracefully", {
+  # Generate test data
+  x <- sin(seq(0, 2 * pi, length.out = 128))
+  fft_x <- tidy_fft(x)
+
+  # Invalid representation
+  expect_error(set_repr(fft_x, "invalid_repr"), "Invalid representation")
+})
+
+test_that("set_repr retains original dimensions", {
+  # Generate test data
+  x <- sin(seq(0, 2 * pi, length.out = 128))
+  fft_x <- tidy_fft(x)
+
+  # Apply representation
+  polr_repr <- set_repr(fft_x, "polr")
+
+  # Verify dimensions remain unchanged
+  expect_equal(nrow(fft_x), nrow(polr_repr))
+  expect_equal(ncol(fft_x) + 1, ncol(polr_repr)) # New columns added
+})
+

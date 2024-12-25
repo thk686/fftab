@@ -16,11 +16,14 @@ by dividing it by the length of the input vector. Default is \code{FALSE}.}
 A complex vector representing the FFT of the input signal.
 }
 \description{
-This function computes the Fast Fourier Transform (FFT) of a numeric vector.
-Optionally, it normalizes the result by dividing it by the length of the input vector.
+Computes the Fast Fourier Transform (FFT) of a numeric vector.
+Optionally, normalizes the result by dividing it by the length of the input vector.
 }
 \details{
-The function wraps around the base R \code{stats::fft} function and provides an
+This function wraps around the base R \code{stats::fft} function and provides an
 option for normalization.
+}
+\seealso{
+\code{\link[stats:fft]{stats::fft()}}
 }
 \keyword{internal}

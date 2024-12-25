@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{.is_complex}
 \alias{.is_complex}
-\title{Check if an object is complex}
+\title{Check if an Object is Complex}
 \usage{
 .is_complex(x)
 }
 \arguments{
-\item{x}{An object to check for the \code{.is_complex} attribute.}
+\item{x}{An R object to check for complexity.}
 }
 \value{
-The value of the \code{.is_complex} attribute, or \code{NULL} if not present.
+A logical value indicating whether the \code{.is_complex} attribute is \code{TRUE}.
 }
 \description{
-Retrieves the \code{.is_complex} attribute of the given object.
+Checks whether an object has the \code{.is_complex} attribute.
 }
 \keyword{internal}

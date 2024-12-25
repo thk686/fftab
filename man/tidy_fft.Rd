@@ -22,11 +22,13 @@ tidy_fft(x, norm = FALSE)
 \item A time series object (\code{ts}).
 \item A multidimensional numeric array.
 }}
+
+\item{norm}{Compute normalized coefficients if TRUE.}
 }
 \value{
 A tibble containing:
 \itemize{
-\item \strong{Fourier frequencies}: Represented by columns \code{dim_1}, \code{dim_2}, ..., depending on the input dimensions.
+\item \strong{Fourier frequencies}: Represented by columns \code{.dim_1}, \code{.dim_2}, ..., depending on the input dimensions.
 \item \strong{FFT values}: Stored in the \code{fx} column as complex values.
 }
 }
@@ -45,8 +47,8 @@ by the time series frequency attribute.
 \item \strong{Array Input (\code{tidy_fft.array})}: Computes the FFT for a multidimensional array.
 }
 
-Each method returns a tidy tibble where the Fourier frequencies (\code{dim_1},
-\code{dim_2}, etc.) are paired with their corresponding FFT values.
+Each method returns a tidy tibble where the Fourier frequencies (\code{.dim_1},
+\code{.dim_2}, etc.) are paired with their corresponding FFT values.
 }
 \examples{
 # FFT for a numeric vector

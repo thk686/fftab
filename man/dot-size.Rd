@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{.size}
 \alias{.size}
-\title{Retrieve the size of an object}
+\title{Retrieve Object Size}
 \usage{
 .size(x)
 }
 \arguments{
-\item{x}{An object to check for the \code{.size} attribute.}
+\item{x}{An R object to check for size.}
 }
 \value{
-The value of the \code{.size} attribute, or \code{NULL} if not present.
+The \code{.size} attribute or \code{NULL} if not present.
 }
 \description{
-Retrieves the \code{.size} attribute of the given object.
+Retrieves the \code{.size} attribute from an object.
 }
 \keyword{internal}

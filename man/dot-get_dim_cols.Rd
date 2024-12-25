@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{.get_dim_cols}
 \alias{.get_dim_cols}
-\title{Select Columns Starting with "dim_"}
+\title{Select Columns Starting with \code{.dim_}}
 \usage{
 .get_dim_cols(x)
 }
@@ -10,13 +10,15 @@
 \item{x}{A data frame or tibble from which to select columns.}
 }
 \value{
-A data frame containing only the columns that start with \code{"dim_"}.
+A data frame containing only the columns that start with \code{.dim_}.
 }
 \description{
-This internal function selects columns from a data frame whose names start with \code{"dim_"}.
+Selects columns from a data frame whose names start with \code{.dim_}.
 }
 \details{
-This function uses \code{dplyr::select()} with \code{dplyr::starts_with()} to filter columns
-starting with the prefix \code{"dim_"}.
+Uses \code{dplyr::select()} with \code{dplyr::starts_with()} to filter columns.
+}
+\seealso{
+\code{\link[dplyr:select]{dplyr::select()}}, \code{\link[dplyr:reexports]{dplyr::starts_with()}}
 }
 \keyword{internal}

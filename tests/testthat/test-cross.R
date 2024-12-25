@@ -1,5 +1,3 @@
-library(testthat)
-
 # Helper Functions for Testing
 generate_random_data <- function(n) rnorm(n)
 generate_time_series <- function(n, frequency) ts(rnorm(n), frequency = frequency)

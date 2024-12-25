@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{.tsp}
 \alias{.tsp}
-\title{Retrieve the time series parameters of an object}
+\title{Retrieve Time Series Parameters}
 \usage{
 .tsp(x)
 }
 \arguments{
-\item{x}{An object to check for the \code{.tsp} attribute.}
+\item{x}{An R object.}
 }
 \value{
-The value of the \code{.tsp} attribute, or \code{NULL} if not present.
+The \code{.tsp} attribute or \code{NULL} if not present.
 }
 \description{
-Retrieves the \code{.tsp} attribute of the given object.
+Retrieves the \code{.tsp} attribute from an object.
 }
 \keyword{internal}

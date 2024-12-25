@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{.is_array}
 \alias{.is_array}
-\title{Check if an object is an array}
+\title{Check if an Object is an Array}
 \usage{
 .is_array(x)
 }
 \arguments{
-\item{x}{An object to check.}
+\item{x}{An R object.}
 }
 \value{
 \code{TRUE} if the object has a \code{.dim} attribute, \code{FALSE} otherwise.
 }
 \description{
-Determines if the object has a \code{.dim} attribute, indicating it is an array.
+Determines if an object has a \code{.dim} attribute, indicating it is an array.
 }
 \keyword{internal}

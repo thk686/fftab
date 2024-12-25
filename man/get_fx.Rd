@@ -23,6 +23,8 @@ get_fx_norm(x, norm = FALSE)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object containing FFT results.}
+
+\item{norm}{Return normalized coefficients if TRUE.}
 }
 \value{
 The requested components:

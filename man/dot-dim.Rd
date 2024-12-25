@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{.dim}
 \alias{.dim}
-\title{Retrieve the dimensions of an object}
+\title{Retrieve Object Dimensions}
 \usage{
 .dim(x)
 }
 \arguments{
-\item{x}{An object to check for the \code{.dim} attribute.}
+\item{x}{An R object to check for dimensions.}
 }
 \value{
-The value of the \code{.dim} attribute, or \code{NULL} if not present.
+The \code{.dim} attribute or \code{NULL} if not present.
 }
 \description{
-Retrieves the \code{.dim} attribute of the given object.
+Retrieves the \code{.dim} attribute from an object.
 }
 \keyword{internal}

@@ -1,5 +1,3 @@
-library(testthat)
-
 test_that("tidy_fft.default computes FFT results correctly", {
   x <- c(1, 0, -1, 0)
 

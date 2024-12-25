@@ -1,39 +1,3 @@
-#' Compute the number of samples in an input
-#'
-#' This helper function determines the number of samples in the input object.
-#' For a vector, it returns its length. For a matrix or data frame, it returns
-#' the number of rows.
-#'
-#' @param x An input object (scalar, vector, matrix, or data frame).
-#' @return An integer representing the number of samples (rows) in the input
-#'   object.
-#' @keywords internal
-.num_samples <- function(x) {
-  input_len <- length(unlist(x))
-  if (input_len == 0) {
-    stop("Input must not be empty")
-  }
-  floor(ifelse(input_len == 1, x, NROW(x)))
-}
-
-#' Compute Fourier frequencies for default inputs
-#'
-#' Computes normalized Fourier frequencies for scalar or vector inputs, which
-#' are evenly spaced between -0.5 and 0.5.
-#'
-#' @param x A scalar or vector representing the length of the sequence.
-#' @return A numeric vector containing the normalized Fourier frequencies.
-#' @keywords internal
-.fourier_frequencies <- function(x) {
-  n <- .num_samples(x)
-  stopifnot(n > 0)
-  if (n == 1) {
-    return(0)
-  }
-  k <- 0:(n - 1)
-  ifelse(k <= n / 2, k, k - n) / n
-}
-
 #' Compute Fourier Frequencies
 #'
 #' Computes Fourier frequencies for various types of inputs, such as scalars,
@@ -105,11 +69,39 @@ fourier_frequencies.array <- function(x) {
   rev(tidyr::expand_grid(!!!ff))
 }
 
+#' Remove DC Component and Symmetric Frequencies
+#'
+#' These functions operate on `tidy_fft` objects to manipulate and filter Fourier coefficients.
+#'
+#' - `remove_dc()`: Removes the DC (zero-frequency) component.
+#' - `remove_symmetric()`: Removes symmetric (negative frequency) components, retaining only non-negative frequencies.
+#'
+#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
+#'
+#' @return A `tidy_fft` object with filtered coefficients.
+#'
+#' @details
+#' - **`remove_dc()`**: Filters out rows where any `.dim_*` column has a value of `0`. This effectively removes the DC component, which represents the mean value of the original signal.
+#' - **`remove_symmetric()`**:
+#'   - For real-valued signals, it filters out negative frequencies, retaining only non-negative ones (`.dim_1 >= 0`).
+#'   - For complex-valued signals, no filtering is applied as symmetry isn't relevant.
+#'   - For arrays, this function is not yet implemented and will raise an error if called.
+#'
+#' @seealso
+#' - [dplyr::filter()]
+#' - [tidy_fft()]
+#'
+#' @examples
+#' fft_x <- tidy_fft(sin(seq(0, 2 * pi, length.out = 128)))
+#' fft_no_dc <- remove_dc(fft_x)
+#' fft_no_sym <- remove_symmetric(fft_x)
+#'
 #' @export
 remove_dc <- function(x) {
   dplyr::filter(x, dplyr::if_any(dplyr::starts_with(".dim_"), ~ . != 0))
 }
 
+#' @rdname remove_dc
 #' @export
 remove_symmetric <- function(x) {
   if (.is_complex(x)) {

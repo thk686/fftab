@@ -3,6 +3,7 @@
 #' These utility functions extract specific components from a `tidy_fft` object.
 #'
 #' @param x A `tidy_fft` object containing FFT results.
+#' @param norm Return normalized coefficients if TRUE.
 #'
 #' @return The requested components:
 #' - **`get_fx`**: A complex vector of Fourier coefficients (`fx`).
