@@ -10,8 +10,10 @@
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-dim.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-fft.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-fourier_frequencies.html</loc></url>
+<url><loc>https://thk686.github.io/tidyfft/reference/dot-get_dim_cols.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-is_array.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-is_complex.html</loc></url>
+<url><loc>https://thk686.github.io/tidyfft/reference/dot-is_normalized.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-is_ts.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-num_samples.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-size.html</loc></url>
