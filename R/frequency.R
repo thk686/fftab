@@ -104,3 +104,20 @@ fourier_frequencies.array <- function(x) {
   }
   rev(tidyr::expand_grid(!!!ff))
 }
+
+#' @export
+remove_dc <- function(x) {
+  dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . != 0))
+}
+
+#' @export
+remove_symmetric <- function(x) {
+  if (.is_complex(x)) {
+    return(x)
+  }
+  if (.is_array(x)) {
+    .NotYetImplemented()
+  } else {
+    dplyr::filter(x, dim_1 >= 0)
+  }
+}

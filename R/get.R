@@ -61,11 +61,19 @@ get_arg <- function(x) {
 
 #' @rdname get_fx
 #' @export
-get_fx_norm <- function(x) {
-  if (.is_normalized(x)) {
-    get_fx(x)
+get_fx_norm <- function(x, norm = FALSE) {
+  if (norm) {
+    if (.is_normalized(x)) {
+      get_fx(x)
+    } else {
+      get_fx(x) / .size(x)
+    }
   } else {
-    get_fx(x) / .size(x)
+    if (.is_normalized(x)) {
+      .size(x) * get_fx(x)
+    } else {
+      get_fx(x)
+    }
   }
 }
 

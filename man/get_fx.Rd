@@ -19,7 +19,7 @@ get_mod(x)
 
 get_arg(x)
 
-get_fx_norm(x)
+get_fx_norm(x, norm = FALSE)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object containing FFT results.}

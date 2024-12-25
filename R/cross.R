@@ -87,47 +87,29 @@ cross_spec.array <- function(a, b, norm = FALSE, conj = TRUE) {
 #' @export
 cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
   stopifnot(nrow(a) == nrow(b))
-  fx_a <- if (norm) {
-    get_fx_norm(a)
-  } else {
-    get_fx(a)
-  }
-  fx_b <- if (norm) {
-    get_fx_norm(b)
-  } else {
-    get_fx(b)
-  }
+  fx_a <- get_fx_norm(a, norm)
+  fx_b <- get_fx_norm(b, norm)
   if (conj) {
     fx_b <- Conj(fx_b)
   }
   .get_dim_cols(a) |>
     tibble::add_column(fx = fx_a * fx_b) |>
-    structure(
-      .is_normalized = norm,
-      .is_complex = .is_complex(a) | .is_complex(b)
-    )
+    structure(.is_normalized = norm,
+              .is_complex = .is_complex(a) | .is_complex(b))
 }
 
-.variance <- function(x) {
-  to_polr(x) |>
-    remove_dc() |>
-    dplyr::mutate(mod = mod^2) |>
-    get_mod() |>
-    sum() / .size(x)^2
-}
-
-lagged_cross_correlation <- function(a, b) {
+phase_diff <- function(a, b) {
   fa <- tidy_fft(a)
   fb <- tidy_fft(b)
   phase_diff <- cross_spec(fb, fa) |>
-    remove_symmetric() |>
-    remove_dc() |>
     to_polr() |>
     dplyr::mutate(arg = mod * arg / sum(mod)) |>
     get_arg() |>
     sum()
-  fb <- shift_phase(fb, phase_shift)
-  cor <- cross_spec(fa, fb, norm = TRUE) |> get_re() |> sum()
-  cor <- cor / sqrt(.variance(fa), .variance(fb))
-  c(phase_shift, cor)
+  fb <- shift_phase(fb, phase_diff)
+  cor <- cross_spec(fa, fb, norm = TRUE) |>
+    get_re() |>
+    sum()
+  cor <- cor / sqrt(.variance(fa) * .variance(fb))
+  c(phase_diff, cor)
 }

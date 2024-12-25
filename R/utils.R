@@ -1,7 +1,28 @@
 # Declare .data as a global variable to avoid R CMD check NOTE
 utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "frequency"))
 
+#' Compute the Fast Fourier Transform (FFT) of a Vector
+#'
+#' This function computes the Fast Fourier Transform (FFT) of a numeric vector.
+#' Optionally, it normalizes the result by dividing it by the length of the input vector.
+#'
+#' @param x A numeric vector representing the input signal to transform.
+#' @param norm A logical value indicating whether to normalize the FFT output
+#'             by dividing it by the length of the input vector. Default is `FALSE`.
+#'
+#' @return A complex vector representing the FFT of the input signal.
+#'
+#' @details
+#' The function wraps around the base R `stats::fft` function and provides an
+#' option for normalization.
+#'
+#' @examples
+#' x <- c(1, 2, 3, 4)
+#' .fft(x)
+#' .fft(x, norm = TRUE)
+#'
 #' @keywords internal
+#' @importFrom stats fft
 .fft <- function(x, norm = FALSE) {
   if (norm) {
     stats::fft(x) / length(x)
@@ -10,6 +31,7 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
   }
 }
 
+#' @keywords internal
 .get_dim_cols <- function(x) {
   dplyr::select(x, dplyr::starts_with("dim_"))
 }
@@ -87,7 +109,16 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 
 #' @keywords internal
 .frequency <- function(x) {
-  .tsp(x)[3]
+  if (.is_ts(x)) {
+    .tsp(x)[3]
+    } else {
+      1
+    }
+}
+
+#' @keywords internal
+.nyquist <- function(x) {
+  .frequency(x) / 2
 }
 
 #' Convert an Object to a Tidy FFT Object
@@ -107,7 +138,6 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
 #'   attributes provided in `...`.
 #' @keywords internal
 .as_tidy_fft_obj <- function(x, .is_normalized, .is_complex, ...) {
-  x <- tibble::as_tibble(x)
   structure(x,
     ...,
     .size = nrow(x),
@@ -131,33 +161,8 @@ utils::globalVariables(c(".data", "arg", "dim_1", "fx", "im", "mod", "re", "freq
   stop("Invalid representation.")
 }
 
-#' @export
-remove_dc <- function(x) {
-  dplyr::filter(x, dplyr::if_any(dplyr::starts_with("dim_"), ~ . != 0))
-}
-
-#' @export
-remove_symmetric <- function(x) {
-  if (.is_complex(x)) {
-    return(x)
-  }
-  if (.is_array(x)) {
-    .NotYetImplemented()
-  } else {
-    dplyr::filter(x, dim_1 >= 0)
-  }
-}
-
-.nyquist <- function(x) {
-  if (.is_ts(x)) {
-    .frequency(x) / 2
-  } else {
-    0.5
-  }
-}
-
-#' @export
-shift_phase <- function(x, shift) {
+#' @keywords internal
+.shift_phase <- function(x, shift) {
   if (.is_array(x)) {
     .NotYetImplemented()
   } else {
@@ -178,20 +183,13 @@ shift_phase <- function(x, shift) {
   }
 }
 
-#' Plot the modulus of FFT results
-#'
-#' Plots the modulus of the FFT results against the frequencies.
-#'
-#' @param x A `tidy_fft` object.
-#' @param ... passed to ggplot.
-#' @exportS3Method graphics::plot
-plot.tidy_fft <- function(x, ...) {
+#' @keywords internal
+.variance <- function(x) {
   to_polr(x) |>
-    ggplot2::ggplot(...) +
-    ggplot2::aes(x = .data$dim_1, y = .data$mod) +
-    ggplot2::geom_line() +
-    ggplot2::ylab("modulus") +
-    ggplot2::theme_classic()
+    remove_dc() |>
+    dplyr::mutate(mod = mod^2) |>
+    get_mod() |>
+    sum() / .size(x)^2
 }
 
 # .gen_indices <- function(dims) {
@@ -228,6 +226,3 @@ plot.tidy_fft <- function(x, ...) {
 #   unique_indices
 # }
 
-wrap <- function(x) {
-  (x + 0.5) %% 0.5
-}
