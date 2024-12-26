@@ -348,7 +348,6 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #' - [cross_spec()]
 #' - [remove_dc()]
 #' - [get_re()]
-#' - [.variance()]
 #'
 #' @keywords internal
 .correlation <- function(a, b) {

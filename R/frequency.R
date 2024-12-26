@@ -81,7 +81,7 @@ fourier_frequencies.array <- function(x) {
 #' @return A `tidy_fft` object with filtered coefficients.
 #'
 #' @details
-#' - **`remove_dc()`**: Filters out rows where any `.dim_*` column has a value of `0`. This effectively removes the DC component, which represents the mean value of the original signal.
+#' - **`remove_dc()`**: Filters out rows where all `.dim_*` column has a value of `0`. This removes the DC component, which represents the mean value of the original signal.
 #' - **`remove_symmetric()`**:
 #'   - For real-valued signals, it filters out negative frequencies, retaining only non-negative ones (`.dim_1 >= 0`).
 #'   - For complex-valued signals, no filtering is applied as symmetry isn't relevant.

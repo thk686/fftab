@@ -121,8 +121,6 @@ cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
 #' @seealso
 #' - [tidy_fft()]
 #' - [cross_spec()]
-#' - [.shift_phase()]
-#' - [.variance()]
 #'
 #' @examples
 #' signal_a <- sin(seq(0, 2 * pi, length.out = 128))
