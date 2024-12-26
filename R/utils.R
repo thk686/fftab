@@ -39,7 +39,6 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #' @return The input object `x`, with the `tidy_fft` class and any additional
 #'   attributes provided in `...`.
 #'
-#' @seealso [dplyr::tibble()]
 #' @keywords internal
 .as_tidy_fft_obj <- function(x, .is_normalized, .is_complex, ...) {
   structure(x,
@@ -95,10 +94,6 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #'
 #' @return A data frame containing only the columns that start with `.dim_`.
 #'
-#' @details
-#' Uses `dplyr::select()` with `dplyr::starts_with()` to filter columns.
-#'
-#' @seealso [dplyr::select()], [dplyr::starts_with()]
 #' @keywords internal
 .get_dim_cols <- function(x) {
   dplyr::select(x, dplyr::starts_with(".dim_"))
@@ -113,7 +108,6 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #' @return A logical value indicating whether the `.is_normalized` attribute is `TRUE`.
 #'         Returns `NULL` if the attribute does not exist.
 #'
-#' @seealso [.as_tidy_fft_obj()]
 #' @keywords internal
 .is_normalized <- function(x) {
   attr(x, ".is_normalized")
@@ -198,7 +192,6 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #' @param x A `tidy_fft` object or time series.
 #'
 #' @return The frequency value or `1` if not a time series.
-#' @seealso [.is_ts()]
 #' @keywords internal
 .frequency <- function(x) {
   if (.is_ts(x)) {
@@ -307,17 +300,6 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #' Removing symmetric components ensures accurate phase alignment, avoiding ambiguity caused
 #' by redundant negative frequencies.
 #'
-#' @seealso
-#' - [cross_spec()]
-#' - [to_polr()]
-#' - [remove_symmetric()]
-#' - [get_arg()]
-#'
-#' @examples
-#' fft_a <- tidy_fft(sin(seq(0, 2 * pi, length.out = 128)))
-#' fft_b <- tidy_fft(sin(seq(0, 2 * pi, length.out = 128) + pi / 4))
-#' phase_difference <- .phase_diff(fft_a, fft_b)
-#'
 #' @keywords internal
 .phase_diff <- function(a, b) {
   cross_spec(b, a) |>
@@ -344,11 +326,6 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #'
 #' Normalization ensures that the correlation value lies between -1 and 1.
 #'
-#' @seealso
-#' - [cross_spec()]
-#' - [remove_dc()]
-#' - [get_re()]
-#'
 #' @keywords internal
 .correlation <- function(a, b) {
   cross_spec(a, b, norm = TRUE) |>
@@ -357,37 +334,193 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
     sum() / sqrt(.variance(a) * .variance(b))
 }
 
-# .gen_indices <- function(dims) {
-#   ff <- lapply(dims, seq_len) # Generate sequences for each dimension
-#   do.call(expand.grid, ff) # Expand the grid in row-major order
-# }
-#
-# # Function to compute conjugate indices with modulo
-# find_cc_2d <- function(i, j, ni, nj) {
-#   c((ni - i + 1) %% ni + 1, (nj - j + 1) %% nj + 1)
-# }
-#
-# # Function to check if an entry is unique
-# is_unique <- function(i, j, ni, nj) {
-#   # Row-major index of current entry
-#   k <- (i - 1) * nj + j
-#   # Row-major index of its conjugate
-#   cc <- find_cc_2d(i, j, ni, nj)
-#   kc <- (cc[1] - 1) * nj + cc[2]
-#   # Keep if kc >= k
-#   kc >= k
-# }
-#
-# # Filter unique indices in a matrix of size ni x nj
-# filter_unique <- function(ni, nj) {
-#   # Generate all indices
-#   indices <- .gen_indices(c(4, 4))
-#
-#   # Apply uniqueness check
-#   unique_indices <- indices[apply(indices, 1, function(row) {
-#     is_unique(row[1], row[2], ni, nj)
-#   }), ]
-#
-#   unique_indices
-# }
+#' @keywords internal
+.sort_dims <- function(x) {
+  dplyr::arrange(x, dplyr::pick(dplyr::starts_with(".dim_")))
+}
+
+#' @keywords internal
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    if (dims[1] %% 2 == 0) {
+      (dims[1] / 2 + 1) * prod(dims[-1])
+    } else {
+      ceiling((dims[1] + 1) / 2) * prod(dims[-1])
+    }
+  } else {
+    ceiling((.size(x) + 1) / 2)
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]
+    m <- prod(dims[-1])
+
+    if (n %% 2 == 0) {
+      (n / 2) * m + (m / 2)
+    } else {
+      ceiling((n + 1) / 2) * m
+    }
+  } else {
+    ceiling((.size(x) + 1) / 2)
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]
+    m <- prod(dims[-1])
+
+    if (n %% 2 == 0) {
+      as.integer((n / 2) * m + (m / 2))
+    } else {
+      as.integer(ceiling((n + 1) / 2) * m)
+    }
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]
+    m <- prod(dims[-1])
+
+    if (n %% 2 == 0) {
+      (n / 2 + 1) * m - (m / 2)
+    } else {
+      ceiling((n + 1) / 2) * m
+    }
+  } else {
+    ceiling((.size(x) + 1) / 2)
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]
+    m <- prod(dims[-1])
+
+    # Count from DC row to the bottom
+    as.integer((n / 2 + 1) * m)
+  } else {
+    ceiling((.size(x) + 1) / 2)
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]
+    m <- prod(dims[-1])
+
+    if (n %% 2 == 0) {
+      as.integer((n / 2) * m + 1)
+    } else {
+      as.integer(ceiling(n / 2) * m)
+    }
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]
+    m <- prod(dims[-1])  # Handles multi-dimensional arrays correctly
+
+    as.integer(ceiling((n + 1) / 2) * m)
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]  # Rows in the first dimension
+    m <- prod(dims[-1])  # Product of remaining dimensions (columns or higher dims)
+
+    # Count rows from the DC row onward
+    as.integer(ceiling(n / 2) * m)
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]
+    m <- prod(dims[-1])
+
+    as.integer((n - floor(n / 2)) * m)
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]  # Rows in first dimension
+    m <- prod(dims[-1])  # Product of remaining dimensions
+
+    # Count rows from DC downward with Nyquist adjustment
+    as.integer((n - floor(n / 2)) * m - (m / 2) * (n %% 2 == 0))
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    dims <- .dim(x)
+    n <- dims[1]  # Number of rows in the first dimension
+    m <- prod(dims[-1])  # Product of remaining dimensions
+
+    as.integer((ceiling(n / 2) * m) - (m / 2))
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+.n_asymmetric <- function(x) {
+  if (.is_array(x)) {
+    if (length(.dim(x)) == 2) {
+      dims <- .dim(x)
+      n <- dims[1]
+      m <- dims[2]
+
+      n_gtz <- ceiling((n + 1) / 2) - 1
+      m_gtz <- ceiling((m + 1) / 2) - 1
+
+      1 + m_gtz + n_gtz * m
+
+    } else {
+      .NotYetImplemented()
+    }
+  } else {
+    as.integer(ceiling((.size(x) + 1) / 2))
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

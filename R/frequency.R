@@ -74,18 +74,17 @@ fourier_frequencies.array <- function(x) {
 #' These functions operate on `tidy_fft` objects to manipulate and filter Fourier coefficients.
 #'
 #' - `remove_dc()`: Removes the DC (zero-frequency) component.
-#' - `remove_symmetric()`: Removes symmetric (negative frequency) components, retaining only non-negative frequencies.
+#' - `remove_symmetric()`: Removes symmetric, complex-conjugate frequencies.
 #'
 #' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
 #'
 #' @return A `tidy_fft` object with filtered coefficients.
 #'
 #' @details
-#' - **`remove_dc()`**: Filters out rows where all `.dim_*` column has a value of `0`. This removes the DC component, which represents the mean value of the original signal.
+#' - **`remove_dc()`**: Filters out rows where all `.dim_*` columns have a value of `0`.
 #' - **`remove_symmetric()`**:
-#'   - For real-valued signals, it filters out negative frequencies, retaining only non-negative ones (`.dim_1 >= 0`).
+#'   - For real-valued signals, it filters out redundant, complex-conjugate frequencies
 #'   - For complex-valued signals, no filtering is applied as symmetry isn't relevant.
-#'   - For arrays, this function is not yet implemented and will raise an error if called.
 #'
 #' @seealso
 #' - [dplyr::filter()]
@@ -107,9 +106,22 @@ remove_symmetric <- function(x) {
   if (.is_complex(x)) {
     return(x)
   }
-  if (.is_array(x)) {
-    .NotYetImplemented()
-  } else {
-    dplyr::filter(x, .dim_1 >= 0)
+  .sort_dims(x) |>
+    dplyr::slice_tail(n = .n_asymmetric(x))
+}
+
+#' @rdname remove_dc
+#' @export
+restore_symmetric <- function(x) {
+  if (.is_complex(x)) {
+    return(x)
   }
+  trail_dims <- ifelse(.is_array(x), prod(.dim(x)[-1]), 0)
+  last_row <- nrow(x) - trail_dims * ((.size(x) + 1) %% 2)
+  to_cplx(x) |>
+    .sort_dims() |>
+    dplyr::slice(2:last_row) |>
+    dplyr::mutate(dplyr::across(dplyr::starts_with(".dim_"), ~ -.),
+                  fx = Conj(fx)) |>
+    dplyr::bind_rows(to_cplx(x))
 }
