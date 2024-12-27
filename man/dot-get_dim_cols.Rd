@@ -15,10 +15,4 @@ A data frame containing only the columns that start with \code{.dim_}.
 \description{
 Selects columns from a data frame whose names start with \code{.dim_}.
 }
-\details{
-Uses \code{dplyr::select()} with \code{dplyr::starts_with()} to filter columns.
-}
-\seealso{
-\code{\link[dplyr:select]{dplyr::select()}}, \code{\link[dplyr:reexports]{dplyr::starts_with()}}
-}
 \keyword{internal}

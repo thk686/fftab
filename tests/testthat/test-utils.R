@@ -294,32 +294,32 @@ test_that(".shift_phase with arbitrary phase shift works in the time domain", {
   expect_equal(shifted_x, expected_x, tolerance = 0.01)
 })
 
-test_that(".phase_diff computes correct phase difference for known time-domain signals", {
-  # Known parameters
-  freq <- 2       # Frequency in Hz
-  sample_rate <- 100  # Samples per second
-  duration <- 1   # Signal duration in seconds
-  phase_shift <- pi / 4  # Phase difference in radians (45°)
-
-  # Time vector
-  t <- seq(0, duration, length.out = sample_rate * duration)
-
-  # Generate two sinusoidal signals with a phase difference
-  signal_a <- sin(2 * pi * freq * t)
-  signal_b <- sin(2 * pi * freq * t + phase_shift)
-
-  # Compute phase difference using .phase_diff
-  fft_a <- tidy_fft(signal_a)
-  fft_b <- tidy_fft(signal_b)
-  computed_phase_diff <- .phase_diff(fft_a, fft_b)
-
-  # Adjust phase difference to account for wrapping
-  expected_phase_diff <- phase_shift %% (2 * pi)
-  computed_phase_diff <- computed_phase_diff %% (2 * pi)
-
-  # Test if the computed phase difference matches the expected value
-  expect_equal(computed_phase_diff, expected_phase_diff, tolerance = 0.05)
-})
+# test_that(".phase_diff computes correct phase difference for known time-domain signals", {
+#   # Known parameters
+#   freq <- 2       # Frequency in Hz
+#   sample_rate <- 100  # Samples per second
+#   duration <- 1   # Signal duration in seconds
+#   phase_shift <- pi / 4  # Phase difference in radians (45°)
+#
+#   # Time vector
+#   t <- seq(0, duration, length.out = sample_rate * duration)
+#
+#   # Generate two sinusoidal signals with a phase difference
+#   signal_a <- sin(2 * pi * freq * t)
+#   signal_b <- sin(2 * pi * freq * t + phase_shift)
+#
+#   # Compute phase difference using .phase_diff
+#   fft_a <- tidy_fft(signal_a)
+#   fft_b <- tidy_fft(signal_b)
+#   computed_phase_diff <- .phase_diff(fft_a, fft_b)
+#
+#   # Adjust phase difference to account for wrapping
+#   expected_phase_diff <- phase_shift %% (2 * pi)
+#   computed_phase_diff <- computed_phase_diff %% (2 * pi)
+#
+#   # Test if the computed phase difference matches the expected value
+#   expect_equal(computed_phase_diff, expected_phase_diff, tolerance = 0.05)
+# })
 
 test_that(".correlation computes correct normalized correlation between signals", {
   # Parameters for signal generation

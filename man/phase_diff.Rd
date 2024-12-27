@@ -46,7 +46,5 @@ phase_diff(signal_a, signal_b)
 \itemize{
 \item \code{\link[=tidy_fft]{tidy_fft()}}
 \item \code{\link[=cross_spec]{cross_spec()}}
-\item \code{\link[=.shift_phase]{.shift_phase()}}
-\item \code{\link[=.variance]{.variance()}}
 }
 }

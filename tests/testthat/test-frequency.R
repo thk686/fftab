@@ -30,8 +30,7 @@ test_that("fourier_frequencies.default computes correctly", {
 test_that("fourier_frequencies.ts scales frequencies correctly", {
   ts_obj <- ts(c(1, 2, 3, 4, 5, 6),
                start = c(2000, 1),
-               frequency = 12
-  )
+               frequency = 12)
 
   # Check scaled frequencies
   freqs <- fourier_frequencies.ts(ts_obj)
@@ -69,11 +68,7 @@ test_that("fourier_frequencies.array computes frequencies for arrays", {
 # FFT vs fourier_frequencies Tests
 # ---------------------------
 test_that("fft(x) matches fourier frequencies for arrays of varying sizes", {
-  dims_list <- list(
-    c(2, 3),   # 2D array
-    c(3, 4, 5), # 3D array
-    c(1, 5, 2, 3) # 4D array
-  )
+  dims_list <- list(c(2, 3), c(3, 4, 5), c(1, 5, 2, 3))
 
   for (dims in dims_list) {
     # Create an array with the specified dimensions
@@ -86,16 +81,14 @@ test_that("fft(x) matches fourier frequencies for arrays of varying sizes", {
     # Check that the order matches
     expect_equal(length(fft_res),
                  nrow(dim_grid),
-                 info = paste("Length mismatch for dims", toString(dims))
-    )
+                 info = paste("Length mismatch for dims", toString(dims)))
 
     # Verify that the frequencies match expected combinations
     expected_freqs <- rev(do.call(tidyr::expand_grid, lapply(rev(dims), .fourier_frequencies)))
     names(expected_freqs) <- names(dim_grid)
     expect_equal(dim_grid,
                  expected_freqs,
-                 info = paste("Frequency mismatch for dims", toString(dims))
-    )
+                 info = paste("Frequency mismatch for dims", toString(dims)))
   }
 })
 
@@ -124,22 +117,26 @@ test_that("Impulse position matches expected frequency for row sine wave", {
 # ---------------------------
 # Column Sine Wave Impulse Position
 # ---------------------------
-test_that("Impulse position matches expected frequency for column sine wave", {
-  dims <- c(32, 40)
-  dim_col <- 10
-  t <- seq(0, 2 * pi, length.out = dims[2])
-  x <- matrix(sin(dim_col * t), nrow = dims[1], ncol = dims[2], byrow = TRUE)
+test_that("Impulse position matches expected frequency for column sine wave",
+          {
+            dims <- c(32, 40)
+            dim_col <- 10
+            t <- seq(0, 2 * pi, length.out = dims[2])
+            x <- matrix(sin(dim_col * t),
+                        nrow = dims[1],
+                        ncol = dims[2],
+                        byrow = TRUE)
 
-  # Perform FFT
-  y <- tidy_fft(x) |> to_polr()
+            # Perform FFT
+            y <- tidy_fft(x) |> to_polr()
 
-  # Find max impulse
-  impulse <- y[which.max(y$mod), ]
+            # Find max impulse
+            impulse <- y[which.max(y$mod), ]
 
-  # Assertions
-  expect_equal(impulse$.dim_1, 0, tolerance = 1e-6)
-  expect_equal(impulse$.dim_2, dim_col / dims[2], tolerance = 1e-6)
-})
+            # Assertions
+            expect_equal(impulse$.dim_1, 0, tolerance = 1e-6)
+            expect_equal(impulse$.dim_2, dim_col / dims[2], tolerance = 1e-6)
+          })
 
 
 # ---------------------------
@@ -163,4 +160,20 @@ test_that("Impulse position matches expected frequency for array", {
   expect_equal(impl$.dim_1, 1 / clen[1], tolerance = 1e-6)
   expect_equal(impl$.dim_2, 1 / clen[2], tolerance = 1e-6)
   expect_equal(impl$.dim_3, 1 / clen[3], tolerance = 1e-6)
+})
+
+test_that("Removing symmetric coefficients works correctly", {
+  x <- array(rnorm(60), dim = c(3, 4, 5)) |> tidy_fft(norm = T) |> .sort_dims()
+  i <- .find_dc_row(x)
+  fx <- get_fx(x)
+  expect_true(all(Conj(fx[1:(i - 1)]) %in% fx[i:length(fx)]))
+  asy <- remove_symmetric(x) |> .get_dim_cols() |> as.matrix()
+  sym <- x[1:(i - 1),] |> .get_dim_cols() |> as.matrix()
+  res <- TRUE
+  for (i in 1:nrow(sym)) {
+    for (j in 1:nrow(asy)) {
+      res <- res & .lt(sym[i,], asy[j,])
+    }
+  }
+  expect_true(res)
 })

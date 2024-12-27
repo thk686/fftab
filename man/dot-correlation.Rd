@@ -24,12 +24,4 @@ variances of both signals.
 
 Normalization ensures that the correlation value lies between -1 and 1.
 }
-\seealso{
-\itemize{
-\item \code{\link[=cross_spec]{cross_spec()}}
-\item \code{\link[=remove_dc]{remove_dc()}}
-\item \code{\link[=get_re]{get_re()}}
-\item \code{\link[=.variance]{.variance()}}
-}
-}
 \keyword{internal}

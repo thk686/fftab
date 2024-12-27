@@ -23,7 +23,4 @@ attributes provided in \code{...}.
 \description{
 Converts an object into a \code{tidy_fft} object with additional metadata attributes.
 }
-\seealso{
-\code{\link[dplyr:reexports]{dplyr::tibble()}}
-}
 \keyword{internal}

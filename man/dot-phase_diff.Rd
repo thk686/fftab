@@ -15,19 +15,15 @@
 A numeric value representing the \strong{phase difference} (in radians) between the two signals.
 }
 \description{
-Computes the phase difference between two signals based on their cross-spectrum.
+Computes the phase difference between two signals based on their cross-spectrum,
+with symmetric and redundant frequency components removed.
 }
 \details{
-This function computes the \strong{cross-spectrum} of two signals, converts it into polar representation,
-weights the phase angles by their magnitudes, and calculates the weighted average phase difference.
+This function computes the \strong{cross-spectrum} of two signals, removes symmetric and redundant
+frequency components, converts the result into polar representation, weights the phase angles
+by their magnitudes, and calculates the weighted average phase difference.
 
-This approach emphasizes phase contributions from higher magnitude components.
-}
-\seealso{
-\itemize{
-\item \code{\link[=cross_spec]{cross_spec()}}
-\item \code{\link[=to_polr]{to_polr()}}
-\item \code{\link[=get_arg]{get_arg()}}
-}
+Removing symmetric components ensures accurate phase alignment, avoiding ambiguity caused
+by redundant negative frequencies.
 }
 \keyword{internal}

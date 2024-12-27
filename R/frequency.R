@@ -106,22 +106,20 @@ remove_symmetric <- function(x) {
   if (.is_complex(x)) {
     return(x)
   }
-  .sort_dims(x) |>
-    dplyr::slice_tail(n = .n_asymmetric(x))
+  x <- .sort_dims(x)
+  i <- .find_dc_row(x)
+  dplyr::slice(x, i:nrow(x))
 }
 
 #' @rdname remove_dc
 #' @export
-restore_symmetric <- function(x) {
+split_symmetric <- function(x) {
   if (.is_complex(x)) {
     return(x)
   }
-  trail_dims <- ifelse(.is_array(x), prod(.dim(x)[-1]), 0)
-  last_row <- nrow(x) - trail_dims * ((.size(x) + 1) %% 2)
-  to_cplx(x) |>
-    .sort_dims() |>
-    dplyr::slice(2:last_row) |>
-    dplyr::mutate(dplyr::across(dplyr::starts_with(".dim_"), ~ -.),
-                  fx = Conj(fx)) |>
-    dplyr::bind_rows(to_cplx(x))
+  x <- .sort_dims(x)
+  i <- .find_dc_row(x)
+  list(symmetric = dplyr::slice(x, 1:(i - 1)),
+       asymmetric = dplyr::slice(x, i:nrow(x)))
 }
+

@@ -15,7 +15,4 @@ The frequency value or \code{1} if not a time series.
 \description{
 Retrieves the frequency of a time series object.
 }
-\seealso{
-\code{\link[=.is_ts]{.is_ts()}}
-}
 \keyword{internal}

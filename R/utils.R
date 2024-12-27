@@ -1,5 +1,15 @@
 # Declare .data as a global variable to avoid R CMD check NOTE
-utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "frequency", ".correlation"))
+utils::globalVariables(c(
+  ".data",
+  "arg",
+  ".dim_1",
+  "fx",
+  "im",
+  "mod",
+  "re",
+  "frequency",
+  ".correlation"
+))
 
 #' Compute the Fast Fourier Transform (FFT) of a Vector
 #'
@@ -41,12 +51,13 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #'
 #' @keywords internal
 .as_tidy_fft_obj <- function(x, .is_normalized, .is_complex, ...) {
-  structure(x,
-            ...,
-            .size = nrow(x),
-            .is_complex = .is_complex,
-            .is_normalized = .is_normalized,
-            class = c("tidy_fft", class(x))
+  structure(
+    x,
+    ...,
+    .size = nrow(x),
+    .is_complex = .is_complex,
+    .is_normalized = .is_normalized,
+    class = c("tidy_fft", class(x))
   )
 }
 
@@ -224,11 +235,13 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 #' @return The object in the specified representation format.
 #' @keywords internal
 .set_repr <- function(x, repr, .keep = "unused") {
-  switch(repr,
-         cplx = to_cplx(x, .keep = .keep),
-         rect = to_rect(x, .keep = .keep),
-         polr = to_polr(x, .keep = .keep),
-         stop("Invalid representation."))
+  switch(
+    repr,
+    cplx = to_cplx(x, .keep = .keep),
+    rect = to_rect(x, .keep = .keep),
+    polr = to_polr(x, .keep = .keep),
+    stop("Invalid representation.")
+  )
 }
 
 #' Shift Phase
@@ -340,35 +353,49 @@ utils::globalVariables(c(".data", "arg", ".dim_1", "fx", "im", "mod", "re", "fre
 }
 
 #' @keywords internal
-.n_asymmetric <- function(x) {
-  if (.is_array(x)) {
-    if (length(.dim(x)) == 2) {
-      dims <- .dim(x)
-      n <- dims[1]
-      m <- dims[2]
-
-      n_gtz <- ceiling((n + 1) / 2) - 1
-      m_gtz <- ceiling((m + 1) / 2) - 1
-
-      1 + m_gtz + n_gtz * m
-
-    } else {
-      .NotYetImplemented()
-    }
-  } else {
-    as.integer(ceiling((.size(x) + 1) / 2))
-  }
+.lt <- function(a, b) {
+  i <- which.max(a != b)
+  a[i] < b[i]
 }
 
+#' @keywords internal
+.gt <- function(a, b) {
+  i <- which.max(a != b)
+  a[i] > b[i]
+}
 
+#' @keywords internal
+.le <- function(a, b) {
+  i <- which.max(a != b)
+  a[i] <= b[i]
+}
 
+#' @keywords internal
+.ge <- function(a, b) {
+  i <- which.max(a != b)
+  a[i] >= b[i]
+}
 
-
-
-
-
-
-
-
-
-
+#' Binary search for the DC row in lexicographically sorted data
+#'
+#' @param df A tibble or data.frame with `.dim_*` columns sorted lexicographically.
+#' @return Row index of the DC component (0,0,...,0).
+#' @keywords internal
+.find_dc_row <- function(df) {
+  left <- 1
+  right <- nrow(df)
+  dim_cols <- .get_dim_cols(df)
+  zero_row <- rep(0, ncol(dim_cols))
+  while (left <= right) {
+    mid <- floor((left + right) / 2)
+    row <- dim_cols[mid, ]
+    if (all(row == zero_row)) {
+      return(mid)
+    } else if (.lt(row, zero_row)) {
+      left <- mid + 1
+    } else {
+      right <- mid - 1
+    }
+  }
+  1 # if not found, do not trim anything
+}

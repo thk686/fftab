@@ -3,11 +3,14 @@
 \name{remove_dc}
 \alias{remove_dc}
 \alias{remove_symmetric}
+\alias{split_symmetric}
 \title{Remove DC Component and Symmetric Frequencies}
 \usage{
 remove_dc(x)
 
 remove_symmetric(x)
+
+split_symmetric(x)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object containing Fourier coefficients and associated metadata.}
@@ -21,13 +24,12 @@ These functions operate on \code{tidy_fft} objects to manipulate and filter Four
 \details{
 \itemize{
 \item \code{remove_dc()}: Removes the DC (zero-frequency) component.
-\item \code{remove_symmetric()}: Removes symmetric (negative frequency) components, retaining only non-negative frequencies.
-\item \strong{\code{remove_dc()}}: Filters out rows where any \verb{.dim_*} column has a value of \code{0}. This effectively removes the DC component, which represents the mean value of the original signal.
+\item \code{remove_symmetric()}: Removes symmetric, complex-conjugate frequencies.
+\item \strong{\code{remove_dc()}}: Filters out rows where all \verb{.dim_*} columns have a value of \code{0}.
 \item \strong{\code{remove_symmetric()}}:
 \itemize{
-\item For real-valued signals, it filters out negative frequencies, retaining only non-negative ones (\code{.dim_1 >= 0}).
+\item For real-valued signals, it filters out redundant, complex-conjugate frequencies
 \item For complex-valued signals, no filtering is applied as symmetry isn't relevant.
-\item For arrays, this function is not yet implemented and will raise an error if called.
 }
 }
 }

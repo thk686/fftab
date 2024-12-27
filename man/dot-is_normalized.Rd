@@ -16,7 +16,4 @@ Returns \code{NULL} if the attribute does not exist.
 \description{
 Checks whether an object has the \code{.is_normalized} attribute.
 }
-\seealso{
-\code{\link[=.as_tidy_fft_obj]{.as_tidy_fft_obj()}}
-}
 \keyword{internal}
