@@ -91,18 +91,11 @@ transform of <code>b</code>. Default is <code>TRUE</code>.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object representing the cross-spectrum:</p><ul><li><p>For <code>default</code> and <code>tidy_fft</code> methods: A <code>tidy_fft</code> object.</p></li>
-<li><p>For <code>ts</code> objects: A <code>tidy_fft</code> object with <code>tsp</code> attributes inherited
+<li><p>For <code>ts</code> objects: A <code>tidy_fft</code> object with <code>.tsp</code> attributes inherited
 from <code>a</code>.</p></li>
-<li><p>For arrays: A <code>tidy_fft</code> object with <code>dim</code> attributes inherited
+<li><p>For arrays: A <code>tidy_fft</code> object with <code>.dim</code> attributes inherited
 from <code>a</code>.</p></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The <code>cross_spec</code> function is generic and has specialized methods for each
-input type. For <code>ts</code> and array inputs, additional attributes such as
-<code>tsp</code> or <code>dim</code> are preserved. The <code>%cfft%</code> operator provides a shorthand
-for calling this function.</p>
-    </div>
     <div class="section level2">
     <h2 id="methods-by-class-">Methods (by class)<a class="anchor" aria-label="anchor" href="#methods-by-class-"></a></h2>
 
@@ -122,20 +115,32 @@ Performs the cross-frequency transform directly using the Fourier transforms of 
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example with numeric vectors</span></span></span>
-<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">cross_spec</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">cross_spec</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span>, norm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .dim_1 fx                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;cpl&gt;</span>                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  0      0.08308948+0.00000000i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  0.125  0.10985200-0.12520060i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  0.25   0.08367576-0.08516305i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  0.375  0.03773447-0.06840483i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  0.5   -0.47643722+0.00000000i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> -<span style="color: #BB0000;">0.375</span>  0.03773447+0.06840483i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> -<span style="color: #BB0000;">0.25</span>   0.08367576+0.08516305i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> -<span style="color: #BB0000;">0.125</span>  0.10985200+0.12520060i</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example with time series</span></span></span>
-<span class="r-in"><span><span class="va">ts_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ts_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">cross_spec</span><span class="op">(</span><span class="va">ts_a</span>, <span class="va">ts_b</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example with `tidy_fft` objects</span></span></span>
-<span class="r-in"><span><span class="va">tidy_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">tidy_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">cross_spec</span><span class="op">(</span><span class="va">tidy_a</span>, <span class="va">tidy_b</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">cross_spec</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .dim_1 fx                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;cpl&gt;</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>    0     0.2644164+0.0000000i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>    0.5  -0.8349846-1.3687810i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>    1    -0.1098456-1.7697982i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>    1.5 -11.9966929+0.1242991i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>    2    -2.3836460+0.0000000i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>   -<span style="color: #BB0000;">1.5</span> -11.9966929-0.1242991i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>   -<span style="color: #BB0000;">1</span>    -0.1098456+1.7697982i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span>   -<span style="color: #BB0000;">0.5</span>  -0.8349846+1.3687810i</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

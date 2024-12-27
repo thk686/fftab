@@ -59,9 +59,7 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p><code>remove_dc()</code>: Removes the DC (zero-frequency) component.</p></li>
-<li><p><code>remove_symmetric()</code>: Removes symmetric, complex-conjugate frequencies.</p></li>
-<li><p><strong><code>remove_dc()</code></strong>: Filters out rows where all <code>.dim_*</code> columns have a value of <code>0</code>.</p></li>
+<ul><li><p><strong><code>remove_dc()</code></strong>: Filters out rows where all <code>.dim_*</code> columns have a value of <code>0</code>.</p></li>
 <li><p><strong><code>remove_symmetric()</code></strong>:</p><ul><li><p>For real-valued signals, it filters out redundant, complex-conjugate frequencies</p></li>
 <li><p>For complex-valued signals, no filtering is applied as symmetry isn't relevant.</p></li>
 </ul></li>
@@ -76,9 +74,28 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fft_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>, length.out <span class="op">=</span> <span class="fl">128</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fft_no_dc</span> <span class="op">&lt;-</span> <span class="fu">remove_dc</span><span class="op">(</span><span class="va">fft_x</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fft_no_sym</span> <span class="op">&lt;-</span> <span class="fu">remove_symmetric</span><span class="op">(</span><span class="va">fft_x</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">9</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">remove_dc</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .dim_1 .dim_2 fx                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;cpl&gt;</span>               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  0.333  0      2.323829-0.6833561i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> -<span style="color: #BB0000;">0.333</span>  0      2.323829+0.6833561i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  0      0.333 -4.835117+0.5116341i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  0.333  0.333  1.061072+1.7263607i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> -<span style="color: #BB0000;">0.333</span>  0.333  2.836266+0.4487876i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>  0     -<span style="color: #BB0000;">0.333</span> -4.835117-0.5116341i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>  0.333 -<span style="color: #BB0000;">0.333</span>  2.836266-0.4487876i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> -<span style="color: #BB0000;">0.333</span> -<span style="color: #BB0000;">0.333</span>  1.061072-1.7263607i</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">9</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">remove_symmetric</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .dim_1 .dim_2 fx                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;cpl&gt;</span>                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  0      0      5.0619481+0.0000000i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  0      0.333 -2.5730959-2.4707925i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  0.333 -<span style="color: #BB0000;">0.333</span>  0.9175139-0.1657906i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  0.333  0      1.0249740+0.7332478i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  0.333  0.333 -2.3950765-1.2494756i</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

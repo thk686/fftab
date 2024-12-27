@@ -65,7 +65,7 @@ to_polr(): Converts to polar representation (mod, arg).
 
 
 <dt id="arg--keep">.keep<a class="anchor" aria-label="anchor" href="#arg--keep"></a></dt>
-<dd><p>Specifies which columns to retain. See <code>mutate()</code>.</p></dd>
+<dd><p>Specifies which columns to retain. See <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -83,20 +83,12 @@ to_polr(): Converts to polar representation (mod, arg).
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="can_repr.html">can_repr()</a></code>, <code><a href="can_repr.html">get_repr()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="has_cplx.html">has_cplx()</a></code>, <code><a href="can_repr.html">get_repr()</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tft</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Convert to different representations</span></span></span>
-<span class="r-in"><span><span class="va">tft_cplx</span> <span class="op">&lt;-</span> <span class="fu">to_cplx</span><span class="op">(</span><span class="va">tft</span><span class="op">)</span> <span class="co"># Complex representation</span></span></span>
-<span class="r-in"><span><span class="va">tft_rect</span> <span class="op">&lt;-</span> <span class="fu">to_rect</span><span class="op">(</span><span class="va">tft_cplx</span><span class="op">)</span> <span class="co"># Rectangular representation</span></span></span>
-<span class="r-in"><span><span class="va">tft_polr</span> <span class="op">&lt;-</span> <span class="fu">to_polr</span><span class="op">(</span><span class="va">tft_cplx</span><span class="op">)</span> <span class="co"># Polar representation</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Print results</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tft_cplx</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">to_cplx</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .dim_1 fx   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;cpl&gt;</span></span>
@@ -104,7 +96,8 @@ to_polr(): Converts to polar representation (mod, arg).
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>   0.25 2+0i </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>   0.5  0+0i </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  -<span style="color: #BB0000;">0.25</span> 2+0i </span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tft_rect</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">to_rect</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .dim_1    re    im</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -112,7 +105,8 @@ to_polr(): Converts to polar representation (mod, arg).
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>   0.25     2     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>   0.5      0     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  -<span style="color: #BB0000;">0.25</span>     2     0</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tft_polr</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">to_polr</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .dim_1   mod   arg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>

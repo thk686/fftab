@@ -62,7 +62,8 @@ after phase-aligning the second signal (<code>b</code>) to the first signal (<co
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function performs the following steps:</p><ol><li><p>Computes the Fourier Transform of both input signals using <code>tidy_fft</code>.</p></li>
+    <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
+<p>This function performs the following steps:</p><ol><li><p>Computes the Fourier Transform of both input signals using <code>tidy_fft</code>.</p></li>
 <li><p>Calculates the <strong>cross-spectrum</strong> of the signals.</p></li>
 <li><p>Converts the cross-spectrum to polar form and computes the weighted average phase difference.</p></li>
 <li><p>Adjusts the phase of the second signal (<code>b</code>) using <code>.shift_phase</code> to maximize alignment with the first signal (<code>a</code>).</p></li>
@@ -80,10 +81,8 @@ between the original signals due to the optimal phase alignment.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">signal_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>, length.out <span class="op">=</span> <span class="fl">128</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">signal_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>, length.out <span class="op">=</span> <span class="fl">128</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">phase_diff</span><span class="op">(</span><span class="va">signal_a</span>, <span class="va">signal_b</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">phase_diff</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>, length.out <span class="op">=</span> <span class="fl">128</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>, length.out <span class="op">=</span> <span class="fl">128</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  phase_diff correlation </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1.5707963   0.9999504 </span>
 <span class="r-in"><span></span></span>
