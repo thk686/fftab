@@ -5,7 +5,8 @@
 \alias{tidy_fft.default}
 \alias{tidy_fft.ts}
 \alias{tidy_fft.array}
-\title{Compute FFT and Return a Tidy Result}
+\alias{tidy_ifft}
+\title{Perform FFT and IFFT with Tidy Results}
 \usage{
 tidy_fft(x, norm = FALSE)
 
@@ -14,55 +15,70 @@ tidy_fft(x, norm = FALSE)
 \method{tidy_fft}{ts}(x, norm = FALSE)
 
 \method{tidy_fft}{array}(x, norm = FALSE)
+
+tidy_ifft(x)
 }
 \arguments{
-\item{x}{Input object for which to compute the FFT. This can be:
+\item{x}{Input object for which to compute the FFT or IFFT. This can be:
 \itemize{
-\item A numeric vector (default method).
-\item A time series object (\code{ts}).
-\item A multidimensional numeric array.
+\item A numeric vector (default method for \code{tidy_fft}).
+\item A time series object (\code{ts}) for \code{tidy_fft.ts}.
+\item A multidimensional numeric array for \code{tidy_fft.array}.
+\item A \code{tidy_fft} object for \code{tidy_ifft}.
 }}
 
-\item{norm}{Compute normalized coefficients if TRUE.}
+\item{norm}{Logical. If \code{TRUE}, computes normalized coefficients for FFT.}
 }
 \value{
-A tibble containing:
 \itemize{
-\item \strong{Fourier frequencies}: Represented by columns \code{.dim_1}, \code{.dim_2}, ..., depending on the input dimensions.
-\item \strong{FFT values}: Stored in the \code{fx} column as complex values.
+\item \strong{\code{tidy_fft}}: A tibble containing:
+\itemize{
+\item Fourier frequencies (\code{.dim_1}, \code{.dim_2}, etc.).
+\item FFT values stored in the \code{fx} column as complex values.
+}
+\item \strong{\code{tidy_ifft}}: A vector, array, or time series object representing the reconstructed signal.
 }
 }
 \description{
-Computes the Fast Fourier Transform (FFT) for various input types, including
-vectors, time series (\code{ts}), and arrays. The result is
-returned as a tidy tibble containing the Fourier frequencies and
-FFT values.
+Provides functions to compute the Fast Fourier Transform (FFT) and its inverse (IFFT)
+while maintaining results in a tidy format using tibbles. Supports vectors, time series
+(\code{ts}), and arrays as inputs.
 }
 \details{
-This is a generic function with methods for specific input types:
 \itemize{
-\item \strong{Default Input (\code{tidy_fft.default})}: Computes the FFT for a numeric vector.
-\item \strong{Time Series Input (\code{tidy_fft.ts})}: Computes the FFT for a \code{ts} object, scaling the frequencies
-by the time series frequency attribute.
-\item \strong{Array Input (\code{tidy_fft.array})}: Computes the FFT for a multidimensional array.
+\item \code{tidy_fft} organizes FFT results into a tidy tibble for downstream analysis.
+\item \code{tidy_ifft} ensures that reconstructed signals match the input structure (e.g., arrays, \code{ts}).
+}
+}
+\section{FFT}{
+
+The \code{tidy_fft} function computes the FFT for different input types:
+\itemize{
+\item \strong{Default Input (\code{tidy_fft.default})}: Computes FFT for numeric vectors.
+\item \strong{Time Series Input (\code{tidy_fft.ts})}: Handles FFT for \code{ts} objects, scaling frequencies appropriately.
+\item \strong{Array Input (\code{tidy_fft.array})}: Processes multidimensional arrays.
 }
 
-Each method returns a tidy tibble where the Fourier frequencies (\code{.dim_1},
-\code{.dim_2}, etc.) are paired with their corresponding FFT values.
+Results are returned as tidy tibbles containing Fourier frequencies and FFT values.
 }
+
+\section{IFFT}{
+
+The \code{tidy_ifft} function reconstructs the original signal from a \code{tidy_fft} object.
+It supports vectors, arrays, and time series inputs. The inverse transform preserves
+the original structure (e.g., array dimensions or time series attributes).
+}
+
 \examples{
-# FFT for a numeric vector
 tidy_fft(c(1, 0, -1, 0))
 
-# FFT for a time series
-ts_obj <- ts(sin(1:10), frequency = 12)
-tidy_fft(ts_obj)
+tidy_fft(c(1, 0, -1, 0)) |> tidy_ifft()
 
-# FFT for a multidimensional array
-arr <- array(1:8, dim = c(2, 2, 2))
-tidy_fft(arr)
+ts(sin(1:10), frequency = 12) |> tidy_fft()
+
+array(1:8, dim = c(2, 2, 2)) |> tidy_fft()
 
 }
 \seealso{
-\code{\link[=fourier_frequencies]{fourier_frequencies()}}, \code{\link[stats:fft]{stats::fft()}}
+\code{\link[stats:fft]{stats::fft()}}
 }

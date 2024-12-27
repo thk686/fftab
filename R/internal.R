@@ -397,5 +397,5 @@ utils::globalVariables(c(
       right <- mid - 1
     }
   }
-  1 # if not found, do not trim anything
+  stop("Input lacks a DC component.")
 }

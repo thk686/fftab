@@ -10,7 +10,7 @@ get_rect(x)
 get_polr(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object containing FFT results.}
+\item{x}{A matrix object containing FFT results.}
 }
 \value{
 \itemize{
@@ -32,15 +32,9 @@ The \code{get_rect} and \code{get_polr} functions extract specific components fr
 or polar form.
 }
 \examples{
-fft_result <- tidy_fft(c(1, 0, -1, 0))
+tidy_fft(c(1, 0, -1, 0)) |> get_rect()
 
-# Extract rectangular components
-rect_values <- get_rect(fft_result)
-print(rect_values)
-
-# Extract polar components
-polr_values <- get_polr(fft_result)
-print(polr_values)
+tidy_fft(c(1, 0, -1, 0)) |> get_polr()
 
 }
 \seealso{

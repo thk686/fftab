@@ -64,6 +64,7 @@ test_that("tidy_ifft reconstructs original signal accurately", {
 })
 
 test_that("error handling works as expected", {
-  expect_error(tidy_fft(list(1, 2, 3)), "is.numeric(x) || is.complex(x) is not TRUE")
-  # expect_error(tidy_fft(c()), "is.vector(x) is not TRUE")
+  expect_error(tidy_fft(list(1, 2, 3)))
+  expect_error(tidy_fft(integer(0)))
+  expect_error(tidy_fft(NULL))
 })

@@ -18,37 +18,20 @@
 #' @return An object representing the cross-spectrum:
 #' \itemize{
 #'   \item For `default` and `tidy_fft` methods: A `tidy_fft` object.
-#'   \item For `ts` objects: A `tidy_fft` object with `tsp` attributes inherited
+#'   \item For `ts` objects: A `tidy_fft` object with `.tsp` attributes inherited
 #'         from `a`.
-#'   \item For arrays: A `tidy_fft` object with `dim` attributes inherited
+#'   \item For arrays: A `tidy_fft` object with `.dim` attributes inherited
 #'         from `a`.
 #' }
 #'
-#' @details
-#' The `cross_spec` function is generic and has specialized methods for each
-#' input type. For `ts` and array inputs, additional attributes such as
-#' `tsp` or `dim` are preserved. The `%cfft%` operator provides a shorthand
-#' for calling this function.
-#'
 #' @examples
-#' # Example with numeric vectors
-#' a <- rnorm(8)
-#' b <- rnorm(8)
-#' result <- cross_spec(a, b)
+#' cross_spec(rnorm(8), rnorm(8), norm = TRUE)
 #'
-#' # Example with time series
-#' ts_a <- ts(rnorm(8), frequency = 4)
-#' ts_b <- ts(rnorm(8), frequency = 4)
-#' result <- cross_spec(ts_a, ts_b)
-#'
-#' # Example with `tidy_fft` objects
-#' tidy_a <- tidy_fft(a)
-#' tidy_b <- tidy_fft(b)
-#' result <- cross_spec(tidy_a, tidy_b)
+#' cross_spec(ts(rnorm(8), frequency = 4),
+#'            ts(rnorm(8), frequency = 4))
 #'
 #' @seealso [tidy_fft()]
 #'
-#' @aliases %cfft%
 #' @export
 cross_spec <- function(a, b, norm = FALSE, conj = TRUE) {
   UseMethod("cross_spec")
@@ -100,6 +83,8 @@ cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
 #' Computes the phase difference and maximum normalized correlation between two input signals
 #' after phase-aligning the second signal (`b`) to the first signal (`a`).
 #'
+#' `r lifecycle::badge('experimental')`
+#'
 #' @param a A numeric vector or time series representing the first signal.
 #' @param b A numeric vector or time series representing the second signal.
 #'
@@ -123,11 +108,10 @@ cross_spec.tidy_fft <- function(a, b, norm = FALSE, conj = TRUE) {
 #' - [cross_spec()]
 #'
 #' @examples
-#' signal_a <- sin(seq(0, 2 * pi, length.out = 128))
-#' signal_b <- cos(seq(0, 2 * pi, length.out = 128))
+#' phase_diff(sin(seq(0, 2 * pi, length.out = 128)),
+#'            cos(seq(0, 2 * pi, length.out = 128)))
 #'
-#' phase_diff(signal_a, signal_b)
-#'
+#' @importFrom lifecycle badge
 #' @export
 phase_diff <- function(a, b) {
   if (!inherits(a, "tidy_fft"))

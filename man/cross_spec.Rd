@@ -2,7 +2,6 @@
 % Please edit documentation in R/cross.R
 \name{cross_spec}
 \alias{cross_spec}
-\alias{\%cfft\%}
 \alias{cross_spec.default}
 \alias{cross_spec.ts}
 \alias{cross_spec.array}
@@ -36,9 +35,9 @@ transform of \code{b}. Default is \code{TRUE}.}
 An object representing the cross-spectrum:
 \itemize{
 \item For \code{default} and \code{tidy_fft} methods: A \code{tidy_fft} object.
-\item For \code{ts} objects: A \code{tidy_fft} object with \code{tsp} attributes inherited
+\item For \code{ts} objects: A \code{tidy_fft} object with \code{.tsp} attributes inherited
 from \code{a}.
-\item For arrays: A \code{tidy_fft} object with \code{dim} attributes inherited
+\item For arrays: A \code{tidy_fft} object with \code{.dim} attributes inherited
 from \code{a}.
 }
 }
@@ -48,12 +47,6 @@ using the Fourier transform. It supports multiple input types including
 numeric vectors, time series (\code{ts}), arrays, and \code{tidy_fft} objects.
 The function provides options for normalization and controlling whether the
 conjugate of the second input is used.
-}
-\details{
-The \code{cross_spec} function is generic and has specialized methods for each
-input type. For \code{ts} and array inputs, additional attributes such as
-\code{tsp} or \code{dim} are preserved. The \verb{\%cfft\%} operator provides a shorthand
-for calling this function.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -71,20 +64,10 @@ Performs the cross-frequency transform directly using the Fourier transforms of 
 
 }}
 \examples{
-# Example with numeric vectors
-a <- rnorm(8)
-b <- rnorm(8)
-result <- cross_spec(a, b)
+cross_spec(rnorm(8), rnorm(8), norm = TRUE)
 
-# Example with time series
-ts_a <- ts(rnorm(8), frequency = 4)
-ts_b <- ts(rnorm(8), frequency = 4)
-result <- cross_spec(ts_a, ts_b)
-
-# Example with `tidy_fft` objects
-tidy_a <- tidy_fft(a)
-tidy_b <- tidy_fft(b)
-result <- cross_spec(tidy_a, tidy_b)
+cross_spec(ts(rnorm(8), frequency = 4),
+           ts(rnorm(8), frequency = 4))
 
 }
 \seealso{

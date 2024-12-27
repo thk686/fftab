@@ -177,3 +177,5 @@ test_that("Removing symmetric coefficients works correctly", {
   }
   expect_true(res)
 })
+
+

@@ -15,7 +15,7 @@ to_polr(x, .keep = "unused")
 \arguments{
 \item{x}{A \code{tidy_fft} object.}
 
-\item{.keep}{Specifies which columns to retain. See \code{\link[=mutate]{mutate()}}.}
+\item{.keep}{Specifies which columns to retain. See \code{\link[dplyr:mutate]{dplyr::mutate()}}.}
 }
 \value{
 A modified \code{tidy_fft} object containing the specified representation:
@@ -41,19 +41,13 @@ These functions convert a \code{tidy_fft} object to a specified representation:
 }
 }
 \examples{
-tft <- tidy_fft(c(1, 0, -1, 0))
+tidy_fft(c(1, 0, -1, 0)) |> to_cplx()
 
-# Convert to different representations
-tft_cplx <- to_cplx(tft) # Complex representation
-tft_rect <- to_rect(tft_cplx) # Rectangular representation
-tft_polr <- to_polr(tft_cplx) # Polar representation
+tidy_fft(c(1, 0, -1, 0)) |> to_rect()
 
-# Print results
-print(tft_cplx)
-print(tft_rect)
-print(tft_polr)
+tidy_fft(c(1, 0, -1, 0)) |> to_polr()
 
 }
 \seealso{
-\code{\link[=can_repr]{can_repr()}}, \code{\link[=get_repr]{get_repr()}}
+\code{\link[=has_cplx]{has_cplx()}}, \code{\link[=get_repr]{get_repr()}}
 }

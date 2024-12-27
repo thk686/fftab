@@ -25,16 +25,13 @@
 #' fourier_frequencies(8)
 #'
 #' # Time series input
-#' ts_obj <- ts(rnorm(36), frequency = 12)
-#' fourier_frequencies(ts_obj)
+#' ts(rnorm(36), frequency = 12) |> fourier_frequencies()
 #'
 #' # Multidimensional array input
-#' array_input <- array(1:27, dim = c(3, 3, 3))
-#' fourier_frequencies(array_input)
+#' array(1:27, dim = c(3, 3, 3)) |> fourier_frequencies()
 #'
 #' # Matrix input
-#' matrix_input <- matrix(1:9, nrow = 3, ncol = 3)
-#' fourier_frequencies(matrix_input)
+#' matrix(1:9, nrow = 3, ncol = 3) |> fourier_frequencies()
 #'
 #' @seealso [tidyr::expand_grid()], [frequency()]
 #'
@@ -73,9 +70,6 @@ fourier_frequencies.array <- function(x) {
 #'
 #' These functions operate on `tidy_fft` objects to manipulate and filter Fourier coefficients.
 #'
-#' - `remove_dc()`: Removes the DC (zero-frequency) component.
-#' - `remove_symmetric()`: Removes symmetric, complex-conjugate frequencies.
-#'
 #' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
 #'
 #' @return A `tidy_fft` object with filtered coefficients.
@@ -91,9 +85,9 @@ fourier_frequencies.array <- function(x) {
 #' - [tidy_fft()]
 #'
 #' @examples
-#' fft_x <- tidy_fft(sin(seq(0, 2 * pi, length.out = 128)))
-#' fft_no_dc <- remove_dc(fft_x)
-#' fft_no_sym <- remove_symmetric(fft_x)
+#' matrix(rnorm(9), 3) |> tidy_fft() |> remove_dc()
+#'
+#' matrix(rnorm(9), 3) |> tidy_fft() |> remove_symmetric()
 #'
 #' @export
 remove_dc <- function(x) {

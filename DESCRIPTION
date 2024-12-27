@@ -19,6 +19,7 @@ Config/testthat/edition: 3
 Imports: 
     dplyr,
     ggplot2,
+    lifecycle,
     tibble,
     tidyr
 URL: https://github.com/thk686/tidyfft, https://thk686.github.io/tidyfft/

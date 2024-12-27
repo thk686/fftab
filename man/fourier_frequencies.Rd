@@ -49,16 +49,13 @@ See the examples for details on each case.
 fourier_frequencies(8)
 
 # Time series input
-ts_obj <- ts(rnorm(36), frequency = 12)
-fourier_frequencies(ts_obj)
+ts(rnorm(36), frequency = 12) |> fourier_frequencies()
 
 # Multidimensional array input
-array_input <- array(1:27, dim = c(3, 3, 3))
-fourier_frequencies(array_input)
+array(1:27, dim = c(3, 3, 3)) |> fourier_frequencies()
 
 # Matrix input
-matrix_input <- matrix(1:9, nrow = 3, ncol = 3)
-fourier_frequencies(matrix_input)
+matrix(1:9, nrow = 3, ncol = 3) |> fourier_frequencies()
 
 }
 \seealso{

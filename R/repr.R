@@ -1,74 +1,3 @@
-#' Check and Retrieve Representations of a `tidy_fft` Object
-#'
-#' These functions check and retrieve specific representations of a `tidy_fft`
-#' object. Supported representations include:
-#' - **Complex (`"cplx"`)**: Contains a column `fx` with complex Fourier coefficients.
-#' - **Rectangular (`"rect"`)**: Contains columns `re` (real) and `im` (imaginary) components.
-#' - **Polar (`"polr"`)**: Contains columns `mod` (modulus) and `arg` (argument).
-#'
-#' @param x A `tidy_fft` object.
-#' @param repr For `can_repr()`, the target representation to check. A character
-#'   vector with one or more of (`"polr"`, `"rect"`, or `"cplx"`).
-#'
-#' @return
-#' - **`can_repr()`**: A logical value (`TRUE` or `FALSE`) indicating if the object
-#' has any of the specified representations.
-#' - **`get_repr()`**: A character vector of representations present in the object.
-#' - **`has_cplx()`, `has_rect()`, `has_polr()`**: Logical values (`TRUE` or `FALSE`)
-#' indicating the presence of specific representations.
-#'
-#' @examples
-#' tft <- tidy_fft(c(1, 0, -1, 0))
-#'
-#' # Check specific representations
-#' can_repr(tft, "cplx") # TRUE
-#' can_repr(tft, "rect") # FALSE
-#'
-#' # Retrieve current representations
-#' get_repr(tft) # "cplx"
-#'
-#' # Check individual representations
-#' has_cplx(tft) # TRUE
-#' has_rect(tft) # FALSE
-#' has_polr(tft) # FALSE
-#'
-#' @export
-can_repr <- function(x, repr) {
-  res <- 0
-  for (r in repr) {
-    res <- res + switch(r,
-      cplx = has_cplx(x),
-      rect = has_rect(x),
-      polr = has_polr(x)
-    )
-  }
-  res > 0
-}
-
-#' @rdname can_repr
-#' @export
-get_repr <- function(x) {
-  c("cplx", "rect", "polr")[c(has_cplx(x), has_rect(x), has_polr(x))]
-}
-
-#' @rdname can_repr
-#' @export
-has_cplx <- function(x) {
-  !is.null(x[["fx"]])
-}
-
-#' @rdname can_repr
-#' @export
-has_rect <- function(x) {
-  !is.null(x[["re"]]) && !is.null(x[["im"]])
-}
-
-#' @rdname can_repr
-#' @export
-has_polr <- function(x) {
-  !is.null(x[["mod"]]) && !is.null(x[["arg"]])
-}
-
 #' Convert a `tidy_fft` Object Between Representations
 #'
 #' These functions convert a `tidy_fft` object to a specified representation:
@@ -77,7 +6,7 @@ has_polr <- function(x) {
 #' - **`to_polr()`**: Converts to polar representation (`mod`, `arg`).
 #'
 #' @param x A `tidy_fft` object.
-#' @param .keep Specifies which columns to retain. See [mutate()].
+#' @param .keep Specifies which columns to retain. See [dplyr::mutate()].
 #'
 #' @return A modified `tidy_fft` object containing the specified representation:
 #' - **`to_cplx()`**: Adds the `fx` column for complex values.
@@ -90,19 +19,14 @@ has_polr <- function(x) {
 #' - **`to_polr()`**: Converts from complex (`fx`) or rectangular components to polar form.
 #'
 #' @examples
-#' tft <- tidy_fft(c(1, 0, -1, 0))
+#' tidy_fft(c(1, 0, -1, 0)) |> to_cplx()
 #'
-#' # Convert to different representations
-#' tft_cplx <- to_cplx(tft) # Complex representation
-#' tft_rect <- to_rect(tft_cplx) # Rectangular representation
-#' tft_polr <- to_polr(tft_cplx) # Polar representation
+#' tidy_fft(c(1, 0, -1, 0)) |> to_rect()
 #'
-#' # Print results
-#' print(tft_cplx)
-#' print(tft_rect)
-#' print(tft_polr)
+#' tidy_fft(c(1, 0, -1, 0)) |> to_polr()
 #'
-#' @seealso [can_repr()], [get_repr()]
+#' @seealso [has_cplx()], [get_repr()]
+#' @rdname to_cplx
 #' @export
 to_cplx <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
@@ -110,14 +34,14 @@ to_cplx <- function(x, .keep = "unused") {
   } else {
     if (has_rect(x)) {
       dplyr::mutate(x,
-        fx = complex(real = re, imaginary = im),
-        .keep = .keep
+                    fx = complex(real = re, imaginary = im),
+                    .keep = .keep
       )
     } else {
       if (has_polr(x)) {
         dplyr::mutate(x,
-          fx = complex(modulus = mod, argument = arg),
-          .keep = .keep
+                      fx = complex(modulus = mod, argument = arg),
+                      .keep = .keep
         )
       } else {
         stop("No valid fft representation.")
@@ -131,9 +55,9 @@ to_cplx <- function(x, .keep = "unused") {
 to_rect <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
     dplyr::mutate(x,
-      re = Re(fx),
-      im = Im(fx),
-      .keep = .keep
+                  re = Re(fx),
+                  im = Im(fx),
+                  .keep = .keep
     )
   } else {
     if (has_rect(x)) {
@@ -158,9 +82,9 @@ to_rect <- function(x, .keep = "unused") {
 to_polr <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
     dplyr::mutate(x,
-      mod = Mod(fx),
-      arg = Arg(fx),
-      .keep = .keep
+                  mod = Mod(fx),
+                  arg = Arg(fx),
+                  .keep = .keep
     )
   } else {
     if (has_rect(x)) {
@@ -180,46 +104,92 @@ to_polr <- function(x, .keep = "unused") {
   }
 }
 
-#' Set Representation of Fourier Coefficients
+#' Check Representations of a `tidy_fft` Object
 #'
-#' Converts the representation format of Fourier coefficients in a `tidy_fft` object.
+#' These functions check if specific representations are present in a `tidy_fft` object:
 #'
-#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
-#' @param repr A character vector specifying the desired representation(s) of the coefficients.
-#'   Supported representations include:
-#'   - `"cplx"`: Complex representation.
-#'   - `"rect"`: Rectangular representation.
-#'   - `"polr"`: Polar representation.
+#' - **`has_cplx()`**: Checks if the object has complex representation (`fx` column).
+#' - **`has_rect()`**: Checks if the object has rectangular representation (`re`, `im` columns).
+#' - **`has_polr()`**: Checks if the object has polar representation (`mod`, `arg` columns).
 #'
-#' @return A modified `tidy_fft` object with Fourier coefficients transformed into the specified representation(s).
+#' @param x A `tidy_fft` object.
 #'
-#' @details
-#' This function allows users to switch between different Fourier coefficient representations:
-#' - **`"cplx"`**: Keeps coefficients in their native complex form.
-#' - **`"rect"`**: Represents coefficients in rectangular format (`real` and `imaginary` parts).
-#' - **`"polr"`**: Represents coefficients in polar format (`magnitude` and `phase`).
-#'
-#' If multiple representations are specified in the `repr` vector, they are applied sequentially:
-#' - The first representation is applied directly.
-#' - Subsequent representations are applied using `.set_repr()` with `.keep = "all"`, preserving intermediate transformations.
-#'
-#' @seealso
-#' - [.set_repr()]
-#' - [tidy_fft()]
+#' @return Logical value (`TRUE` or `FALSE`) indicating whether the specified representation exists.
 #'
 #' @examples
-#' fft_x <- tidy_fft(sin(seq(0, 2 * pi, length.out = 128)))
+#' tidy_fft(c(1, 0, -1, 0)) |> has_cplx()
 #'
-#' # Convert to polar representation
-#' fft_polar <- set_repr(fft_x, "polr")
+#' tidy_fft(c(1, 0, -1, 0)) |> has_rect()
 #'
-#' # Apply multiple representations
-#' fft_multi <- set_repr(fft_x, c("rect", "polr"))
+#' tidy_fft(c(1, 0, -1, 0)) |> has_polr()
 #'
+#' @seealso [to_cplx()], [get_repr()]
+#' @rdname has_cplx
+#' @export
+has_cplx <- function(x) {
+  !is.null(x[["fx"]])
+}
+
+#' @rdname has_cplx
+#' @export
+has_rect <- function(x) {
+  !is.null(x[["re"]]) && !is.null(x[["im"]])
+}
+
+#' @rdname has_cplx
+#' @export
+has_polr <- function(x) {
+  !is.null(x[["mod"]]) && !is.null(x[["arg"]])
+}
+
+#' Manage Representations of a `tidy_fft` Object
+#'
+#' These functions handle representation management for a `tidy_fft` object:
+#'
+#' - **`get_repr()`**: Retrieve current representations.
+#' - **`can_repr()`**: Check if the object supports specific representations.
+#' - **`set_repr()`**: Convert the object to one or more specified representations.
+#'
+#' @param x A `tidy_fft` object.
+#' @param repr For `can_repr()`, a character vector specifying representations (`"polr"`, `"rect"`, `"cplx"`).
+#'
+#' @return
+#' - **`can_repr()`**: Logical value (`TRUE` or `FALSE`) indicating if the object supports the specified representations.
+#' - **`get_repr()`**: A character vector of current representations.
+#' - **`set_repr()`**: A modified `tidy_fft` object with the specified representation(s).
+#'
+#' @examples
+#' tidy_fft(c(1, 0, -1, 0)) |> can_repr("cplx")
+#'
+#' tidy_fft(c(1, 0, -1, 0)) |> get_repr()
+#'
+#' tidy_fft(c(1, 0, -1, 0)) |> set_repr(c("polr", "rect"))
+#'
+#' @seealso [to_cplx()], [has_cplx()]
+#' @rdname can_repr
+#' @export
+can_repr <- function(x, repr) {
+  res <- 0
+  for (r in repr) {
+    res <- res + switch(r,
+                        cplx = has_cplx(x),
+                        rect = has_rect(x),
+                        polr = has_polr(x)
+    )
+  }
+  res > 0
+}
+
+#' @rdname can_repr
+#' @export
+get_repr <- function(x) {
+  c("cplx", "rect", "polr")[c(has_cplx(x), has_rect(x), has_polr(x))]
+}
+
+#' @rdname can_repr
 #' @export
 set_repr <- function(x, repr) {
-  res <- .get_dim_cols(x) |>
-    dplyr::mutate(fx = get_fx(x))
+  res <- .get_dim_cols(x) |> dplyr::mutate(fx = get_fx(x))
   res <- .set_repr(res, repr[1])
   if (length(repr) > 1) {
     for (i in 2:length(repr)) {

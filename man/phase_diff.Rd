@@ -23,6 +23,8 @@ Computes the phase difference and maximum normalized correlation between two inp
 after phase-aligning the second signal (\code{b}) to the first signal (\code{a}).
 }
 \details{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 This function performs the following steps:
 \enumerate{
 \item Computes the Fourier Transform of both input signals using \code{tidy_fft}.
@@ -36,10 +38,8 @@ The correlation is normalized using the variances of both signals and will gener
 between the original signals due to the optimal phase alignment.
 }
 \examples{
-signal_a <- sin(seq(0, 2 * pi, length.out = 128))
-signal_b <- cos(seq(0, 2 * pi, length.out = 128))
-
-phase_diff(signal_a, signal_b)
+phase_diff(sin(seq(0, 2 * pi, length.out = 128)),
+           cos(seq(0, 2 * pi, length.out = 128)))
 
 }
 \seealso{

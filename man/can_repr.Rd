@@ -3,58 +3,45 @@
 \name{can_repr}
 \alias{can_repr}
 \alias{get_repr}
-\alias{has_cplx}
-\alias{has_rect}
-\alias{has_polr}
-\title{Check and Retrieve Representations of a \code{tidy_fft} Object}
+\alias{set_repr}
+\title{Manage Representations of a \code{tidy_fft} Object}
 \usage{
 can_repr(x, repr)
 
 get_repr(x)
 
-has_cplx(x)
-
-has_rect(x)
-
-has_polr(x)
+set_repr(x, repr)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object.}
 
-\item{repr}{For \code{can_repr()}, the target representation to check. A character
-vector with one or more of (\code{"polr"}, \code{"rect"}, or \code{"cplx"}).}
+\item{repr}{For \code{can_repr()}, a character vector specifying representations (\code{"polr"}, \code{"rect"}, \code{"cplx"}).}
 }
 \value{
 \itemize{
-\item \strong{\code{can_repr()}}: A logical value (\code{TRUE} or \code{FALSE}) indicating if the object
-has any of the specified representations.
-\item \strong{\code{get_repr()}}: A character vector of representations present in the object.
-\item \strong{\code{has_cplx()}, \code{has_rect()}, \code{has_polr()}}: Logical values (\code{TRUE} or \code{FALSE})
-indicating the presence of specific representations.
+\item \strong{\code{can_repr()}}: Logical value (\code{TRUE} or \code{FALSE}) indicating if the object supports the specified representations.
+\item \strong{\code{get_repr()}}: A character vector of current representations.
+\item \strong{\code{set_repr()}}: A modified \code{tidy_fft} object with the specified representation(s).
 }
 }
 \description{
-These functions check and retrieve specific representations of a \code{tidy_fft}
-object. Supported representations include:
+These functions handle representation management for a \code{tidy_fft} object:
+}
+\details{
 \itemize{
-\item \strong{Complex (\code{"cplx"})}: Contains a column \code{fx} with complex Fourier coefficients.
-\item \strong{Rectangular (\code{"rect"})}: Contains columns \code{re} (real) and \code{im} (imaginary) components.
-\item \strong{Polar (\code{"polr"})}: Contains columns \code{mod} (modulus) and \code{arg} (argument).
+\item \strong{\code{get_repr()}}: Retrieve current representations.
+\item \strong{\code{can_repr()}}: Check if the object supports specific representations.
+\item \strong{\code{set_repr()}}: Convert the object to one or more specified representations.
 }
 }
 \examples{
-tft <- tidy_fft(c(1, 0, -1, 0))
+tidy_fft(c(1, 0, -1, 0)) |> can_repr("cplx")
 
-# Check specific representations
-can_repr(tft, "cplx") # TRUE
-can_repr(tft, "rect") # FALSE
+tidy_fft(c(1, 0, -1, 0)) |> get_repr()
 
-# Retrieve current representations
-get_repr(tft) # "cplx"
+tidy_fft(c(1, 0, -1, 0)) |> set_repr(c("polr", "rect"))
 
-# Check individual representations
-has_cplx(tft) # TRUE
-has_rect(tft) # FALSE
-has_polr(tft) # FALSE
-
+}
+\seealso{
+\code{\link[=to_cplx]{to_cplx()}}, \code{\link[=has_cplx]{has_cplx()}}
 }

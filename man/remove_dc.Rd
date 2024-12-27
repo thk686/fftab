@@ -23,8 +23,6 @@ These functions operate on \code{tidy_fft} objects to manipulate and filter Four
 }
 \details{
 \itemize{
-\item \code{remove_dc()}: Removes the DC (zero-frequency) component.
-\item \code{remove_symmetric()}: Removes symmetric, complex-conjugate frequencies.
 \item \strong{\code{remove_dc()}}: Filters out rows where all \verb{.dim_*} columns have a value of \code{0}.
 \item \strong{\code{remove_symmetric()}}:
 \itemize{
@@ -34,9 +32,9 @@ These functions operate on \code{tidy_fft} objects to manipulate and filter Four
 }
 }
 \examples{
-fft_x <- tidy_fft(sin(seq(0, 2 * pi, length.out = 128)))
-fft_no_dc <- remove_dc(fft_x)
-fft_no_sym <- remove_symmetric(fft_x)
+matrix(rnorm(9), 3) |> tidy_fft() |> remove_dc()
+
+matrix(rnorm(9), 3) |> tidy_fft() |> remove_symmetric()
 
 }
 \seealso{

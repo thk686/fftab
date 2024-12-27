@@ -2,14 +2,16 @@
 % Please edit documentation in R/get.R
 \name{get_fx}
 \alias{get_fx}
+\alias{get_fx_norm}
 \alias{get_re}
 \alias{get_im}
 \alias{get_mod}
 \alias{get_arg}
-\alias{get_fx_norm}
 \title{Extract Fourier Coefficients and Components}
 \usage{
 get_fx(x)
+
+get_fx_norm(x, norm = FALSE)
 
 get_re(x)
 
@@ -18,18 +20,19 @@ get_im(x)
 get_mod(x)
 
 get_arg(x)
-
-get_fx_norm(x, norm = FALSE)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object containing FFT results.}
 
-\item{norm}{Return normalized coefficients if TRUE.}
+\item{norm}{Logical. If \code{TRUE}, forces normalized coefficients. If \code{FALSE},
+ensures non-normalized coefficients.}
 }
 \value{
 The requested components:
 \itemize{
-\item \strong{\code{get_fx}}: A complex vector of Fourier coefficients (\code{fx}).
+\item \strong{\code{get_fx}}: A complex vector of raw Fourier coefficients (\code{fx}) as stored in the object.
+\item \strong{\code{get_fx_norm}}: A complex vector of Fourier coefficients, explicitly normalized
+or non-normalized based on the \code{norm} parameter.
 \item \strong{\code{get_re}}: A numeric vector of real parts (\code{re}).
 \item \strong{\code{get_im}}: A numeric vector of imaginary parts (\code{im}).
 \item \strong{\code{get_mod}}: A numeric vector of magnitudes (\code{mod}).
@@ -38,26 +41,31 @@ The requested components:
 }
 \description{
 These utility functions extract specific components from a \code{tidy_fft} object.
+\code{get_fx} retrieves the raw Fourier coefficients, while \code{get_fx_norm} ensures the
+coefficients are either normalized or not normalized based on the \code{norm} parameter.
+}
+\details{
+\itemize{
+\item \strong{\code{get_fx}}: Returns coefficients as they are stored in the \code{tidy_fft} object.
+\item \strong{\code{get_fx_norm}}: Adjusts coefficients if they are not in the desired normalization state.
+\item \strong{\code{get_re}, \code{get_im}}: Extract real and imaginary components.
+\item \strong{\code{get_mod}, \code{get_arg}}: Compute magnitude and phase of coefficients.
+}
 }
 \examples{
-fft_result <- tidy_fft(c(1, 0, -1, 0)) |>
-  to_rect(.keep = "all") |>
-  to_polr(.keep = "all")
+tidy_fft(c(1, 0, -1, 0)) |> get_fx()
 
-# Extract components
-fx_values <- get_fx(fft_result)
-re_values <- get_re(fft_result)
-im_values <- get_im(fft_result)
-mod_values <- get_mod(fft_result)
-arg_values <- get_arg(fft_result)
+tidy_fft(c(1, 0, -1, 0)) |> get_fx_norm(norm = TRUE)
 
-print(fx_values)
-print(re_values)
-print(im_values)
-print(mod_values)
-print(arg_values)
+tidy_fft(c(1, 0, -1, 0)) |> get_re()
+
+tidy_fft(c(1, 0, -1, 0)) |> get_im()
+
+tidy_fft(c(1, 0, -1, 0)) |> get_mod()
+
+tidy_fft(c(1, 0, -1, 0)) |> get_arg()
 
 }
 \seealso{
-\code{\link[=to_cplx]{to_cplx()}}
+\code{\link[=to_cplx]{to_cplx()}}, \code{\link[=to_rect]{to_rect()}}, \code{\link[=to_polr]{to_polr()}}
 }
