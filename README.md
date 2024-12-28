@@ -26,7 +26,7 @@ You can install the development version of tidyfft from
 pak::pak("thk686/tidyfft")
 ```
 
-## Maintenance
+## Maintenance and Contributions
 
 I intend to keep this package current and availabe on CRAN within reason. I
 understand why CRAN stives for consistency, yet the regular addtion of new rules
@@ -35,7 +35,8 @@ I am very happy to receive pull requests and suggestions for improvements. The
 current code base is pure R and I have followed the recommendations of the
 [R Packages book](https://r-pkgs.org/), so I hope that it will require very few updates.
 I do not plan to add features for the sake of programming and I intend this to be a 
-fairly stable and unchanging minimal core package.
+fairly stable and unchanging minimal core package. If you would like to contribute of
+code or maintenance, please create an issue.
 
 ## Example
 
