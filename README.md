@@ -8,13 +8,14 @@
 [![R-CMD-check](https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of **tidyfft** is to make working with fft’s in R easier and more
-consistent. It follows **the tidy philosophy** by working with tabular data
-rather than lists, vectors, and so on. There is likely some cost in terms
-of intermediate copies, etc. when using tidy operations. However, you can
-easily extract and work with the raw fourier coefficients as required and
-repackage them along with the frequency information. Think of it as your
-cushy SUV with an eMTB sitting in the bike rack.
+The goal of **tidyfft** is to make working with fft’s in R easier and
+more consistent. It follows **the tidy philosophy** by working with
+tabular data rather than lists, vectors, and so on. There is likely some
+cost in terms of intermediate copies, etc. when using tidy operations.
+However, you can easily extract and work with the raw fourier
+coefficients as required and repackage them along with the frequency
+information. Think of it as your cushy SUV with an eMTB sitting in the
+bike rack.
 
 ## Installation
 
@@ -28,15 +29,17 @@ pak::pak("thk686/tidyfft")
 
 ## Maintenance and Contributions
 
-I intend to keep this package current and availabe on CRAN within reason. I
-understand why CRAN stives for consistency, yet the regular addtion of new rules
-breaks existing packageson a fairly often, so please be patient with updates.
-I am very happy to receive pull requests and suggestions for improvements. The
-current code base is pure R and I have followed the recommendations of the
-[R Packages book](https://r-pkgs.org/), so I hope that it will require very few updates.
-I do not plan to add features for the sake of programming and I intend this to be a 
-fairly stable and unchanging minimal core package. If you would like to contribute of
-code or maintenance, please create an issue.
+I intend to keep this package current and availabe on CRAN within
+reason. I understand why CRAN stives for consistency, yet the regular
+addtion of new rules breaks existing packageson a fairly often, so
+please be patient with updates. I am very happy to receive pull requests
+and suggestions for improvements. The current code base is pure R and I
+have followed the recommendations of the [R Packages
+book](https://r-pkgs.org/), so I hope that it will require very few
+updates. I do not plan to add features for the sake of programming and I
+intend this to be a fairly stable and unchanging minimal core package.
+If you would like to contribute of code or maintenance, please create an
+issue.
 
 ## Example
 
@@ -49,19 +52,14 @@ tidy_fft(sunspot.month, norm = TRUE) |>
   print(n = 5) ->
   ssm.fft
 #> # A tibble: 3,177 × 6
-#>     .dim_1 fx              re     im   mod    arg
-#>      <dbl> <cpl>        <dbl>  <dbl> <dbl>  <dbl>
-#>  1 0       51.96+0.00i 52.0    0     52.0   0    
-#>  2 0.00378  4.37+4.99i  4.37   4.99   6.63  0.852
-#>  3 0.00755 -0.86+5.08i -0.860  5.08   5.15  1.74 
-#>  4 0.0113  -2.65-5.70i -2.65  -5.70   6.29 -2.01 
-#>  5 0.0151  -4.64-0.59i -4.64  -0.586  4.68 -3.02 
-#>  6 0.0189  -2.51+4.07i -2.51   4.07   4.79  2.12 
-#>  7 0.0227  -0.68+2.26i -0.684  2.26   2.36  1.87 
-#>  8 0.0264  -1.07-2.22i -1.07  -2.22   2.46 -2.02 
-#>  9 0.0302   0.18-1.36i  0.180 -1.36   1.37 -1.44 
-#> 10 0.0340   2.46-1.10i  2.46  -1.10   2.70 -0.422
-#> # ℹ 3,167 more rows
+#>    .dim_1 fx              re     im   mod    arg
+#>     <dbl> <cpl>        <dbl>  <dbl> <dbl>  <dbl>
+#> 1 0       51.96+0.00i 52.0    0     52.0   0    
+#> 2 0.00378  4.37+4.99i  4.37   4.99   6.63  0.852
+#> 3 0.00755 -0.86+5.08i -0.860  5.08   5.15  1.74 
+#> 4 0.0113  -2.65-5.70i -2.65  -5.70   6.29 -2.01 
+#> 5 0.0151  -4.64-0.59i -4.64  -0.586  4.68 -3.02 
+#> # ℹ 3,172 more rows
 ```
 
 ``` r
