@@ -60,14 +60,7 @@
 </div>
 <!-- badges: start -->
 
-<p>The goal of tidyfft is to make working with fft’s in R easier and more consistent. It follows the tidy philosophy by storing output in a tibble.</p>
-<p>Features:</p>
-<ol style="list-style-type: decimal">
-<li>Provides frequencies in each dimension in cycles per sample-interval.</li>
-<li>Caches attributes sufficient to allow reconstruction of original object when computing the inverse transform.</li>
-<li>Easy conversion between complex, rectangular, and polar representations.</li>
-<li>Tracks complex versus real valued input.</li>
-</ol>
+<p>The goal of <strong>tidyfft</strong> is to make working with fft’s in R easier and more consistent. It follows <strong>the tidy philosophy</strong> by working with tabular data rather than lists, vectors, and so on. There is likely some cost in terms of intermediate copies, etc. when using tidy operations. However, you can easily extract and work with the raw fourier coefficients as required and repackage them along with the frequency information. Think of it as your cushy SUV with an eMTB sitting in the bike rack.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -77,6 +70,11 @@
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"thk686/tidyfft"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="maintenance">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance"></a>
+</h2>
+<p>I intend to keep this package current and availabe on CRAN within reason. I understand why CRAN stives for consistency, yet the regular addtion of new rules breaks existing packageson a fairly often, so please be patient with updates. I am very happy to receive pull requests and suggestions for improvements. The current code base is pure R and I have followed the recommendations of the <a href="https://r-pkgs.org/" class="external-link">R Packages book</a>, so I hope that it will require very few updates. I do not plan to add features for the sake of programming and I intend this to be a fairly stable and unchanging minimal core package.</p>
+</div>
+<div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>Using tidy_fft with ggplot.</p>
@@ -84,7 +82,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">sunspot.month</span>, norm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/to_cplx.html">to_rect</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/to_cplx.html">to_polr</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">-&gt;</span></span>
 <span>  <span class="va">ssm.fft</span></span>
 <span><span class="co">#&gt; # A tibble: 3,177 × 6</span></span>
 <span><span class="co">#&gt;     .dim_1 fx              re     im   mod    arg</span></span>
