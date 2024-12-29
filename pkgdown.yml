@@ -1,8 +1,9 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2024-12-28T20:30Z
+articles:
+  articles/tidyfft: tidyfft.html
+last_built: 2024-12-29T04:07Z
 urls:
   reference: https://thk686.github.io/tidyfft/reference
   article: https://thk686.github.io/tidyfft/articles
