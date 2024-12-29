@@ -14,8 +14,7 @@ tabular data rather than lists, vectors, and so on. There is likely some
 cost in terms of intermediate copies, etc. when using tidy operations.
 However, you can easily extract and work with the raw fourier
 coefficients as required and repackage them along with the frequency
-information. Think of it as your cushy SUV with an eMTB sitting in the
-bike rack.
+information.
 
 ## Installation
 
@@ -30,16 +29,13 @@ pak::pak("thk686/tidyfft")
 ## Maintenance and Contributions
 
 I intend to keep this package current and availabe on CRAN within
-reason. I understand why CRAN stives for consistency, yet the regular
-addtion of new rules breaks existing packageson a fairly often, so
-please be patient with updates. I am very happy to receive pull requests
-and suggestions for improvements. The current code base is pure R and I
+reason. The current code base is pure R and I
 have followed the recommendations of the [R Packages
 book](https://r-pkgs.org/), so I hope that it will require very few
-updates. I do not plan to add features for the sake of programming and I
-intend this to be a fairly stable and unchanging minimal core package.
-If you would like to contribute of code or maintenance, please create an
-issue.
+updates.
+
+If you would like to contribute of code or maintenance, please [raise an
+issue](https://github.com/thk686/tidyfft/issues).
 
 ## Example
 
