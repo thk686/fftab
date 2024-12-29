@@ -24,3 +24,4 @@ Imports:
     tidyr
 URL: https://github.com/thk686/tidyfft, https://thk686.github.io/tidyfft/
 BugReports: https://github.com/thk686/tidyfft/issues
+Config/Needs/website: rmarkdown

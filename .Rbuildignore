@@ -7,3 +7,4 @@
 ^docs$
 ^pkgdown$
 ^make_logo\.R$
+^vignettes/articles$
