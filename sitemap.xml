@@ -6,6 +6,8 @@
 <url><loc>https://thk686.github.io/tidyfft/articles/tidyfft.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/authors.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/index.html</loc></url>
+<url><loc>https://thk686.github.io/tidyfft/reference/add_cplx.html</loc></url>
+<url><loc>https://thk686.github.io/tidyfft/reference/add_l2nm.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/can_repr.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/cross_spec.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-as_tidy_fft_obj.html</loc></url>
@@ -28,6 +30,7 @@
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-size.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-tsp.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/dot-variance.html</loc></url>
+<url><loc>https://thk686.github.io/tidyfft/reference/fft_internal_filters.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/fourier_frequencies.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/get_fx.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/get_rect.html</loc></url>
@@ -35,7 +38,6 @@
 <url><loc>https://thk686.github.io/tidyfft/reference/index.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/phase_diff.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/plot.tidy_fft.html</loc></url>
-<url><loc>https://thk686.github.io/tidyfft/reference/remove_dc.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/tidy_fft.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/tidyfft-package.html</loc></url>
 <url><loc>https://thk686.github.io/tidyfft/reference/to_cplx.html</loc></url>
