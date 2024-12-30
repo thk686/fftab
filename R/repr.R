@@ -198,3 +198,50 @@ set_repr <- function(x, repr) {
   }
   res
 }
+
+#' Add Additional Representations to Fourier Coefficients
+#'
+#' These functions add additional representations to a `tidy_fft` object without removing or modifying existing representations.
+#'
+#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
+#'
+#' @return A `tidy_fft` object with the additional representation included.
+#'
+#' @details
+#' - **`add_cplx()`**: Adds a **complex** (`"cplx"`) representation to the Fourier coefficients.
+#' - **`add_rect()`**: Adds a **rectangular** (`"rect"`) representation to the Fourier coefficients.
+#' - **`add_polr()`**: Adds a **polar** (`"polr"`) representation to the Fourier coefficients.
+#'
+#' These functions are useful for working with multiple representations simultaneously without overwriting existing data.
+#'
+#' @seealso
+#' - [tidy_fft()]
+#'
+#' @examples
+#' matrix(1:9, 3) |>
+#'   tidy_fft() |>
+#'   print(n = 3) |>
+#'   add_polr() |>
+#'   print(n = 3) |>
+#'   add_rect() |>
+#'   print(n = 3) |>
+#'   add_cplx() |>
+#'   print(n = 3)
+#'
+#' @export
+add_cplx <- function(x) {
+  .set_repr(x, "cplx", .keep = "all")
+}
+
+#' @rdname add_cplx
+#' @export
+add_rect <- function(x) {
+  .set_repr(x, "rect", .keep = "all")
+}
+
+#' @rdname add_cplx
+#' @export
+add_polr <- function(x) {
+  .set_repr(x, "polr", .keep = "all")
+}
+

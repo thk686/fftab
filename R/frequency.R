@@ -66,54 +66,44 @@ fourier_frequencies.array <- function(x) {
   rev(tidyr::expand_grid(!!!ff))
 }
 
-#' Remove DC Component and Symmetric Frequencies
+#' Add L2 Norm and Squared L2 Norm of Dimensions
 #'
-#' These functions operate on `tidy_fft` objects to manipulate and filter Fourier coefficients.
+#' These functions compute and add L2 norms and squared L2 norms of the frequency dimensions
+#' (`.dim_*` columns) as additional columns to a `tidy_fft` object.
 #'
-#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
+#' @param x A `tidy_fft` object containing frequency dimensions (`.dim_*`) and associated metadata.
 #'
-#' @return A `tidy_fft` object with filtered coefficients.
+#' @return A `tidy_fft` object with additional columns:
+#' - **`l2nm`**: The L2 norm of the frequency dimensions.
+#' - **`l2sq`**: The squared L2 norm of the frequency dimensions.
 #'
 #' @details
-#' - **`remove_dc()`**: Filters out rows where all `.dim_*` columns have a value of `0`.
-#' - **`remove_symmetric()`**:
-#'   - For real-valued signals, it filters out redundant, complex-conjugate frequencies
-#'   - For complex-valued signals, no filtering is applied as symmetry isn't relevant.
+#' - **`add_l2nm()`**: Adds a column `l2nm` containing the L2 norm, calculated as the square root
+#'   of the sum of squares across `.dim_*` columns.
+#' - **`add_l2sq()`**: Adds a column `l2sq` containing the squared L2 norm, calculated as the sum
+#'   of squares across `.dim_*` columns.
 #'
 #' @seealso
-#' - [dplyr::filter()]
 #' - [tidy_fft()]
+#' - [tibble::add_column()]
 #'
 #' @examples
-#' matrix(rnorm(9), 3) |> tidy_fft() |> remove_dc()
-#'
-#' matrix(rnorm(9), 3) |> tidy_fft() |> remove_symmetric()
+#' matrix(1:9, 3) |>
+#'   tidy_fft() |>
+#'   print(n = 3) |>
+#'   add_l2nm() |>
+#'   print(n = 3) |>
+#'   add_l2sq() |>
+#'   print(n = 3)
 #'
 #' @export
-remove_dc <- function(x) {
-  dplyr::filter(x, dplyr::if_any(dplyr::starts_with(".dim_"), ~ . != 0))
+add_l2nm <- function(x) {
+  tibble::add_column(x, l2nm = .get_dim_cols(x)^2 |> rowSums() |> sqrt())
 }
 
-#' @rdname remove_dc
+#' @rdname add_l2nm
 #' @export
-remove_symmetric <- function(x) {
-  if (.is_complex(x)) {
-    return(x)
-  }
-  x <- .sort_dims(x)
-  i <- .find_dc_row(x)
-  dplyr::slice(x, i:nrow(x))
-}
-
-#' @rdname remove_dc
-#' @export
-split_symmetric <- function(x) {
-  if (.is_complex(x)) {
-    return(x)
-  }
-  x <- .sort_dims(x)
-  i <- .find_dc_row(x)
-  list(symmetric = dplyr::slice(x, 1:(i - 1)),
-       asymmetric = dplyr::slice(x, i:nrow(x)))
+add_l2sq <- function(x) {
+  tibble::add_column(x, l2sq = .get_dim_cols(x)^2 |> rowSums())
 }
 

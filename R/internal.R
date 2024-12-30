@@ -282,13 +282,13 @@ utils::globalVariables(c(
 .variance <- function(x) {
   if (.is_normalized(x)) {
     to_polr(x) |>
-      remove_dc() |>
+      .remove_dc() |>
       dplyr::mutate(mod = mod^2) |>
       get_mod() |>
       sum()
   } else {
     to_polr(x) |>
-      remove_dc() |>
+      .remove_dc() |>
       dplyr::mutate(mod = mod^2) |>
       get_mod() |>
       sum() / .size(x)^2
@@ -317,7 +317,7 @@ utils::globalVariables(c(
 .phase_diff <- function(a, b) {
   cross_spec(b, a) |>
     to_polr() |>
-    remove_symmetric() |>
+    .remove_symmetric() |>
     dplyr::mutate(arg = mod * arg / sum(mod)) |>
     get_arg() |>
     sum()
@@ -342,7 +342,7 @@ utils::globalVariables(c(
 #' @keywords internal
 .correlation <- function(a, b) {
   cross_spec(a, b, norm = TRUE) |>
-    remove_dc() |>
+    .remove_dc() |>
     get_re() |>
     sum() / sqrt(.variance(a) * .variance(b))
 }
@@ -399,3 +399,57 @@ utils::globalVariables(c(
   }
   stop("Input lacks a DC component.")
 }
+
+
+#' @title Remove DC Component and Symmetric Frequencies
+#' @name fft_internal_filters
+#' @description
+#' Internal functions to manipulate and filter Fourier coefficients in `tidy_fft` objects.
+#'
+#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
+#'
+#' @return A `tidy_fft` object with filtered coefficients.
+#'
+#' @details
+#' - **`.remove_dc()`**: Filters out rows where all `.dim_*` columns have a value of `0`.
+#' - **`.remove_symmetric()`**:
+#'   - For real-valued signals, it filters out redundant, complex-conjugate frequencies.
+#'   - For complex-valued signals, no filtering is applied as symmetry isn't relevant.
+#' - **`.split_symmetric()`**: Splits the coefficients into symmetric and asymmetric parts.
+#'
+#' @seealso
+#' - [dplyr::filter()]
+#' - [tidy_fft()]
+#'
+#' @keywords internal
+NULL
+
+#' @rdname fft_internal_filters
+#' @keywords internal
+.remove_dc <- function(x) {
+  dplyr::filter(x, dplyr::if_any(dplyr::starts_with(".dim_"), ~ . != 0))
+}
+
+#' @rdname fft_internal_filters
+#' @keywords internal
+.remove_symmetric <- function(x) {
+  if (.is_complex(x)) {
+    return(x)
+  }
+  x <- .sort_dims(x)
+  i <- .find_dc_row(x)
+  dplyr::slice(x, i:nrow(x))
+}
+
+#' @rdname fft_internal_filters
+#' @keywords internal
+.split_symmetric <- function(x) {
+  if (.is_complex(x)) {
+    return(x)
+  }
+  x <- .sort_dims(x)
+  i <- .find_dc_row(x)
+  list(symmetric = dplyr::slice(x, 1:(i - 1)),
+       asymmetric = dplyr::slice(x, i:nrow(x)))
+}
+

@@ -16,19 +16,24 @@ library(tidyfft)
 
 ```{r}
 sigma <- 25
-scale_fac <- -2 * pi ^ 2 * sigma ^ 2
-matrix(rnorm(512 * 512), 512) |>
-  tidy_fft(norm = TRUE) |>
+scale_fac <- -pi ^ 2 * sigma ^ 2
+
+set.seed(1234)
+
+matrix(rnorm(512 * 512, sd = 100), 512) |>
+  tidy_fft() |>
   to_polr() |>
-  dplyr::mutate(mod = mod * exp(scale_fac * (.dim_1 ^ 2 + .dim_2 ^ 2))) |>
+  add_l2sq() |>
+  dplyr::mutate(mod = mod * exp(scale_fac * l2sq)) |>
   tidy_ifft() ->
   gauss_acf
+
 tidyr::expand_grid(x = 1:512, y = 1:512) |>
   tibble::add_column(z = as.vector(gauss_acf)) |>
   ggplot() +
   aes(x = x, y = y, z = z) +
   geom_contour_filled(bins = 10) +
-  geom_contour(bins = 10) +
+  geom_contour(bins = 10, color = "darkgrey") +
   scale_fill_brewer(palette = "Spectral") +
   coord_equal() +
   theme_void()

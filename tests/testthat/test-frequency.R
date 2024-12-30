@@ -167,7 +167,7 @@ test_that("Removing symmetric coefficients works correctly", {
   i <- .find_dc_row(x)
   fx <- get_fx(x)
   expect_true(all(Conj(fx[1:(i - 1)]) %in% fx[i:length(fx)]))
-  asy <- remove_symmetric(x) |> .get_dim_cols() |> as.matrix()
+  asy <- .remove_symmetric(x) |> .get_dim_cols() |> as.matrix()
   sym <- x[1:(i - 1),] |> .get_dim_cols() |> as.matrix()
   res <- TRUE
   for (i in 1:nrow(sym)) {
