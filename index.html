@@ -61,23 +61,23 @@
 </div>
 <!-- badges: start -->
 
-<p>The goal of <strong>tidyfft</strong> is to make working with fft’s in R easier and more consistent. It follows <strong>the tidy philosophy</strong> by working with tabular data rather than lists, vectors, and so on. There is likely some cost in terms of intermediate copies, etc. when using tidy operations. However, you can easily extract and work with the raw fourier coefficients as required and repackage them along with the frequency information. Think of it as your cushy SUV with an eMTB sitting in the bike rack.</p>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
+<p>The goal of <strong>tidyfft</strong> is to make working with fft’s in R easier and more consistent. It follows <strong>the tidy philosophy</strong> by working with tabular data rather than lists, vectors, and so on.</p>
+<div class="section level3">
+<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h3>
 <p>You can install the development version of tidyfft from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"thk686/tidyfft"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="maintenance-and-contributions">Maintenance and Contributions<a class="anchor" aria-label="anchor" href="#maintenance-and-contributions"></a>
-</h2>
-<p>I intend to keep this package current and availabe on CRAN within reason. I understand why CRAN stives for consistency, yet the regular addtion of new rules breaks existing packageson a fairly often, so please be patient with updates. I am very happy to receive pull requests and suggestions for improvements. The current code base is pure R and I have followed the recommendations of the <a href="https://r-pkgs.org/" class="external-link">R Packages book</a>, so I hope that it will require very few updates. I do not plan to add features for the sake of programming and I intend this to be a fairly stable and unchanging minimal core package. If you would like to contribute of code or maintenance, please create an issue.</p>
+<div class="section level3">
+<h3 id="maintenance-and-contributions">Maintenance and Contributions<a class="anchor" aria-label="anchor" href="#maintenance-and-contributions"></a>
+</h3>
+<p>I intend to keep this package current and availabe on CRAN. If you would like to contribute of code or maintenance, please create an issue on github.</p>
 </div>
-<div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
-</h2>
+<div class="section level3">
+<h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h3>
 <p>Using tidy_fft with ggplot.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">sunspot.month</span>, norm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
