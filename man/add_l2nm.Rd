@@ -3,32 +3,40 @@
 \name{add_l2nm}
 \alias{add_l2nm}
 \alias{add_l2sq}
-\title{Add L2 Norm and Squared L2 Norm of Dimensions}
+\alias{get_l2nm}
+\alias{get_l2sq}
+\title{Add L2 Norm and Squared L2 Norm of Frequency Dimensions}
 \usage{
 add_l2nm(x)
 
 add_l2sq(x)
+
+get_l2nm(x)
+
+get_l2sq(x)
 }
 \arguments{
 \item{x}{A \code{tidy_fft} object containing frequency dimensions (\verb{.dim_*}) and associated metadata.}
 }
 \value{
-A \code{tidy_fft} object with additional columns:
+A vector or \code{tidy_fft} object with additional columns:
 \itemize{
 \item \strong{\code{l2nm}}: The L2 norm of the frequency dimensions.
 \item \strong{\code{l2sq}}: The squared L2 norm of the frequency dimensions.
 }
 }
 \description{
-These functions compute and add L2 norms and squared L2 norms of the frequency dimensions
-(\verb{.dim_*} columns) as additional columns to a \code{tidy_fft} object.
+These functions compute and append the L2 norm and squared L2 norm of the frequency dimensions
+(\verb{.dim_*} columns) as new columns in a \code{tidy_fft} object.
 }
 \details{
 \itemize{
-\item \strong{\code{add_l2nm()}}: Adds a column \code{l2nm} containing the L2 norm, calculated as the square root
-of the sum of squares across \verb{.dim_*} columns.
-\item \strong{\code{add_l2sq()}}: Adds a column \code{l2sq} containing the squared L2 norm, calculated as the sum
-of squares across \verb{.dim_*} columns.
+\item \strong{\code{add_l2nm()}}: Appends a column \code{l2nm} containing the L2 norm, calculated as the square root
+of the sum of squared values across \verb{.dim_*} columns.
+\item \strong{\code{add_l2sq()}}: Appends a column \code{l2sq} containing the squared L2 norm, calculated as the sum
+of squared values across \verb{.dim_*} columns.
+\item \strong{\code{get_l2nm()}}: Returns a numeric vector representing the L2 norm for each row.
+\item \strong{\code{get_l2sq()}}: Returns a numeric vector representing the squared L2 norm for each row.
 }
 }
 \examples{

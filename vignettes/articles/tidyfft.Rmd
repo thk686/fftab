@@ -9,16 +9,110 @@ knitr::opts_chunk$set(
 )
 ```
 
+Unlike R's native `fft` function, `tidy_fft` outputs both the fourier coefficients and
+their associated frequencies in tabular form. This makes it easy to manipulate these data
+using pipes and functions from the tidyverse.
+
+We start by loading the package and setting the random seed for reproducibility.
+
 ```{r setup}
 library(ggplot2)
 library(tidyfft)
+set.seed(1234)
 ```
+
+Currently, the `tidy_fft` function supports numeric and complex vectors, time series
+objects, and multidimensional arrays. I plan to extend this to the multivariate case,
+in which multiple columns in a matrix or table are transformed simultaneously.
+
+### Vector input
+
+The simplest case is the fft of a numeric vector.
+
+```{r}
+v <- rnorm(8)
+v_tfft <- tidy_fft(v)
+print(v_tfft)
+```
+
+The output table has two columns. The `.dim_1` column contans the normalized frequencies in cycles
+per unit distance along the sequence, i.e., a length 8 vector is 8 units long. For an even-length
+vector, the largest frequency will be the nyquist frequency 0.5 as shown here. Many treatments
+use un-normalized frequencies when not dealing with explicit dimensions, so be aware of the
+difference. The maximum un-normalized frequence in the case above would equal four cycles per the
+length of the vector. Notice that following convention, the frequencies wrap at zero producing
+negative frequencies.
+
+The `fx` column contains the associated fourier coefficients in complex form. Because it is often
+easier to manipulate real numbers, functions are provided to change the representation between
+complex (`cplx`), rectangular (`rect`), and polar (`polr`).
+
+```{r}
+v_tfft |> to_rect() |> print(n = 3)
+v_tfft |> to_polr() |> print(n = 3)
+```
+
+The columns `re`, `im`, `mod`, and `arg`, are produced by applying the R functions `Re`, `Im`, `Mod`, and `Arg` to the complex coefficients. There are a set of matching `get_*` functions that
+retrieve different parts as vectors or matrices.
+
+```{r}
+v_tfft |> get_arg()
+```
+
+These functions will work correctly with any representation and are used internally so that all
+`tidy_fft` package functions produce the same output given any input representation. You do not
+need, for example, to convert from the polar to rectangular representation to retrieve the imaginary part of the coefficients using `get_im`.
+
+### Manipulation with `dplyr`
+
+The polar representation is useful if we want to manipulate the phase information contained in a signal.
+
+```{r fig.asp=0.5}
+s1 <- seq(-pi, pi, length.out = 200) |>
+  tibble::as_tibble() |>
+  dplyr::mutate(x = value, y = cos(8 * value), treatment = "original", .keep = "none")
+ggplot(s1) +
+  geom_line(aes(x = x, y = y)) +
+  theme_classic()
+```
+
+Now we apply the fft and make a basic plot. The provided `plot` function is only for a quick
+look. Use of `ggplot` directly is recommended for reports.
+
+```{r fig.asp=0.5}
+s1_tfft <- with(s1, y |> tidy_fft() |> to_polr())
+plot(s1_tfft) # calls ggplot internally
+```
+
+To shift the signal, we need to add a factor to the phase (`arg`). Because this
+example has real-valued input, we have to respect conjugate symmetry.
+
+```{r}
+s2_tfft <- s1_tfft |>
+  dplyr::mutate(arg = dplyr::case_when(
+    .dim_1 == 0 ~ arg,          # DC component
+    .dim_1 == 0.5 ~ arg,        # nyquist frequency
+    .dim_1 > 0 ~ arg - pi,  # Positive frequencies
+    .dim_1 < 0 ~ arg + pi)) # Conjugate negative frequencies
+```
+
+Now we can reconstruct the shifted signal and compare it ot the original.
+
+```{r fig.asp=0.5}
+s1 |>
+  dplyr::mutate(y = s2_tfft |> tidy_ifft(), treatment = "shifted") |>
+  dplyr::bind_rows(s1) |>
+  dplyr::mutate(treatment = as.factor(treatment)) |>
+  ggplot() +
+    geom_line(aes(x = x, y = y, color = treatment), lwd = 1, alpha = 0.5) +
+    scale_color_manual(values = c("darkblue", "darkred")) +
+    theme_classic()
+```
+
 
 ```{r}
 sigma <- 25
 scale_fac <- -pi ^ 2 * sigma ^ 2
-
-set.seed(1234)
 
 matrix(rnorm(512 * 512, sd = 100), 512) |>
   tidy_fft() |>

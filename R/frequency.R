@@ -66,22 +66,25 @@ fourier_frequencies.array <- function(x) {
   rev(tidyr::expand_grid(!!!ff))
 }
 
-#' Add L2 Norm and Squared L2 Norm of Dimensions
+#' Add L2 Norm and Squared L2 Norm of Frequency Dimensions
 #'
-#' These functions compute and add L2 norms and squared L2 norms of the frequency dimensions
-#' (`.dim_*` columns) as additional columns to a `tidy_fft` object.
+#' These functions compute and append the L2 norm and squared L2 norm of the frequency dimensions
+#' (`.dim_*` columns) as new columns in a `tidy_fft` object.
 #'
 #' @param x A `tidy_fft` object containing frequency dimensions (`.dim_*`) and associated metadata.
 #'
-#' @return A `tidy_fft` object with additional columns:
+#' @return A vector or `tidy_fft` object with additional columns:
 #' - **`l2nm`**: The L2 norm of the frequency dimensions.
 #' - **`l2sq`**: The squared L2 norm of the frequency dimensions.
 #'
 #' @details
-#' - **`add_l2nm()`**: Adds a column `l2nm` containing the L2 norm, calculated as the square root
-#'   of the sum of squares across `.dim_*` columns.
-#' - **`add_l2sq()`**: Adds a column `l2sq` containing the squared L2 norm, calculated as the sum
-#'   of squares across `.dim_*` columns.
+#' - **`add_l2nm()`**: Appends a column `l2nm` containing the L2 norm, calculated as the square root
+#'   of the sum of squared values across `.dim_*` columns.
+#' - **`add_l2sq()`**: Appends a column `l2sq` containing the squared L2 norm, calculated as the sum
+#'   of squared values across `.dim_*` columns.
+#'
+#' - **`get_l2nm()`**: Returns a numeric vector representing the L2 norm for each row.
+#' - **`get_l2sq()`**: Returns a numeric vector representing the squared L2 norm for each row.
 #'
 #' @seealso
 #' - [tidy_fft()]
@@ -98,12 +101,25 @@ fourier_frequencies.array <- function(x) {
 #'
 #' @export
 add_l2nm <- function(x) {
-  tibble::add_column(x, l2nm = .get_dim_cols(x)^2 |> rowSums() |> sqrt())
+  tibble::add_column(x, l2nm = get_l2nm(x))
 }
 
 #' @rdname add_l2nm
 #' @export
 add_l2sq <- function(x) {
-  tibble::add_column(x, l2sq = .get_dim_cols(x)^2 |> rowSums())
+  tibble::add_column(x, l2sq = get_l2sq(x))
 }
+
+#' @rdname add_l2nm
+#' @export
+get_l2nm <- function(x) {
+  .get_dim_cols(x)^2 |> rowSums() |> sqrt()
+}
+
+#' @rdname add_l2nm
+#' @export
+get_l2sq <- function(x) {
+  .get_dim_cols(x)^2 |> rowSums()
+}
+
 
