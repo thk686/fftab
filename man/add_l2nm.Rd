@@ -16,10 +16,10 @@ get_l2nm(x)
 get_l2sq(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object containing frequency dimensions (\verb{.dim_*}) and associated metadata.}
+\item{x}{A \code{fftab} object containing frequency dimensions (\verb{.dim_*}) and associated metadata.}
 }
 \value{
-A vector or \code{tidy_fft} object with additional columns:
+A vector or \code{fftab} object with additional columns:
 \itemize{
 \item \strong{\code{l2nm}}: The L2 norm of the frequency dimensions.
 \item \strong{\code{l2sq}}: The squared L2 norm of the frequency dimensions.
@@ -27,7 +27,7 @@ A vector or \code{tidy_fft} object with additional columns:
 }
 \description{
 These functions compute and append the L2 norm and squared L2 norm of the frequency dimensions
-(\verb{.dim_*} columns) as new columns in a \code{tidy_fft} object.
+(\verb{.dim_*} columns) as new columns in a \code{fftab} object.
 }
 \details{
 \itemize{
@@ -41,7 +41,7 @@ of squared values across \verb{.dim_*} columns.
 }
 \examples{
 matrix(1:9, 3) |>
-  tidy_fft() |>
+  fftab() |>
   print(n = 3) |>
   add_l2nm() |>
   print(n = 3) |>
@@ -51,7 +51,7 @@ matrix(1:9, 3) |>
 }
 \seealso{
 \itemize{
-\item \code{\link[=tidy_fft]{tidy_fft()}}
+\item \code{\link[=fftab]{fftab()}}
 \item \code{\link[tibble:add_column]{tibble::add_column()}}
 }
 }

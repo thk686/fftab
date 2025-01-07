@@ -36,9 +36,9 @@ utils::globalVariables(c(
   }
 }
 
-#' Build a Tidy FFT Object
+#' Build a FFTAB Object
 #'
-#' Converts an object into a `tidy_fft` object with additional metadata attributes.
+#' Converts an object into a `fftab` object with additional metadata attributes.
 #'
 #' @param x The input object to convert, typically a tibble or data frame.
 #' @param .is_normalized A logical value indicating if the input is normalized.
@@ -46,18 +46,18 @@ utils::globalVariables(c(
 #' @param ... Additional attributes to include in the structured object, such as
 #'   metadata or specific attributes required for Fourier Transform analysis.
 #'
-#' @return The input object `x`, with the `tidy_fft` class and any additional
+#' @return The input object `x`, with the `fftab` class and any additional
 #'   attributes provided in `...`.
 #'
 #' @keywords internal
-.as_tidy_fft_obj <- function(x, .is_normalized, .is_complex, ...) {
+.as_fftab_obj <- function(x, .is_normalized, .is_complex, ...) {
   structure(
     x,
     ...,
     .size = nrow(x),
     .is_complex = .is_complex,
     .is_normalized = .is_normalized,
-    class = c("tidy_fft", class(x))
+    class = c("fftab", class(x))
   )
 }
 
@@ -200,7 +200,7 @@ utils::globalVariables(c(
 #'
 #' Retrieves the frequency of a time series object.
 #'
-#' @param x A `tidy_fft` object or time series.
+#' @param x A `fftab` object or time series.
 #'
 #' @return The frequency value or `1` if not a time series.
 #' @keywords internal
@@ -235,8 +235,7 @@ utils::globalVariables(c(
 #' @return The object in the specified representation format.
 #' @keywords internal
 .set_repr <- function(x, repr, .keep = "unused") {
-  switch(
-    repr,
+  switch(repr,
     cplx = to_cplx(x, .keep = .keep),
     rect = to_rect(x, .keep = .keep),
     polr = to_polr(x, .keep = .keep),
@@ -300,8 +299,8 @@ utils::globalVariables(c(
 #' Computes the phase difference between two signals based on their cross-spectrum,
 #' with symmetric and redundant frequency components removed.
 #'
-#' @param a A `tidy_fft` object or signal representing the first input.
-#' @param b A `tidy_fft` object or signal representing the second input.
+#' @param a A `fftab` object or signal representing the first input.
+#' @param b A `fftab` object or signal representing the second input.
 #'
 #' @return A numeric value representing the **phase difference** (in radians) between the two signals.
 #'
@@ -327,8 +326,8 @@ utils::globalVariables(c(
 #'
 #' Computes the normalized correlation between two signals based on their Fourier representations.
 #'
-#' @param a A `tidy_fft` object or signal representing the first input.
-#' @param b A `tidy_fft` object or signal representing the second input.
+#' @param a A `fftab` object or signal representing the first input.
+#' @param b A `fftab` object or signal representing the second input.
 #'
 #' @return A numeric value representing the **normalized correlation** between the two signals.
 #'
@@ -404,11 +403,11 @@ utils::globalVariables(c(
 #' @title Remove DC Component and Symmetric Frequencies
 #' @name fft_internal_filters
 #' @description
-#' Internal functions to manipulate and filter Fourier coefficients in `tidy_fft` objects.
+#' Internal functions to manipulate and filter Fourier coefficients in `fftab` objects.
 #'
-#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
+#' @param x A `fftab` object containing Fourier coefficients and associated metadata.
 #'
-#' @return A `tidy_fft` object with filtered coefficients.
+#' @return A `fftab` object with filtered coefficients.
 #'
 #' @details
 #' - **`.remove_dc()`**: Filters out rows where all `.dim_*` columns have a value of `0`.
@@ -419,7 +418,7 @@ utils::globalVariables(c(
 #'
 #' @seealso
 #' - [dplyr::filter()]
-#' - [tidy_fft()]
+#' - [fftab()]
 #'
 #' @keywords internal
 NULL
@@ -449,7 +448,8 @@ NULL
   }
   x <- .sort_dims(x)
   i <- .find_dc_row(x)
-  list(symmetric = dplyr::slice(x, 1:(i - 1)),
-       asymmetric = dplyr::slice(x, i:nrow(x)))
+  list(
+    symmetric = dplyr::slice(x, 1:(i - 1)),
+    asymmetric = dplyr::slice(x, i:nrow(x))
+  )
 }
-

@@ -14,13 +14,13 @@
 .split_symmetric(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object containing Fourier coefficients and associated metadata.}
+\item{x}{A \code{fftab} object containing Fourier coefficients and associated metadata.}
 }
 \value{
-A \code{tidy_fft} object with filtered coefficients.
+A \code{fftab} object with filtered coefficients.
 }
 \description{
-Internal functions to manipulate and filter Fourier coefficients in \code{tidy_fft} objects.
+Internal functions to manipulate and filter Fourier coefficients in \code{fftab} objects.
 }
 \details{
 \itemize{
@@ -36,7 +36,7 @@ Internal functions to manipulate and filter Fourier coefficients in \code{tidy_f
 \seealso{
 \itemize{
 \item \code{\link[dplyr:filter]{dplyr::filter()}}
-\item \code{\link[=tidy_fft]{tidy_fft()}}
+\item \code{\link[=fftab]{fftab()}}
 }
 }
 \keyword{internal}

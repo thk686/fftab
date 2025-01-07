@@ -1,4 +1,4 @@
-fft_obj <- tidy_fft(rnorm(32)) |> set_repr(c("cplx", "rect", "polr"))
+fft_obj <- fftab(rnorm(32)) |> set_repr(c("cplx", "rect", "polr"))
 
 # Tests start here
 test_that("get_fx returns raw Fourier coefficients", {

@@ -8,7 +8,7 @@ test_that("cross_spec.default computes the cross FFT correctly", {
   b <- generate_random_data(8)
 
   result <- cross_spec(a, b)
-  expect_s3_class(result, "tidy_fft")
+  expect_s3_class(result, "fftab")
   expect_true("fx" %in% colnames(result))
 })
 
@@ -17,7 +17,7 @@ test_that("cross_spec.ts preserves time series attributes", {
   b <- generate_time_series(8, frequency = 4)
 
   result <- cross_spec(a, b)
-  expect_s3_class(result, "tidy_fft")
+  expect_s3_class(result, "fftab")
   expect_equal(attr(result, ".tsp"), attr(a, "tsp"))
 })
 
@@ -33,7 +33,7 @@ test_that("cross_spec.array preserves array dimensions", {
   b <- array(runif(8), dim = c(2, 4))
 
   result <- cross_spec(a, b)
-  expect_s3_class(result, "tidy_fft")
+  expect_s3_class(result, "fftab")
   expect_equal(attr(result, ".dim"), dim(a))
 })
 
@@ -44,9 +44,9 @@ test_that("cross_spec.array fails for mismatched dimensions", {
   expect_error(cross_spec(a, b), "dim")
 })
 
-test_that("cross_spec.tidy_fft respects conjugate and normalization options", {
-  a <- tidy_fft(generate_random_data(8))
-  b <- tidy_fft(generate_random_data(8))
+test_that("cross_spec.fftab respects conjugate and normalization options", {
+  a <- fftab(generate_random_data(8))
+  b <- fftab(generate_random_data(8))
 
   result_conj <- cross_spec(a, b, conj = TRUE)
   result_no_conj <- cross_spec(a, b, conj = FALSE)
@@ -205,10 +205,10 @@ test_that("Can calculate shifted correlation function in frequency domain", {
 
 test_that("phase_diff correlation matches time-domain correlation after alignment", {
   # Parameters for signal generation
-  freq <- 2          # Frequency in Hz
+  freq <- 2 # Frequency in Hz
   sample_rate <- 100 # Samples per second
-  duration <- 1      # Duration in seconds
-  phase_shift <- pi / 4  # Known phase shift in radians (45°)
+  duration <- 1 # Duration in seconds
+  phase_shift <- pi / 4 # Known phase shift in radians (45°)
 
   # Time vector
   t <- seq(0, duration, length.out = sample_rate * duration)
@@ -250,10 +250,10 @@ test_that("phase_diff correlation matches time-domain correlation after alignmen
 
 test_that(".correlation computes correct normalized correlation between signals", {
   # Parameters for signal generation
-  freq <- 2          # Frequency in Hz
+  freq <- 2 # Frequency in Hz
   sample_rate <- 100 # Samples per second
-  duration <- 1      # Duration in seconds
-  phase_shift <- pi / 4  # Phase shift in radians (45°)
+  duration <- 1 # Duration in seconds
+  phase_shift <- pi / 4 # Phase shift in radians (45°)
 
   # Time vector
   t <- seq(0, duration, length.out = sample_rate * duration)
@@ -269,8 +269,8 @@ test_that(".correlation computes correct normalized correlation between signals"
   signal_b <- signal_b + noise_b
 
   # Compute FFT of the signals
-  fft_a <- tidy_fft(signal_a)
-  fft_b <- tidy_fft(signal_b)
+  fft_a <- fftab(signal_a)
+  fft_b <- fftab(signal_b)
 
   # Compute correlation
   computed_corr <- .correlation(fft_a, fft_b)
@@ -286,16 +286,16 @@ test_that(".shift_phase with arbitrary phase shift works in the time domain", {
   # Generate a sine wave signal
   n <- 1024
   t <- seq(0, 2 * pi, length.out = n)
-  x <- sin(t)  # Original sine wave signal
+  x <- sin(t) # Original sine wave signal
 
   # Perform FFT
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Shift phase by pi/4
   shifted_fft <- .shift_phase(fft_x, pi / 4)
 
   # Inverse FFT to get back to time domain
-  shifted_x <- tidy_ifft(shifted_fft)
+  shifted_x <- ifftab(shifted_fft)
 
   # Expected signal (shift sine by pi/4 manually)
   expected_x <- sin(t + pi / 4)
@@ -303,7 +303,3 @@ test_that(".shift_phase with arbitrary phase shift works in the time domain", {
   # Compare time-domain signals
   expect_equal(shifted_x, expected_x, tolerance = 0.01)
 })
-
-
-
-

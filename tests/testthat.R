@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(tidyfft)
+library(fftab)
 
-test_check("tidyfft")
+test_check("fftab")

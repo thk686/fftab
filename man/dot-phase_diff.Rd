@@ -7,9 +7,9 @@
 .phase_diff(a, b)
 }
 \arguments{
-\item{a}{A \code{tidy_fft} object or signal representing the first input.}
+\item{a}{A \code{fftab} object or signal representing the first input.}
 
-\item{b}{A \code{tidy_fft} object or signal representing the second input.}
+\item{b}{A \code{fftab} object or signal representing the second input.}
 }
 \value{
 A numeric value representing the \strong{phase difference} (in radians) between the two signals.

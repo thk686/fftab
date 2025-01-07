@@ -107,8 +107,8 @@ test_that("get_fx extracts complex Fourier coefficients correctly from a polar r
   # Input signal
   x <- c(1, 0, -1, 0)
 
-  # Generate tidy_fft object
-  fft_result <- tidy_fft(x) |> to_polr() # Convert to polar representation
+  # Generate fftab object
+  fft_result <- fftab(x) |> to_polr() # Convert to polar representation
 
   # Extract complex Fourier coefficients using get_fx
   fx_values <- get_fx(fft_result)
@@ -126,34 +126,34 @@ test_that("get_fx extracts complex Fourier coefficients correctly from a polar r
 test_that("set_repr correctly applies single representation", {
   # Generate test data
   x <- sin(seq(0, 2 * pi, length.out = 128))
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Test complex representation
   cplx_repr <- set_repr(fft_x, "cplx")
-  expect_s3_class(cplx_repr, "tidy_fft")
+  expect_s3_class(cplx_repr, "fftab")
   expect_true("fx" %in% names(cplx_repr))
 
   # Test rectangular representation
   rect_repr <- set_repr(fft_x, "rect")
-  expect_s3_class(rect_repr, "tidy_fft")
+  expect_s3_class(rect_repr, "fftab")
   expect_true(all(c("re", "im") %in% names(rect_repr)))
 
   # Test polar representation
   polr_repr <- set_repr(fft_x, "polr")
-  expect_s3_class(polr_repr, "tidy_fft")
+  expect_s3_class(polr_repr, "fftab")
   expect_true(all(c("mod", "arg") %in% names(polr_repr)))
 })
 
 test_that("set_repr correctly applies multiple representations", {
   # Generate test data
   x <- sin(seq(0, 2 * pi, length.out = 128))
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Apply sequential representations
   multi_repr <- set_repr(fft_x, c("rect", "polr"))
 
   # Check final representation
-  expect_s3_class(multi_repr, "tidy_fft")
+  expect_s3_class(multi_repr, "fftab")
   expect_true(all(c("mod", "arg") %in% names(multi_repr)))
 
   # Check intermediate preservation
@@ -163,7 +163,7 @@ test_that("set_repr correctly applies multiple representations", {
 test_that("set_repr handles invalid representation gracefully", {
   # Generate test data
   x <- sin(seq(0, 2 * pi, length.out = 128))
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Invalid representation
   expect_error(set_repr(fft_x, "invalid_repr"), "Invalid representation")
@@ -172,7 +172,7 @@ test_that("set_repr handles invalid representation gracefully", {
 test_that("set_repr retains original dimensions", {
   # Generate test data
   x <- sin(seq(0, 2 * pi, length.out = 128))
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Apply representation
   polr_repr <- set_repr(fft_x, "polr")
@@ -181,4 +181,3 @@ test_that("set_repr retains original dimensions", {
   expect_equal(nrow(fft_x), nrow(polr_repr))
   expect_equal(ncol(fft_x) + 1, ncol(polr_repr)) # New columns added
 })
-

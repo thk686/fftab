@@ -22,7 +22,7 @@ get_mod(x)
 get_arg(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object containing FFT results.}
+\item{x}{A \code{fftab} object containing FFT results.}
 
 \item{norm}{Logical. If \code{TRUE}, forces normalized coefficients. If \code{FALSE},
 ensures non-normalized coefficients.}
@@ -40,30 +40,30 @@ or non-normalized based on the \code{norm} parameter.
 }
 }
 \description{
-These utility functions extract specific components from a \code{tidy_fft} object.
+These utility functions extract specific components from a \code{fftab} object.
 \code{get_fx} retrieves the raw Fourier coefficients, while \code{get_fx_norm} ensures the
 coefficients are either normalized or not normalized based on the \code{norm} parameter.
 }
 \details{
 \itemize{
-\item \strong{\code{get_fx}}: Returns coefficients as they are stored in the \code{tidy_fft} object.
+\item \strong{\code{get_fx}}: Returns coefficients as they are stored in the \code{fftab} object.
 \item \strong{\code{get_fx_norm}}: Adjusts coefficients if they are not in the desired normalization state.
 \item \strong{\code{get_re}, \code{get_im}}: Extract real and imaginary components.
 \item \strong{\code{get_mod}, \code{get_arg}}: Compute magnitude and phase of coefficients.
 }
 }
 \examples{
-tidy_fft(c(1, 0, -1, 0)) |> get_fx()
+fftab(c(1, 0, -1, 0)) |> get_fx()
 
-tidy_fft(c(1, 0, -1, 0)) |> get_fx_norm(norm = TRUE)
+fftab(c(1, 0, -1, 0)) |> get_fx_norm(norm = TRUE)
 
-tidy_fft(c(1, 0, -1, 0)) |> get_re()
+fftab(c(1, 0, -1, 0)) |> get_re()
 
-tidy_fft(c(1, 0, -1, 0)) |> get_im()
+fftab(c(1, 0, -1, 0)) |> get_im()
 
-tidy_fft(c(1, 0, -1, 0)) |> get_mod()
+fftab(c(1, 0, -1, 0)) |> get_mod()
 
-tidy_fft(c(1, 0, -1, 0)) |> get_arg()
+fftab(c(1, 0, -1, 0)) |> get_arg()
 
 }
 \seealso{

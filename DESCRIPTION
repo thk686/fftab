@@ -1,4 +1,4 @@
-Package: tidyfft
+Package: fftab
 Title: Tidy manipulation of fourier transformed data
 Version: 0.0.0.9000
 Authors@R: 
@@ -22,6 +22,6 @@ Imports:
     lifecycle,
     tibble,
     tidyr
-URL: https://github.com/thk686/tidyfft, https://thk686.github.io/tidyfft/
-BugReports: https://github.com/thk686/tidyfft/issues
+URL: https://github.com/thk686/fftab, https://thk686.github.io/fftab/
+BugReports: https://github.com/thk686/fftab/issues
 Config/Needs/website: rmarkdown
