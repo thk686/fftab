@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Tidy manipulation of fourier transformed data • tidyfft</title>
+<title>Tidy manipulation of fourier transformed data • fftab</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -27,7 +27,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="index.html">tidyfft</a>
+    <a class="navbar-brand me-2" href="index.html">fftab</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
 
@@ -38,14 +38,14 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="articles/tidyfft.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="articles/fftab.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/thk686/tidyfft/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/thk686/fftab/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -55,36 +55,31 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="tidyfft-">tidyfft 
-<a class="anchor" aria-label="anchor" href="#tidyfft-"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="fftab-">fftab 
+<a class="anchor" aria-label="anchor" href="#fftab-"></a>
 </h1>
 </div>
 <!-- badges: start -->
 
-<p>The goal of <strong>tidyfft</strong> is to make working with fft’s in R easier and more consistent. It follows <strong>the tidy philosophy</strong> by working with tabular data rather than lists, vectors, and so on.</p>
+<p>The goal of <strong>fftab</strong> is to make working with fft’s in R easier and more consistent. It follows <a href="https://www.tidyverse.org/" class="external-link">the tidy philosophy</a> by working with tabular data rather than lists, vectors, and so on.</p>
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>You can install the development version of tidyfft from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the development version of fftab from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"thk686/tidyfft"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="maintenance-and-contributions">Maintenance and Contributions<a class="anchor" aria-label="anchor" href="#maintenance-and-contributions"></a>
-</h3>
-<p>I intend to keep this package current and availabe on CRAN. If you would like to contribute of code or maintenance, please create an issue on github.</p>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"thk686/fftab"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h3>
-<p>Using tidy_fft with ggplot.</p>
+<p>Using fftab with ggplot.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/tidy_fft.html">tidy_fft</a></span><span class="op">(</span><span class="va">sunspot.month</span>, norm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/fftab.html">fftab</a></span><span class="op">(</span><span class="va">sunspot.month</span>, norm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/to_cplx.html">to_rect</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/to_cplx.html">to_polr</a></span><span class="op">(</span>.keep <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">-&gt;</span></span>
-<span>  <span class="va">ssm.fft</span></span>
+<span><span class="va">ssm.fft</span></span>
 <span><span class="co">#&gt; # A tibble: 3,177 × 6</span></span>
 <span><span class="co">#&gt;    .dim_1 fx              re     im   mod    arg</span></span>
 <span><span class="co">#&gt;     &lt;dbl&gt; &lt;cpl&gt;        &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
@@ -100,7 +95,7 @@
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Sunspot count"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span></span>
-<span>  <span class="va">p1</span></span>
+<span><span class="va">p1</span></span>
 <span></span>
 <span><span class="va">xlocs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="va">xlabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"10"</span>, <span class="st">"100"</span><span class="op">)</span></span>
@@ -115,7 +110,7 @@
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Cycle duration (years)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Mean amplitude"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span></span>
-<span>  <span class="va">p2</span></span>
+<span><span class="va">p2</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p1</span> <span class="op">/</span> <span class="va">p2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
@@ -124,8 +119,8 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/thk686/tidyfft/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/thk686/tidyfft/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/thk686/fftab/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/thk686/fftab/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -141,7 +136,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing tidyfft</a></li>
+<li><a href="authors.html#citation">Citing fftab</a></li>
 </ul>
 </div>
 
@@ -155,7 +150,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
