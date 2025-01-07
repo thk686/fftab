@@ -13,13 +13,13 @@ add_rect(x)
 add_polr(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object containing Fourier coefficients and associated metadata.}
+\item{x}{A \code{fftab} object containing Fourier coefficients and associated metadata.}
 }
 \value{
-A \code{tidy_fft} object with the additional representation included.
+A \code{fftab} object with the additional representation included.
 }
 \description{
-These functions add additional representations to a \code{tidy_fft} object without removing or modifying existing representations.
+These functions add additional representations to a \code{fftab} object without removing or modifying existing representations.
 }
 \details{
 \itemize{
@@ -32,7 +32,7 @@ These functions are useful for working with multiple representations simultaneou
 }
 \examples{
 matrix(1:9, 3) |>
-  tidy_fft() |>
+  fftab() |>
   print(n = 3) |>
   add_polr() |>
   print(n = 3) |>
@@ -44,6 +44,6 @@ matrix(1:9, 3) |>
 }
 \seealso{
 \itemize{
-\item \code{\link[=tidy_fft]{tidy_fft()}}
+\item \code{\link[=fftab]{fftab()}}
 }
 }

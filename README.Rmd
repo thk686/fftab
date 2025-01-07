@@ -13,48 +13,43 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tidyfft <a href="https://github.com/thk686/tidyfft"><img src="man/figures/logo.png" align="right" height="138" /></a>
+# fftab <a href="https://github.com/thk686/fftab"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/tidyfft/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of **tidyfft** is to make working with fft’s in R easier and more
-consistent. It follows **the tidy philosophy** by working with tabular data
-rather than lists, vectors, and so on.
+The goal of **fftab** is to make working with fft’s in R easier and more
+consistent. It follows [the tidy philosophy](https://www.tidyverse.org/) by
+working with tabular data rather than lists, vectors, and so on.
 
 ### Installation
 
-You can install the development version of tidyfft from
+You can install the development version of fftab from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("thk686/tidyfft")
+pak::pak("thk686/fftab")
 ```
-
-### Maintenance and Contributions
-
-I intend to keep this package current and availabe on CRAN. If you would like to contribute of
-code or maintenance, please create an issue on github.
 
 ### Example
 
-Using tidy_fft with ggplot.
+Using fftab with ggplot.
 
 ```{r include=FALSE}
 options(digits = 2)
 library(ggfortify)
 library(patchwork)
-library(tidyfft)
+library(fftab)
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-tidy_fft(sunspot.month, norm = TRUE) |>
+fftab(sunspot.month, norm = TRUE) |>
   to_rect(.keep = "all") |>
   to_polr(.keep = "all") |>
   print(n = 5) ->
-  ssm.fft
+ssm.fft
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -63,7 +58,7 @@ ggplot(fortify(sunspot.month)) +
   ylab("Sunspot count") +
   xlab("Year") +
   theme_bw() ->
-  p1
+p1
 
 xlocs <- c(1, 0.1, 0.01)
 xlabs <- c("1", "10", "100")
@@ -78,7 +73,7 @@ ssm.fft |>
   xlab("Cycle duration (years)") +
   ylab("Mean amplitude") +
   theme_bw() ->
-  p2
+p2
 
 print(p1 / p2)
 ```

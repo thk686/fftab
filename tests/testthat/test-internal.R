@@ -29,14 +29,14 @@ test_that(".fft handles single-element input", {
 })
 
 test_that(".fft handles complex input", {
-  x <- c(1+1i, 2+2i, 3+3i)
+  x <- c(1 + 1i, 2 + 2i, 3 + 3i)
   expected <- stats::fft(x)
   result <- .fft(x)
   expect_equal(result, expected)
 })
 
 test_that(".fft normalization works with complex input", {
-  x <- c(1+1i, 2+2i, 3+3i)
+  x <- c(1 + 1i, 2 + 2i, 3 + 3i)
   expected <- stats::fft(x) / length(x)
   result <- .fft(x, norm = TRUE)
   expect_equal(result, expected)
@@ -178,22 +178,22 @@ test_that(".size retrieves size attribute", {
 
 test_that(".variance computes correct variance for real input", {
   x <- rnorm(1024)
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
   expect_equal(.variance(fft_x), var(x), tolerance = 0.01)
 
   x <- rnorm(1024, mean = -2, sd = 2)
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
   expect_equal(.variance(fft_x), var(x), tolerance = 0.01)
 
   x <- rnorm(1024, mean = 3, sd = 5)
-  fft_x <- tidy_fft(x, norm = TRUE)
+  fft_x <- fftab(x, norm = TRUE)
   expect_equal(.variance(fft_x), var(x), tolerance = 0.01)
 })
 
 test_that(".shift_phase correctly shifts phase for real input", {
   # Generate a simple sine wave
   x <- sin(seq(0, 2 * pi, length.out = 128))
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Shift phase by pi/2
   shifted <- .shift_phase(fft_x, pi / 2)
@@ -215,9 +215,11 @@ test_that(".shift_phase correctly shifts phase for real input", {
 
 test_that(".shift_phase correctly shifts phase for complex input", {
   # Generate a complex sine wave
-  x <- complex(real = cos(seq(0, 2 * pi, length.out = 128)),
-               imaginary = sin(seq(0, 2 * pi, length.out = 128)))
-  fft_x <- tidy_fft(x)
+  x <- complex(
+    real = cos(seq(0, 2 * pi, length.out = 128)),
+    imaginary = sin(seq(0, 2 * pi, length.out = 128))
+  )
+  fft_x <- fftab(x)
 
   # Shift phase by pi/4
   shifted <- .shift_phase(fft_x, pi / 4)
@@ -232,16 +234,16 @@ test_that(".shift_phase correctly shifts phase in the time domain", {
   # Generate a sine wave signal
   n <- 1024
   t <- seq(0, 2 * pi, length.out = n)
-  x <- sin(t)  # Original sine wave signal
+  x <- sin(t) # Original sine wave signal
 
   # Perform FFT
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Shift phase by pi/2
   shifted_fft <- .shift_phase(fft_x, pi / 2)
 
   # Inverse FFT to get back to time domain
-  shifted_x <- tidy_ifft(shifted_fft)
+  shifted_x <- ifftab(shifted_fft)
 
   # Expected signal after phase shift (pi/2 phase shift -> cos wave)
   expected_x <- cos(t)
@@ -254,16 +256,16 @@ test_that(".shift_phase shifts a cosine wave correctly in the time domain", {
   # Generate a cosine wave signal
   n <- 1024
   t <- seq(0, 2 * pi, length.out = n)
-  x <- cos(t)  # Original cosine wave signal
+  x <- cos(t) # Original cosine wave signal
 
   # Perform FFT
-  fft_x <- tidy_fft(x)
+  fft_x <- fftab(x)
 
   # Shift phase by pi/2
   shifted_fft <- .shift_phase(fft_x, pi / 2)
 
   # Inverse FFT to get back to time domain
-  shifted_x <- tidy_ifft(shifted_fft)
+  shifted_x <- ifftab(shifted_fft)
 
   # Expected signal after phase shift (pi/2 phase shift -> -sin wave)
   expected_x <- -sin(t)
@@ -271,4 +273,3 @@ test_that(".shift_phase shifts a cosine wave correctly in the time domain", {
   # Compare time-domain signals
   expect_equal(shifted_x, expected_x, tolerance = 0.01)
 })
-

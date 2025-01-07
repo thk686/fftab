@@ -5,7 +5,7 @@
 \alias{cross_spec.default}
 \alias{cross_spec.ts}
 \alias{cross_spec.array}
-\alias{cross_spec.tidy_fft}
+\alias{cross_spec.fftab}
 \title{Compute the Cross-Spectrum (Cross FFT)}
 \usage{
 cross_spec(a, b, norm = FALSE, conj = TRUE)
@@ -16,11 +16,11 @@ cross_spec(a, b, norm = FALSE, conj = TRUE)
 
 \method{cross_spec}{array}(a, b, norm = FALSE, conj = TRUE)
 
-\method{cross_spec}{tidy_fft}(a, b, norm = FALSE, conj = TRUE)
+\method{cross_spec}{fftab}(a, b, norm = FALSE, conj = TRUE)
 }
 \arguments{
 \item{a}{The first input for the cross FFT. Supported types include numeric
-vectors, \code{ts} objects, arrays, and \code{tidy_fft} objects.}
+vectors, \code{ts} objects, arrays, and \code{fftab} objects.}
 
 \item{b}{The second input for the cross FFT. Must match the dimensions or
 structure of \code{a}.}
@@ -34,24 +34,24 @@ transform of \code{b}. Default is \code{TRUE}.}
 \value{
 An object representing the cross-spectrum:
 \itemize{
-\item For \code{default} and \code{tidy_fft} methods: A \code{tidy_fft} object.
-\item For \code{ts} objects: A \code{tidy_fft} object with \code{.tsp} attributes inherited
+\item For \code{default} and \code{fftab} methods: A \code{fftab} object.
+\item For \code{ts} objects: A \code{fftab} object with \code{.tsp} attributes inherited
 from \code{a}.
-\item For arrays: A \code{tidy_fft} object with \code{.dim} attributes inherited
+\item For arrays: A \code{fftab} object with \code{.dim} attributes inherited
 from \code{a}.
 }
 }
 \description{
 The \code{cross_spec} function computes the cross-spectrum between two inputs
 using the Fourier transform. It supports multiple input types including
-numeric vectors, time series (\code{ts}), arrays, and \code{tidy_fft} objects.
+numeric vectors, time series (\code{ts}), arrays, and \code{fftab} objects.
 The function provides options for normalization and controlling whether the
 conjugate of the second input is used.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{cross_spec(default)}: Default method for computing cross FFT.
-Converts inputs to \code{tidy_fft} objects before computation.
+Converts inputs to \code{fftab} objects before computation.
 
 \item \code{cross_spec(ts)}: Method for time series (\code{ts}) objects.
 Ensures the time series frequencies are consistent and preserves the \code{tsp} attribute.
@@ -59,17 +59,19 @@ Ensures the time series frequencies are consistent and preserves the \code{tsp} 
 \item \code{cross_spec(array)}: Method for array inputs.
 Ensures dimensions are consistent and preserves the \code{dim} attribute.
 
-\item \code{cross_spec(tidy_fft)}: Method for \code{tidy_fft} objects.
+\item \code{cross_spec(fftab)}: Method for \code{fftab} objects.
 Performs the cross-frequency transform directly using the Fourier transforms of \code{a} and \code{b}.
 
 }}
 \examples{
 cross_spec(rnorm(8), rnorm(8), norm = TRUE)
 
-cross_spec(ts(rnorm(8), frequency = 4),
-           ts(rnorm(8), frequency = 4))
+cross_spec(
+  ts(rnorm(8), frequency = 4),
+  ts(rnorm(8), frequency = 4)
+)
 
 }
 \seealso{
-\code{\link[=tidy_fft]{tidy_fft()}}
+\code{\link[=fftab]{fftab()}}
 }

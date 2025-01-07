@@ -1,91 +1,91 @@
 #' Perform FFT and IFFT with Tidy Results
 #'
 #' Provides functions to compute the Fast Fourier Transform (FFT) and its inverse (IFFT)
-#' while maintaining results in a tidy format using tibbles. Supports vectors, time series
+#' while maintaining results in a tabular format. Supports vectors, time series
 #' (`ts`), and arrays as inputs.
 #'
 #' @section FFT:
-#' The `tidy_fft` function computes the FFT for different input types:
+#' The `fftab` function computes the FFT for different input types:
 #'
-#' - **Default Input (`tidy_fft.default`)**: Computes FFT for numeric vectors.
-#' - **Time Series Input (`tidy_fft.ts`)**: Handles FFT for `ts` objects, scaling frequencies appropriately.
-#' - **Array Input (`tidy_fft.array`)**: Processes multidimensional arrays.
+#' - **Default Input (`fftab.default`)**: Computes FFT for numeric vectors.
+#' - **Time Series Input (`fftab.ts`)**: Handles FFT for `ts` objects, scaling frequencies appropriately.
+#' - **Array Input (`fftab.array`)**: Processes multidimensional arrays.
 #'
-#' Results are returned as tidy tibbles containing Fourier frequencies and FFT values.
+#' Results are returned as a tibble containing Fourier frequencies and FFT values.
 #'
 #' @section IFFT:
-#' The `tidy_ifft` function reconstructs the original signal from a `tidy_fft` object.
+#' The `ifftab` function reconstructs the original signal from a `fftab` object.
 #' It supports vectors, arrays, and time series inputs. The inverse transform preserves
 #' the original structure (e.g., array dimensions or time series attributes).
 #'
 #' @param x Input object for which to compute the FFT or IFFT. This can be:
-#'   - A numeric vector (default method for `tidy_fft`).
-#'   - A time series object (`ts`) for `tidy_fft.ts`.
-#'   - A multidimensional numeric array for `tidy_fft.array`.
-#'   - A `tidy_fft` object for `tidy_ifft`.
+#'   - A numeric vector (default method for `fftab`).
+#'   - A time series object (`ts`) for `fftab.ts`.
+#'   - A multidimensional numeric array for `fftab.array`.
+#'   - A `fftab` object for `ifftab`.
 #' @param norm Logical. If `TRUE`, computes normalized coefficients for FFT.
 #'
 #' @return
-#' - **`tidy_fft`**: A tibble containing:
+#' - **`fftab`**: A tibble containing:
 #'   - Fourier frequencies (`.dim_1`, `.dim_2`, etc.).
 #'   - FFT values stored in the `fx` column as complex values.
-#' - **`tidy_ifft`**: A vector, array, or time series object representing the reconstructed signal.
+#' - **`ifftab`**: A vector, array, or time series object representing the reconstructed signal.
 #'
 #' @details
-#' - `tidy_fft` organizes FFT results into a tidy tibble for downstream analysis.
-#' - `tidy_ifft` ensures that reconstructed signals match the input structure (e.g., arrays, `ts`).
+#' - `fftab` organizes FFT results into a tibble for downstream analysis.
+#' - `ifftab` ensures that reconstructed signals match the input structure (e.g., arrays, `ts`).
 #'
 #' @examples
-#' tidy_fft(c(1, 0, -1, 0))
+#' fftab(c(1, 0, -1, 0))
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> tidy_ifft()
+#' fftab(c(1, 0, -1, 0)) |> ifftab()
 #'
-#' ts(sin(1:10), frequency = 12) |> tidy_fft()
+#' ts(sin(1:10), frequency = 12) |> fftab()
 #'
-#' array(1:8, dim = c(2, 2, 2)) |> tidy_fft()
+#' array(1:8, dim = c(2, 2, 2)) |> fftab()
 #'
 #' @seealso [stats::fft()]
 #' @export
-tidy_fft <- function(x, norm = FALSE) {
-  UseMethod("tidy_fft")
+fftab <- function(x, norm = FALSE) {
+  UseMethod("fftab")
 }
 
-#' @rdname tidy_fft
+#' @rdname fftab
 #' @export
-tidy_fft.default <- function(x, norm = FALSE) {
+fftab.default <- function(x, norm = FALSE) {
   stopifnot(is.numeric(x) || is.complex(x), length(x) > 0)
   fourier_frequencies(x) |>
     tibble::add_column(fx = .fft(x, norm)) |>
-    .as_tidy_fft_obj(
+    .as_fftab_obj(
       .is_normalized = norm,
       .is_complex = is.complex(x)
     )
 }
 
-#' @rdname tidy_fft
+#' @rdname fftab
 #' @export
-tidy_fft.ts <- function(x, norm = FALSE) {
-  tidy_fft(as.vector(x), norm = norm) |>
+fftab.ts <- function(x, norm = FALSE) {
+  fftab(as.vector(x), norm = norm) |>
     dplyr::mutate(.dim_1 = .dim_1 * frequency(x)) |>
     structure(.tsp = attr(x, "tsp"))
 }
 
-#' @rdname tidy_fft
+#' @rdname fftab
 #' @export
-tidy_fft.array <- function(x, norm = FALSE) {
+fftab.array <- function(x, norm = FALSE) {
   fourier_frequencies(x) |>
     dplyr::mutate(fx = as.vector(.fft(x, norm))) |>
-    .as_tidy_fft_obj(
+    .as_fftab_obj(
       .is_normalized = norm,
       .is_complex = is.complex(x),
       .dim = dim(x)
     )
 }
 
-#' @rdname tidy_fft
+#' @rdname fftab
 #' @export
-tidy_ifft <- function(x) {
-  stopifnot(inherits(x, "tidy_fft"))
+ifftab <- function(x) {
+  stopifnot(inherits(x, "fftab"))
   if (nrow(x) != .size(x)) {
     warning("Number of rows does not match the original object size.")
   }

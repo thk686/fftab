@@ -69,11 +69,11 @@ fourier_frequencies.array <- function(x) {
 #' Add L2 Norm and Squared L2 Norm of Frequency Dimensions
 #'
 #' These functions compute and append the L2 norm and squared L2 norm of the frequency dimensions
-#' (`.dim_*` columns) as new columns in a `tidy_fft` object.
+#' (`.dim_*` columns) as new columns in a `fftab` object.
 #'
-#' @param x A `tidy_fft` object containing frequency dimensions (`.dim_*`) and associated metadata.
+#' @param x A `fftab` object containing frequency dimensions (`.dim_*`) and associated metadata.
 #'
-#' @return A vector or `tidy_fft` object with additional columns:
+#' @return A vector or `fftab` object with additional columns:
 #' - **`l2nm`**: The L2 norm of the frequency dimensions.
 #' - **`l2sq`**: The squared L2 norm of the frequency dimensions.
 #'
@@ -87,12 +87,12 @@ fourier_frequencies.array <- function(x) {
 #' - **`get_l2sq()`**: Returns a numeric vector representing the squared L2 norm for each row.
 #'
 #' @seealso
-#' - [tidy_fft()]
+#' - [fftab()]
 #' - [tibble::add_column()]
 #'
 #' @examples
 #' matrix(1:9, 3) |>
-#'   tidy_fft() |>
+#'   fftab() |>
 #'   print(n = 3) |>
 #'   add_l2nm() |>
 #'   print(n = 3) |>
@@ -113,7 +113,9 @@ add_l2sq <- function(x) {
 #' @rdname add_l2nm
 #' @export
 get_l2nm <- function(x) {
-  .get_dim_cols(x)^2 |> rowSums() |> sqrt()
+  .get_dim_cols(x)^2 |>
+    rowSums() |>
+    sqrt()
 }
 
 #' @rdname add_l2nm
@@ -121,5 +123,3 @@ get_l2nm <- function(x) {
 get_l2sq <- function(x) {
   .get_dim_cols(x)^2 |> rowSums()
 }
-
-

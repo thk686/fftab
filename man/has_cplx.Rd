@@ -4,7 +4,7 @@
 \alias{has_cplx}
 \alias{has_rect}
 \alias{has_polr}
-\title{Check Representations of a \code{tidy_fft} Object}
+\title{Check Representations of a \code{fftab} Object}
 \usage{
 has_cplx(x)
 
@@ -13,13 +13,13 @@ has_rect(x)
 has_polr(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object.}
+\item{x}{A \code{fftab} object.}
 }
 \value{
 Logical value (\code{TRUE} or \code{FALSE}) indicating whether the specified representation exists.
 }
 \description{
-These functions check if specific representations are present in a \code{tidy_fft} object:
+These functions check if specific representations are present in a \code{fftab} object:
 }
 \details{
 \itemize{
@@ -29,11 +29,11 @@ These functions check if specific representations are present in a \code{tidy_ff
 }
 }
 \examples{
-tidy_fft(c(1, 0, -1, 0)) |> has_cplx()
+fftab(c(1, 0, -1, 0)) |> has_cplx()
 
-tidy_fft(c(1, 0, -1, 0)) |> has_rect()
+fftab(c(1, 0, -1, 0)) |> has_rect()
 
-tidy_fft(c(1, 0, -1, 0)) |> has_polr()
+fftab(c(1, 0, -1, 0)) |> has_polr()
 
 }
 \seealso{

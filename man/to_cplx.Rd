@@ -4,7 +4,7 @@
 \alias{to_cplx}
 \alias{to_rect}
 \alias{to_polr}
-\title{Convert a \code{tidy_fft} Object Between Representations}
+\title{Convert a \code{fftab} Object Between Representations}
 \usage{
 to_cplx(x, .keep = "unused")
 
@@ -13,12 +13,12 @@ to_rect(x, .keep = "unused")
 to_polr(x, .keep = "unused")
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object.}
+\item{x}{A \code{fftab} object.}
 
 \item{.keep}{Specifies which columns to retain. See \code{\link[dplyr:mutate]{dplyr::mutate()}}.}
 }
 \value{
-A modified \code{tidy_fft} object containing the specified representation:
+A modified \code{fftab} object containing the specified representation:
 \itemize{
 \item \strong{\code{to_cplx()}}: Adds the \code{fx} column for complex values.
 \item \strong{\code{to_rect()}}: Adds the \code{re} and \code{im} columns for rectangular components.
@@ -26,7 +26,7 @@ A modified \code{tidy_fft} object containing the specified representation:
 }
 }
 \description{
-These functions convert a \code{tidy_fft} object to a specified representation:
+These functions convert a \code{fftab} object to a specified representation:
 \itemize{
 \item \strong{\code{to_cplx()}}: Converts to complex representation (\code{fx}).
 \item \strong{\code{to_rect()}}: Converts to rectangular representation (\code{re}, \code{im}).
@@ -41,11 +41,11 @@ These functions convert a \code{tidy_fft} object to a specified representation:
 }
 }
 \examples{
-tidy_fft(c(1, 0, -1, 0)) |> to_cplx()
+fftab(c(1, 0, -1, 0)) |> to_cplx()
 
-tidy_fft(c(1, 0, -1, 0)) |> to_rect()
+fftab(c(1, 0, -1, 0)) |> to_rect()
 
-tidy_fft(c(1, 0, -1, 0)) |> to_polr()
+fftab(c(1, 0, -1, 0)) |> to_polr()
 
 }
 \seealso{

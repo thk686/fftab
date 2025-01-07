@@ -24,7 +24,7 @@ p <- ggplot(df) +
   theme_transparent()
 
 sticker(p,
-        package="tidyfft",
+        package="fftab",
         p_y = 1.63,
         p_size = 23,
         p_color = "black",

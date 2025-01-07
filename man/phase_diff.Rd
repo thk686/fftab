@@ -27,7 +27,7 @@ after phase-aligning the second signal (\code{b}) to the first signal (\code{a})
 
 This function performs the following steps:
 \enumerate{
-\item Computes the Fourier Transform of both input signals using \code{tidy_fft}.
+\item Computes the Fourier Transform of both input signals using \code{fftab}.
 \item Calculates the \strong{cross-spectrum} of the signals.
 \item Converts the cross-spectrum to polar form and computes the weighted average phase difference.
 \item Adjusts the phase of the second signal (\code{b}) using \code{.shift_phase} to maximize alignment with the first signal (\code{a}).
@@ -38,13 +38,15 @@ The correlation is normalized using the variances of both signals and will gener
 between the original signals due to the optimal phase alignment.
 }
 \examples{
-phase_diff(sin(seq(0, 2 * pi, length.out = 128)),
-           cos(seq(0, 2 * pi, length.out = 128)))
+phase_diff(
+  sin(seq(0, 2 * pi, length.out = 128)),
+  cos(seq(0, 2 * pi, length.out = 128))
+)
 
 }
 \seealso{
 \itemize{
-\item \code{\link[=tidy_fft]{tidy_fft()}}
+\item \code{\link[=fftab]{fftab()}}
 \item \code{\link[=cross_spec]{cross_spec()}}
 }
 }

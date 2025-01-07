@@ -4,7 +4,7 @@
 \alias{can_repr}
 \alias{get_repr}
 \alias{set_repr}
-\title{Manage Representations of a \code{tidy_fft} Object}
+\title{Manage Representations of a \code{fftab} Object}
 \usage{
 can_repr(x, repr)
 
@@ -13,7 +13,7 @@ get_repr(x)
 set_repr(x, repr)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object.}
+\item{x}{A \code{fftab} object.}
 
 \item{repr}{For \code{can_repr()}, a character vector specifying representations (\code{"polr"}, \code{"rect"}, \code{"cplx"}).}
 }
@@ -21,11 +21,11 @@ set_repr(x, repr)
 \itemize{
 \item \strong{\code{can_repr()}}: Logical value (\code{TRUE} or \code{FALSE}) indicating if the object supports the specified representations.
 \item \strong{\code{get_repr()}}: A character vector of current representations.
-\item \strong{\code{set_repr()}}: A modified \code{tidy_fft} object with the specified representation(s).
+\item \strong{\code{set_repr()}}: A modified \code{fftab} object with the specified representation(s).
 }
 }
 \description{
-These functions handle representation management for a \code{tidy_fft} object:
+These functions handle representation management for a \code{fftab} object:
 }
 \details{
 \itemize{
@@ -35,11 +35,11 @@ These functions handle representation management for a \code{tidy_fft} object:
 }
 }
 \examples{
-tidy_fft(c(1, 0, -1, 0)) |> can_repr("cplx")
+fftab(c(1, 0, -1, 0)) |> can_repr("cplx")
 
-tidy_fft(c(1, 0, -1, 0)) |> get_repr()
+fftab(c(1, 0, -1, 0)) |> get_repr()
 
-tidy_fft(c(1, 0, -1, 0)) |> set_repr(c("polr", "rect"))
+fftab(c(1, 0, -1, 0)) |> set_repr(c("polr", "rect"))
 
 }
 \seealso{

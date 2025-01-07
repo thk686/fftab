@@ -1,14 +1,14 @@
-#' Convert a `tidy_fft` Object Between Representations
+#' Convert a `fftab` Object Between Representations
 #'
-#' These functions convert a `tidy_fft` object to a specified representation:
+#' These functions convert a `fftab` object to a specified representation:
 #' - **`to_cplx()`**: Converts to complex representation (`fx`).
 #' - **`to_rect()`**: Converts to rectangular representation (`re`, `im`).
 #' - **`to_polr()`**: Converts to polar representation (`mod`, `arg`).
 #'
-#' @param x A `tidy_fft` object.
+#' @param x A `fftab` object.
 #' @param .keep Specifies which columns to retain. See [dplyr::mutate()].
 #'
-#' @return A modified `tidy_fft` object containing the specified representation:
+#' @return A modified `fftab` object containing the specified representation:
 #' - **`to_cplx()`**: Adds the `fx` column for complex values.
 #' - **`to_rect()`**: Adds the `re` and `im` columns for rectangular components.
 #' - **`to_polr()`**: Adds the `mod` and `arg` columns for polar components.
@@ -19,11 +19,11 @@
 #' - **`to_polr()`**: Converts from complex (`fx`) or rectangular components to polar form.
 #'
 #' @examples
-#' tidy_fft(c(1, 0, -1, 0)) |> to_cplx()
+#' fftab(c(1, 0, -1, 0)) |> to_cplx()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> to_rect()
+#' fftab(c(1, 0, -1, 0)) |> to_rect()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> to_polr()
+#' fftab(c(1, 0, -1, 0)) |> to_polr()
 #'
 #' @seealso [has_cplx()], [get_repr()]
 #' @rdname to_cplx
@@ -34,14 +34,14 @@ to_cplx <- function(x, .keep = "unused") {
   } else {
     if (has_rect(x)) {
       dplyr::mutate(x,
-                    fx = complex(real = re, imaginary = im),
-                    .keep = .keep
+        fx = complex(real = re, imaginary = im),
+        .keep = .keep
       )
     } else {
       if (has_polr(x)) {
         dplyr::mutate(x,
-                      fx = complex(modulus = mod, argument = arg),
-                      .keep = .keep
+          fx = complex(modulus = mod, argument = arg),
+          .keep = .keep
         )
       } else {
         stop("No valid fft representation.")
@@ -55,9 +55,9 @@ to_cplx <- function(x, .keep = "unused") {
 to_rect <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
     dplyr::mutate(x,
-                  re = Re(fx),
-                  im = Im(fx),
-                  .keep = .keep
+      re = Re(fx),
+      im = Im(fx),
+      .keep = .keep
     )
   } else {
     if (has_rect(x)) {
@@ -82,9 +82,9 @@ to_rect <- function(x, .keep = "unused") {
 to_polr <- function(x, .keep = "unused") {
   if (has_cplx(x)) {
     dplyr::mutate(x,
-                  mod = Mod(fx),
-                  arg = Arg(fx),
-                  .keep = .keep
+      mod = Mod(fx),
+      arg = Arg(fx),
+      .keep = .keep
     )
   } else {
     if (has_rect(x)) {
@@ -104,24 +104,24 @@ to_polr <- function(x, .keep = "unused") {
   }
 }
 
-#' Check Representations of a `tidy_fft` Object
+#' Check Representations of a `fftab` Object
 #'
-#' These functions check if specific representations are present in a `tidy_fft` object:
+#' These functions check if specific representations are present in a `fftab` object:
 #'
 #' - **`has_cplx()`**: Checks if the object has complex representation (`fx` column).
 #' - **`has_rect()`**: Checks if the object has rectangular representation (`re`, `im` columns).
 #' - **`has_polr()`**: Checks if the object has polar representation (`mod`, `arg` columns).
 #'
-#' @param x A `tidy_fft` object.
+#' @param x A `fftab` object.
 #'
 #' @return Logical value (`TRUE` or `FALSE`) indicating whether the specified representation exists.
 #'
 #' @examples
-#' tidy_fft(c(1, 0, -1, 0)) |> has_cplx()
+#' fftab(c(1, 0, -1, 0)) |> has_cplx()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> has_rect()
+#' fftab(c(1, 0, -1, 0)) |> has_rect()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> has_polr()
+#' fftab(c(1, 0, -1, 0)) |> has_polr()
 #'
 #' @seealso [to_cplx()], [get_repr()]
 #' @rdname has_cplx
@@ -142,28 +142,28 @@ has_polr <- function(x) {
   !is.null(x[["mod"]]) && !is.null(x[["arg"]])
 }
 
-#' Manage Representations of a `tidy_fft` Object
+#' Manage Representations of a `fftab` Object
 #'
-#' These functions handle representation management for a `tidy_fft` object:
+#' These functions handle representation management for a `fftab` object:
 #'
 #' - **`get_repr()`**: Retrieve current representations.
 #' - **`can_repr()`**: Check if the object supports specific representations.
 #' - **`set_repr()`**: Convert the object to one or more specified representations.
 #'
-#' @param x A `tidy_fft` object.
+#' @param x A `fftab` object.
 #' @param repr For `can_repr()`, a character vector specifying representations (`"polr"`, `"rect"`, `"cplx"`).
 #'
 #' @return
 #' - **`can_repr()`**: Logical value (`TRUE` or `FALSE`) indicating if the object supports the specified representations.
 #' - **`get_repr()`**: A character vector of current representations.
-#' - **`set_repr()`**: A modified `tidy_fft` object with the specified representation(s).
+#' - **`set_repr()`**: A modified `fftab` object with the specified representation(s).
 #'
 #' @examples
-#' tidy_fft(c(1, 0, -1, 0)) |> can_repr("cplx")
+#' fftab(c(1, 0, -1, 0)) |> can_repr("cplx")
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> get_repr()
+#' fftab(c(1, 0, -1, 0)) |> get_repr()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> set_repr(c("polr", "rect"))
+#' fftab(c(1, 0, -1, 0)) |> set_repr(c("polr", "rect"))
 #'
 #' @seealso [to_cplx()], [has_cplx()]
 #' @rdname can_repr
@@ -172,9 +172,9 @@ can_repr <- function(x, repr) {
   res <- 0
   for (r in repr) {
     res <- res + switch(r,
-                        cplx = has_cplx(x),
-                        rect = has_rect(x),
-                        polr = has_polr(x)
+      cplx = has_cplx(x),
+      rect = has_rect(x),
+      polr = has_polr(x)
     )
   }
   res > 0
@@ -201,11 +201,11 @@ set_repr <- function(x, repr) {
 
 #' Add Additional Representations to Fourier Coefficients
 #'
-#' These functions add additional representations to a `tidy_fft` object without removing or modifying existing representations.
+#' These functions add additional representations to a `fftab` object without removing or modifying existing representations.
 #'
-#' @param x A `tidy_fft` object containing Fourier coefficients and associated metadata.
+#' @param x A `fftab` object containing Fourier coefficients and associated metadata.
 #'
-#' @return A `tidy_fft` object with the additional representation included.
+#' @return A `fftab` object with the additional representation included.
 #'
 #' @details
 #' - **`add_cplx()`**: Adds a **complex** (`"cplx"`) representation to the Fourier coefficients.
@@ -215,11 +215,11 @@ set_repr <- function(x, repr) {
 #' These functions are useful for working with multiple representations simultaneously without overwriting existing data.
 #'
 #' @seealso
-#' - [tidy_fft()]
+#' - [fftab()]
 #'
 #' @examples
 #' matrix(1:9, 3) |>
-#'   tidy_fft() |>
+#'   fftab() |>
 #'   print(n = 3) |>
 #'   add_polr() |>
 #'   print(n = 3) |>
@@ -244,4 +244,3 @@ add_rect <- function(x) {
 add_polr <- function(x) {
   .set_repr(x, "polr", .keep = "all")
 }
-

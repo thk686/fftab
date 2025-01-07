@@ -7,7 +7,7 @@
 .frequency(x)
 }
 \arguments{
-\item{x}{A \code{tidy_fft} object or time series.}
+\item{x}{A \code{fftab} object or time series.}
 }
 \value{
 The frequency value or \code{1} if not a time series.

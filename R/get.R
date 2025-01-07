@@ -1,10 +1,10 @@
 #' Extract Fourier Coefficients and Components
 #'
-#' These utility functions extract specific components from a `tidy_fft` object.
+#' These utility functions extract specific components from a `fftab` object.
 #' `get_fx` retrieves the raw Fourier coefficients, while `get_fx_norm` ensures the
 #' coefficients are either normalized or not normalized based on the `norm` parameter.
 #'
-#' @param x A `tidy_fft` object containing FFT results.
+#' @param x A `fftab` object containing FFT results.
 #' @param norm Logical. If `TRUE`, forces normalized coefficients. If `FALSE`,
 #' ensures non-normalized coefficients.
 #'
@@ -18,23 +18,23 @@
 #' - **`get_arg`**: A numeric vector of phase angles (`arg`), in radians.
 #'
 #' @details
-#' - **`get_fx`**: Returns coefficients as they are stored in the `tidy_fft` object.
+#' - **`get_fx`**: Returns coefficients as they are stored in the `fftab` object.
 #' - **`get_fx_norm`**: Adjusts coefficients if they are not in the desired normalization state.
 #' - **`get_re`, `get_im`**: Extract real and imaginary components.
 #' - **`get_mod`, `get_arg`**: Compute magnitude and phase of coefficients.
 #'
 #' @examples
-#' tidy_fft(c(1, 0, -1, 0)) |> get_fx()
+#' fftab(c(1, 0, -1, 0)) |> get_fx()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> get_fx_norm(norm = TRUE)
+#' fftab(c(1, 0, -1, 0)) |> get_fx_norm(norm = TRUE)
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> get_re()
+#' fftab(c(1, 0, -1, 0)) |> get_re()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> get_im()
+#' fftab(c(1, 0, -1, 0)) |> get_im()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> get_mod()
+#' fftab(c(1, 0, -1, 0)) |> get_mod()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> get_arg()
+#' fftab(c(1, 0, -1, 0)) |> get_arg()
 #'
 #' @seealso [to_cplx()], [to_rect()], [to_polr()]
 #'
@@ -89,7 +89,7 @@ get_arg <- function(x) {
 #' Extract Rectangular or Polar Components
 #'
 #' The `get_rect` and `get_polr` functions extract specific components from a
-#' `tidy_fft` object, representing the Fourier coefficients in either rectangular
+#' `fftab` object, representing the Fourier coefficients in either rectangular
 #' or polar form.
 #'
 #' @param x A matrix object containing FFT results.
@@ -103,9 +103,9 @@ get_arg <- function(x) {
 #'   - `arg`: The phase angle of the coefficients, in radians.
 #'
 #' @examples
-#' tidy_fft(c(1, 0, -1, 0)) |> get_rect()
+#' fftab(c(1, 0, -1, 0)) |> get_rect()
 #'
-#' tidy_fft(c(1, 0, -1, 0)) |> get_polr()
+#' fftab(c(1, 0, -1, 0)) |> get_polr()
 #'
 #' @seealso [get_fx()], [get_re()], [get_mod()], [to_rect()], [to_polr()]
 #'

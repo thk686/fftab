@@ -28,13 +28,13 @@ get_polr(x)
 }
 \description{
 The \code{get_rect} and \code{get_polr} functions extract specific components from a
-\code{tidy_fft} object, representing the Fourier coefficients in either rectangular
+\code{fftab} object, representing the Fourier coefficients in either rectangular
 or polar form.
 }
 \examples{
-tidy_fft(c(1, 0, -1, 0)) |> get_rect()
+fftab(c(1, 0, -1, 0)) |> get_rect()
 
-tidy_fft(c(1, 0, -1, 0)) |> get_polr()
+fftab(c(1, 0, -1, 0)) |> get_polr()
 
 }
 \seealso{
