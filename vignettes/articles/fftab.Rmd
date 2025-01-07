@@ -31,8 +31,8 @@ The simplest case is the fft of a numeric vector.
 
 ```{r}
 v <- rnorm(8)
-v_tfft <- fftab(v)
-print(v_tfft)
+v_fft <- fftab(v)
+print(v_fft)
 ```
 
 The output table has two columns. The `.dim_1` column contans the normalized frequencies in cycles
@@ -48,10 +48,10 @@ easier to manipulate real numbers, functions are provided to change the represen
 complex (`cplx`), rectangular (`rect`), and polar (`polr`).
 
 ```{r}
-v_tfft |>
+v_fft |>
   to_rect() |>
   print(n = 3)
-v_tfft |>
+v_fft |>
   to_polr() |>
   print(n = 3)
 ```
@@ -60,7 +60,7 @@ The columns `re`, `im`, `mod`, and `arg`, are produced by applying the R functio
 retrieve different parts as vectors or matrices.
 
 ```{r}
-v_tfft |> get_arg()
+v_fft |> get_arg()
 ```
 
 These functions will work correctly with any representation and are used internally so that all
@@ -84,15 +84,15 @@ Now we apply the fft and make a basic plot. The provided `plot` function is only
 look. Use of `ggplot` directly is recommended for reports.
 
 ```{r fig.asp=0.5}
-s1_tfft <- with(s1, y |> fftab() |> to_polr())
-plot(s1_tfft) # calls ggplot internally
+s1_fft <- with(s1, y |> fftab() |> to_polr())
+plot(s1_fft) # calls ggplot internally
 ```
 
 To shift the signal, we need to add a factor to the phase (`arg`). Because this
 example has real-valued input, we have to respect conjugate symmetry.
 
 ```{r}
-s2_tfft <- s1_tfft |>
+s2_fft <- s1_fft |>
   dplyr::mutate(arg = dplyr::case_when(
     .dim_1 == 0 ~ arg,      # DC component
     .dim_1 == 0.5 ~ arg,    # nyquist frequency
@@ -105,7 +105,7 @@ Now we can reconstruct the shifted signal and compare it ot the original.
 
 ```{r fig.asp=0.5}
 s1 |>
-  dplyr::mutate(y = s2_tfft |> ifftab(), treatment = "shifted") |>
+  dplyr::mutate(y = s2_fft |> ifftab(), treatment = "shifted") |>
   dplyr::bind_rows(s1) |>
   dplyr::mutate(treatment = as.factor(treatment)) |>
   ggplot() +
