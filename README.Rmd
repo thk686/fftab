@@ -53,7 +53,7 @@ fftab(sunspot.month, norm = TRUE) |>
 ssm.fft
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, fig.alt="Plot of monthly sunspot counts and its fourier transform"}
 ggplot(fortify(sunspot.month)) +
   geom_line(aes(x = Index, y = Data)) +
   ylab("Sunspot count") +

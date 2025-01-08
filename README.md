@@ -71,4 +71,4 @@ p2
 print(p1 / p2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" alt="Plot of monthly sunspot counts and its fourier transform" width="100%" />
