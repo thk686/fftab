@@ -19,7 +19,8 @@ RoxygenNote: 7.3.2
 Suggests: 
     ggfortify,
     patchwork,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    zoo
 Config/testthat/edition: 3
 Imports: 
     dplyr,
