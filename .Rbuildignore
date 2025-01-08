@@ -8,3 +8,4 @@
 ^pkgdown$
 ^make_logo\.R$
 ^vignettes/articles$
+^cran-comments\.md$

@@ -3,11 +3,11 @@
 \docType{package}
 \name{fftab-package}
 \alias{fftab-package}
-\title{fftab: Tidy manipulation of fourier transformed data}
+\title{fftab: Tidy Manipulation of Fourier Transformed Data}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides functions for storing fourier coefficients in a tibble and manipulating them in various ways. The main different between tidy_fft and base R is that tidy_fft computes the normalized fourier frequencies in cycles per stride, i.e., cycles per interval between samples, which is often a point of confusion for new users and convenient for plotting, etc. Because the frequencies and coefficients are stored in a tibble (data.frame), easy processing with, e.g., dplyr is facilitated.
+Provides functions for storing fourier coefficients in a tibble and manipulating them in various ways. Functions are provided for changing between complex, rectangular (re, im), and polar (mod, arg) representations are provided, as well as functions for extracting components as vectors or matrices. Inputs can be vectors, time series, and arrays of arbitrary dimension, and these are restored to their original form when inverting the transform. Because fftab stores the fourier frequencies as columns in the tibble, many standard operations on spectral data can be easily computed using tidy packages, including dplyr.
 }
 \seealso{
 Useful links:
