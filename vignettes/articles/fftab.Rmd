@@ -204,9 +204,11 @@ periodicity of 5 years or fewer.
 ### Example 3: 2D Gaussian Autocorrelation
 
 A gaussian kernel in the frequency domain has mangnitudes
+
 $$
-\left | F \left ( \vec\omega \right) \right | = -\pi^2\sigma^2\left|\left| \vec\omega \right|\right| ^2
+\left | F \left ( \vec\omega \right) \right | \propto e^{-\pi^2\sigma^2\left|\left| \vec\omega \right|\right| ^2}
 $$
+
 where $\left|\left| \vec\omega \right|\right| ^2$ is the sum of squared moduli across the dimensions.
 `fftab` provides functions for computing the L2 norm and squared L2 norm of the frequencies in any
 number of dimensions allowing easy access to these numbers in computations.
