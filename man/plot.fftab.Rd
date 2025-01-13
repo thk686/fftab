@@ -7,9 +7,13 @@
 \method{plot}{fftab}(x, ...)
 }
 \arguments{
-\item{x}{A \code{fftab} object.}
+\item{x}{A \code{fftab} object. This should contain Fourier-transformed data.}
 
-\item{...}{passed to ggplot.}
+\item{...}{Additional arguments passed to \code{ggplot2::ggplot}.}
+}
+\value{
+A \code{ggplot} object representing the modulus of FFT results plotted against the frequencies.
+The plot shows the modulus (\code{mod}) on the y-axis and frequency values on the x-axis.
 }
 \description{
 Plots the modulus of the FFT results against the frequencies.

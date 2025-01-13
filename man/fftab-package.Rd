@@ -7,7 +7,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides functions for storing fourier coefficients in a tibble and manipulating them in various ways. Functions are provided for changing between complex, rectangular (re, im), and polar (mod, arg) representations are provided, as well as functions for extracting components as vectors or matrices. Inputs can be vectors, time series, and arrays of arbitrary dimension, and these are restored to their original form when inverting the transform. Because fftab stores the fourier frequencies as columns in the tibble, many standard operations on spectral data can be easily computed using tidy packages, including dplyr.
+The 'fftab' package stores Fourier coefficients in a tibble and allows their manipulation in various ways. Functions are available for converting between complex, rectangular ('re', 'im'), and polar ('mod', 'arg') representations, as well as for extracting components as vectors or matrices. Inputs can include vectors, time series, and arrays of arbitrary dimensions, which are restored to their original form when inverting the transform. Since 'fftab' stores Fourier frequencies as columns in the tibble, many standard operations on spectral data can be easily performed using tidy packages like 'dplyr'.
 }
 \seealso{
 Useful links:

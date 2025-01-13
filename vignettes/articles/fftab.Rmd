@@ -13,23 +13,26 @@ library(patchwork)
 library(ggplot2)
 ```
 
-Unlike R's native `fft` function, `fftab` outputs both the fourier coefficients and
-their associated frequencies in tabular form. This makes it easy to manipulate these data
-using pipes and functions from the tidyverse.
+The `fftab` package provides a tidy interface for Fourier Transform operations by storing Fourier coefficients and their associated frequencies in a tabular format (`tibble`). This design facilitates the manipulation of spectral data using pipes and functions from the tidyverse.
 
-We start by loading the package and setting the random seed for reproducibility.
+We’ll demonstrate the package’s capabilities using reproducible examples.
+
+### Setup
+
+Load the package and set the random seed:
 
 ```{r setup, message=FALSE, error=FALSE, warning=FALSE}
 library(fftab)
 set.seed(1234)
 ```
 
-Currently, the `fftab` function supports numeric and complex vectors, time series
-objects, and multidimensional arrays.
+The `fftab` function supports various input types, including numeric and complex vectors, time series objects, and multidimensional arrays.
 
-### Vector input
+---
 
-The simplest case is the fft of a numeric vector.
+### Vector Input
+
+A simple example is the FFT of a numeric vector:
 
 ```{r}
 v <- rnorm(8)
@@ -37,147 +40,138 @@ v_fft <- fftab(v)
 print(v_fft)
 ```
 
-The output table has two columns. The `.dim_1` column contains the normalized frequencies in cycles
-per unit distance along the sequence, i.e., a length 8 vector is 8 units long. For an even-length
-vector, the largest frequency will be the nyquist frequency 0.5 as shown here. Many treatments
-use un-normalized frequencies when not dealing with explicit dimensions, so be aware of the
-difference. The maximum un-normalized frequency in the case above would equal four cycles per the
-length of the vector. Notice that following convention, the frequencies wrap at zero producing
-negative frequencies.
+The output `tibble` includes:
+- `.dim_1`: Normalized frequencies in cycles per unit length. For an even-length vector, the maximum frequency is the Nyquist frequency (0.5). Frequencies wrap around zero, producing negative frequencies.
+- `fx`: Fourier coefficients in complex form.
 
-The `fx` column contains the associated fourier coefficients in complex form. Because it is often
-easier to manipulate real numbers, functions are provided to change the representation between
-complex (`cplx`), rectangular (`rect`), and polar (`polr`).
+To facilitate manipulation, you can switch between representations—complex (`cplx`), rectangular (`rect`), and polar (`polr`):
 
 ```{r}
 v_fft |> to_rect() |> print(n = 3)
-```
-
-```{r}
 v_fft |> to_polr() |> print(n = 3)
-```
-
-```{r}
 v_fft |> set_repr(c("polr", "rect", "cplx")) |> print(n = 3)
 ```
 
-The columns `re`, `im`, `mod`, and `arg`, are produced by applying the R functions `Re`, `Im`, `Mod`, and `Arg` to the complex coefficients. There are a set of matching `get_*` functions that
-retrieve different parts as vectors or matrices.
+Retrieve individual components, such as phase or modulus, with `get_*` functions:
 
 ```{r}
 v_fft |> get_arg()
 ```
 
-These functions will work correctly with any representation and are used internally so that all
-`fftab` package functions produce the same output given any input representation. You do not
-need, for example, to convert from the polar to rectangular representation to retrieve the imaginary part of the coefficients using `get_im`.
+These functions work seamlessly across all representations, ensuring consistent outputs.
 
-### Time series input
+**Warning:** When modifying an `fftab` object:
 
-Time series in R have implicit units defined by their beginning and ending times.
-In addition, time series carry a frequency attribute which describes the number of
-samples per time unit. For example, the `sunspot.month` data starts in 1749 and ends
-in 2014 (implicit units of years) and has a sampling frequency of 12, meaning monthly
-counts. When computing fourier frequencies, `fftab` uses this information to output
-frequencies in cycles per implicit time units.
+* If multiple representations (e.g., complex, polar, rectangular) are present, ensure consistency to avoid ambiguity during the inverse transform.
+* Changes to specific columns, such as `arg`, do not automatically propagate to other representations.
+* Adding or deleting rows can lead to nonsensical results when inverting the transform.
 
-```{r}
-sunspot.month |> fftab() |> print(n = 5)
-```
+Always verify the structure and contents of an `fftab` object after modifications to ensure it remains valid.
 
-Here, `.dim_1` contains frequencies in cycles per year rather than cycles per sample
-interval (months) because the data set has implicit time units of years. Note that `fftab`
-will restore the original data correctly when inverting the transform.
+---
 
-```{r}
-sunspot.month |> fftab() |> ifftab() |> str()
-```
+### Complex Input
 
-### Array-valued input
-
-Arrays retain their dimensions.
-
-```{r}
-ra <- matrix(rnorm(9), 3)
-ra |> fftab() |> to_polr()
-```
-
-And real-valued inputs generates real-valued output.
-
-```{r}
-ra |> fftab() |> ifftab()
-```
-
-Tracking real-valued input is important in certain operations where maintaining
-conjugate symmetry is important.
-
-### Complex input
-
-The `fftab` object tracks whether input is real or complex and acts accordingly
-when passed to the `ifftab` function.
+The `fftab` object tracks whether the input is real or complex, ensuring correct handling in inverse transforms:
 
 ```{r}
 cplx <- complex(modulus = rnorm(4), argument = runif(4, 0, pi))
 cbind(orig = cplx, reconst = cplx |> fftab() |> ifftab())
 ```
 
-### Example 1: applying a phase shift
-
-The polar representation is useful if we want to manipulate the phase information contained in a signal. First, we generate a sinusoid.
+For real-valued input returns real-valued output when the transform is inverted.
 
 ```{r}
+real_v <- runif(4)
+cbind(orig = real_v, reconst = real_v |> fftab() |> ifftab())
+```
+
+---
+
+### Time Series Input
+
+Time series objects in R include implicit units and a frequency attribute. For example, the `sunspot.month` dataset represents monthly counts spanning from 1749 to 2014. The sampling frequency (12) corresponds to cycles per year:
+
+```{r}
+sunspot.month |> fftab() |> print(n = 5)
+```
+
+Here, `.dim_1` contains frequencies in cycles per year. It is important to understand the difference,
+as the Nyquist frequency will be 6 cycles per year and not $1/2$ cycle per step as would be the case when analyzing a vector without frequency information.
+
+The original data can be restored using `ifftab`:
+
+```{r}
+sunspot.month |> fftab() |> ifftab() |> str()
+```
+
+---
+
+### Array Input
+
+Arrays retain their dimensions through the Fourier Transform:
+
+```{r}
+ra <- matrix(rnorm(9), 3)
+ra |> fftab() |> to_polr()
+ra |> fftab() |> ifftab()
+```
+
+---
+
+### Example 1: Applying a Phase Shift
+
+The polar representation allows manipulation of phase information. Let’s create a sinusoid and examine it:
+
+```{r}
+#| fig-asp: 0.3333
 s1 <- seq(-pi, pi, length.out = 200) |>
   tibble::as_tibble() |>
   dplyr::mutate(x = value, y = cos(4 * value), treatment = "original", .keep = "none")
-```
 
-Let's examine the results.
-
-```{r fig.asp=1/3}
 ggplot(s1) +
   geom_line(aes(x = x, y = y)) +
   theme_classic()
 ```
 
-Now we apply the fft and make a basic plot. The provided `plot` function is only for a quick
-look. Use `ggplot` directly for full control.
+Perform the FFT and plot the results:
 
-```{r fig.asp=1/3}
+```{r}
+#| fig-asp: 0.3333
 s1_fft <- with(s1, y |> fftab() |> to_polr())
-plot(s1_fft) # calls ggplot internally
+plot(s1_fft) # Quick visualization
 ```
 
-To shift the signal, we need to add a factor to the phase (`arg`). Because this
-example has real-valued input, we have to respect conjugate symmetry.
+To shift the signal, adjust the phase (`arg`) while respecting conjugate symmetry:
 
 ```{r}
 s2_fft <- s1_fft |>
   dplyr::mutate(arg = dplyr::case_when(
     .dim_1 == 0 ~ arg,      # DC component
-    .dim_1 == 0.5 ~ arg,    # nyquist frequency
+    .dim_1 == 0.5 ~ arg,    # Nyquist frequency
     .dim_1 > 0 ~ arg - pi,  # Positive frequencies
     .dim_1 < 0 ~ arg + pi   # Conjugate negative frequencies
   ))
 ```
 
-Now we can reconstruct the shifted signal and compare it to the original.
+Reconstruct and compare the shifted signal to the original:
 
-```{r fig.asp=1/3}
+```{r}
+#| fig-asp: 0.3333
 s1 |>
   dplyr::mutate(y = s2_fft |> ifftab(), treatment = "shifted") |>
   dplyr::bind_rows(s1) |>
-  dplyr::mutate(treatment = as.factor(treatment)) |>
   ggplot() +
   geom_line(aes(x = x, y = y, color = treatment), lwd = 1, alpha = 0.5) +
   scale_color_manual(values = c("darkblue", "darkred")) +
   theme_classic()
 ```
 
-### Example 2: time series filtering
+---
 
-To demonstrate how `fftab` facilitates *ad hoc* spectral analysis, I show how one
-can denoise a time series with `dplyr`. First, let's make a plot of the `sunspot.month`
-data and save it for later output. 
+### Example 2: Time Series Filtering
+
+To denoise the `sunspot.month` data, we suppress high-frequency components:
 
 ```{r}
 ggplot(fortify(sunspot.month)) +
@@ -186,44 +180,29 @@ ggplot(fortify(sunspot.month)) +
   xlab("Year") +
   theme_bw() ->
 p1
-```
 
-Now I generate a smoothed version by zeroing out the highest frequency components. Because
-`.dim_1` is in cycles per year, a cutoff of 1/5 suppresses variation below the 5-year scale.
-
-```{r}
-sunspot.month |>
+smoothed <- sunspot.month |>
   fftab() |>
   to_polr() |>
   dplyr::mutate(mod = ifelse(abs(.dim_1) > 0.2, 0, mod)) |>
-  ifftab() |>
-  fortify() |>
-  ggplot() +
-    geom_line(aes(x = Index, y = Data)) +
-    ylab("Sunspot count") +
-    xlab("Year") +
-    theme_bw() ->
+  ifftab()
+
+ggplot(fortify(smoothed)) +
+  geom_line(aes(x = Index, y = Data)) +
+  theme_bw() ->
 p2
-```
 
-Now we can examine the results.
-
-```{r}
 p1 / p2
 ```
 
-### Example 3: 2D gaussian autocorrelation
+The `dplyr::mutate` call zeros out the magnitudes of any components with
+periodicity of 5 years or fewer.
 
-A convenient feature of `fftab` is that it works with array inputs of arbitrary
-dimensions. The function `get_l2sq()` returns the squared L2 norm of the fourier
-frequencies in any dimensions. This is useful for filtering multi-dimensional data.
+---
 
-We can use this to, for example, produce gaussian autocorrelated maps. A gaussian
-kernel in the frequency domain will have
-$$
-\left | F(\omega) \right | \propto e^{-\pi^2 \sigma^2 \left || \omega \right || ^2}
-$$
-So we can apply a convolution by scaling the coefficients by this factor.
+### Example 3: 2D Gaussian Autocorrelation
+
+Apply a Gaussian kernel in the frequency domain to filter 2D data:
 
 ```{r}
 sigma <- 64
@@ -236,28 +215,21 @@ matrix(rnorm(512 * 512), 512) |>
   dplyr::mutate(mod = mod * exp(scale_fac * l2sq)) |>
   ifftab() ->
 gauss_acf
-```
 
-After inverting, the white-noise input should have a gaussian autocorrelation with scale
-64 steps. Let's plot the result.
-
-```{r}
 tidyr::expand_grid(x = 1:512, y = 1:512) |>
   tibble::add_column(z = gauss_acf |> as.vector() |> scale()) |>
   ggplot() +
   aes(x = x, y = y, z = z) +
   geom_contour_filled(bins = 16) +
   geom_contour(bins = 16, color = "darkgrey") +
-  scale_fill_viridis_d() +
   coord_equal() +
   theme_void()
 ```
 
+---
+
 ### Conclusion
 
-Hopefully I have demonstrated the utility of the `fftab` package. Binding the fourier
-coefficients to their frequencies in a tibble makes many standard manipulations in the
-frequency domain simple calls to `dplyr` and other packages designed to work with tabular
-data.
+The `fftab` package simplifies Fourier Transform operations by combining spectral coefficients and frequencies in a `tibble`. This integration enables seamless manipulation of frequency-domain data with tidyverse tools, making `fftab` a powerful resource for spectral analysis.
 
-
+---

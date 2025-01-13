@@ -13,6 +13,10 @@ status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/
 The goal of **fftab** is to make working with fft’s in R easier and more
 consistent. It follows [the tidy philosophy](https://www.tidyverse.org/)
 by working with tabular data rather than lists, vectors, and so on.
+Typical signal processing operations can thus often be accomplished in a
+single `dplyr::mutate` call or by a call to similar functions. Some
+examples are shown
+[here](https://thk686.github.io/fftab/articles/fftab.html).
 
 ### Installation
 
