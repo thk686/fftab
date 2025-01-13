@@ -203,7 +203,13 @@ periodicity of 5 years or fewer.
 
 ### Example 3: 2D Gaussian Autocorrelation
 
-Apply a Gaussian kernel in the frequency domain to filter 2D data:
+A gaussian kernel in the frequency domain has mangnitudes
+$$
+\left | F \left ( \vec\omega \right) \right | = -\pi^2\sigma^2\left|\left| \vec\omega \right|\right| ^2
+$$
+where $\left|\left| \vec\omega \right|\right| ^2$ is the sum of squared moduli across the dimensions.
+`fftab` provides functions for computing the L2 norm and squared L2 norm of the frequencies in any
+number of dimensions allowing easy access to these numbers in computations.
 
 ```{r}
 sigma <- 64
@@ -226,6 +232,9 @@ tidyr::expand_grid(x = 1:512, y = 1:512) |>
   coord_equal() +
   theme_void()
 ```
+
+The result of this operation is a circular convolution of the white-noise input
+with a gaussian kernel.
 
 ---
 
