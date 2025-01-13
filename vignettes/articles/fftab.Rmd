@@ -41,8 +41,9 @@ print(v_fft)
 ```
 
 The output `tibble` includes:
-- `.dim_1`: Normalized frequencies in cycles per unit length. For an even-length vector, the maximum frequency is the Nyquist frequency (0.5). Frequencies wrap around zero, producing negative frequencies.
-- `fx`: Fourier coefficients in complex form.
+
+* `.dim_1`: Normalized frequencies in cycles per unit length. For an even-length vector, the maximum frequency is the Nyquist frequency (0.5). Frequencies wrap around zero, producing negative frequencies.
+* `fx`: Fourier coefficients in complex form.
 
 To facilitate manipulation, you can switch between representations—complex (`cplx`), rectangular (`rect`), and polar (`polr`):
 
@@ -178,7 +179,7 @@ ggplot(fortify(sunspot.month)) +
   geom_line(aes(x = Index, y = Data)) +
   ylab("Sunspot count") +
   xlab("Year") +
-  theme_bw() ->
+  theme_classic() ->
 p1
 
 smoothed <- sunspot.month |>
@@ -189,7 +190,7 @@ smoothed <- sunspot.month |>
 
 ggplot(fortify(smoothed)) +
   geom_line(aes(x = Index, y = Data)) +
-  theme_bw() ->
+  theme_classic() ->
 p2
 
 p1 / p2
