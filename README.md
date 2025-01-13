@@ -8,6 +8,8 @@
 [![R-CMD-check](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/package=fftab)
+[![Codecov test
+coverage](https://codecov.io/gh/thk686/fftab/graph/badge.svg)](https://app.codecov.io/gh/thk686/fftab)
 <!-- badges: end -->
 
 The goal of **fftab** is to make working with fft’s in R easier and more
