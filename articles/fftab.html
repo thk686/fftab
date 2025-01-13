@@ -318,8 +318,15 @@ components with periodicity of 5 years or fewer.</p>
 <div class="section level3">
 <h3 id="example-3-2d-gaussian-autocorrelation">Example 3: 2D Gaussian Autocorrelation<a class="anchor" aria-label="anchor" href="#example-3-2d-gaussian-autocorrelation"></a>
 </h3>
-<p>Apply a Gaussian kernel in the frequency domain to filter 2D
-data:</p>
+<p>A gaussian kernel in the frequency domain has mangnitudes
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">|</mo><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>ω</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mo>−</mo><msup><mi>π</mi><mn>2</mn></msup><msup><mi>σ</mi><mn>2</mn></msup><msup><mrow><mo stretchy="true" form="prefix">|</mo><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>ω</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">
+\left | F \left ( \vec\omega \right) \right | = -\pi^2\sigma^2\left|\left| \vec\omega \right|\right| ^2
+</annotation></semantics></math> where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">|</mo><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>ω</mi><mo accent="true">→</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><annotation encoding="application/x-tex">\left|\left| \vec\omega \right|\right| ^2</annotation></semantics></math>
+is the sum of squared moduli across the dimensions. <code>fftab</code>
+provides functions for computing the L2 norm and squared L2 norm of the
+frequencies in any number of dimensions allowing easy access to these
+numbers in computations.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">64</span></span>
 <span><span class="va">scale_fac</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">pi</span><span class="op">^</span><span class="fl">2</span> <span class="op">*</span> <span class="va">sigma</span><span class="op">^</span><span class="fl">2</span></span>
@@ -341,6 +348,8 @@ data:</p>
 <span>  <span class="fu">coord_equal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fftab_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p>The result of this operation is a circular convolution of the
+white-noise input with a gaussian kernel.</p>
 <hr>
 </div>
 <div class="section level3">
