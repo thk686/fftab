@@ -36,7 +36,9 @@ A simple example is the FFT of a numeric vector:
 
 ```{r}
 v <- rnorm(8)
+
 v_fft <- fftab(v)
+
 print(v_fft)
 ```
 
@@ -49,7 +51,9 @@ To facilitate manipulation, you can switch between representations—complex (`c
 
 ```{r}
 v_fft |> to_rect() |> print(n = 3)
+
 v_fft |> to_polr() |> print(n = 3)
+
 v_fft |> set_repr(c("polr", "rect", "cplx")) |> print(n = 3)
 ```
 
@@ -77,6 +81,7 @@ The `fftab` object tracks whether the input is real or complex, ensuring correct
 
 ```{r}
 cplx <- complex(modulus = rnorm(4), argument = runif(4, 0, pi))
+
 cbind(orig = cplx, reconst = cplx |> fftab() |> ifftab())
 ```
 
@@ -84,6 +89,7 @@ For real-valued input returns real-valued output when the transform is inverted.
 
 ```{r}
 real_v <- runif(4)
+
 cbind(orig = real_v, reconst = real_v |> fftab() |> ifftab())
 ```
 
@@ -91,20 +97,21 @@ cbind(orig = real_v, reconst = real_v |> fftab() |> ifftab())
 
 ### Time Series Input
 
-Time series objects in R include implicit units and a frequency attribute. For example, the `sunspot.month` dataset represents monthly counts spanning from 1749 to 2014. The sampling frequency (12) corresponds to cycles per year:
-
-```{r}
-sunspot.month |> fftab() |> print(n = 5)
-```
-
-Here, `.dim_1` contains frequencies in cycles per year. It is important to understand the difference,
-as the Nyquist frequency will be 6 cycles per year and not $1/2$ cycle per step as would be the case when analyzing a vector without frequency information.
-
-The original data can be restored using `ifftab`:
+Time series attributes are maintained by `fftab` and used to restore the original 
+object when passed to `ifftab`:
 
 ```{r}
 sunspot.month |> fftab() |> ifftab() |> str()
 ```
+
+Time series objects in R include implicit units and a frequency attribute. For example, the `sunspot.month` dataset represents monthly counts spanning from 1749 to 2014. The sampling frequency (12) corresponds to cycles per year:
+
+```{r}
+sunspot.month |> fftab() |> dplyr::filter(abs(.dim_1) > 5.99)
+```
+
+Here, `.dim_1` contains frequencies in cycles per year, so the Nyquist frequency will be output as 6 cycles per year and not $1/2$ cycle per step as would be the case when analyzing a vector without frequency information. In the case above, the sequence is of odd-length. Owing to rounding during
+formatting, the highest frequencies are shown as 6.00, but are actually slightly smaller This output illustrates both filtering with `dplyr::filter` and conjugate symmetry with real inputs.
 
 ---
 
@@ -114,7 +121,9 @@ Arrays retain their dimensions through the Fourier Transform:
 
 ```{r}
 ra <- matrix(rnorm(9), 3)
+
 ra |> fftab() |> to_polr()
+
 ra |> fftab() |> ifftab()
 ```
 
@@ -140,19 +149,22 @@ Perform the FFT and plot the results:
 ```{r}
 #| fig-asp: 0.3333
 s1_fft <- with(s1, y |> fftab() |> to_polr())
-plot(s1_fft) # Quick visualization
+
+# Quick visualization
+plot(s1_fft)
 ```
 
 To shift the signal, adjust the phase (`arg`) while respecting conjugate symmetry:
 
 ```{r}
-s2_fft <- s1_fft |>
+s1_fft |>
   dplyr::mutate(arg = dplyr::case_when(
     .dim_1 == 0 ~ arg,      # DC component
     .dim_1 == 0.5 ~ arg,    # Nyquist frequency
     .dim_1 > 0 ~ arg - pi,  # Positive frequencies
     .dim_1 < 0 ~ arg + pi   # Conjugate negative frequencies
-  ))
+  )) ->
+s2_fft
 ```
 
 Reconstruct and compare the shifted signal to the original:
@@ -161,9 +173,12 @@ Reconstruct and compare the shifted signal to the original:
 #| fig-asp: 0.3333
 s1 |>
   dplyr::mutate(y = s2_fft |> ifftab(), treatment = "shifted") |>
-  dplyr::bind_rows(s1) |>
-  ggplot() +
-  geom_line(aes(x = x, y = y, color = treatment), lwd = 1, alpha = 0.5) +
+  dplyr::bind_rows(s1) ->
+combined
+
+ggplot(combined) +
+  aes(x = x, y = y, color = treatment) +
+  geom_line(lwd = 1, alpha = 0.5) +
   scale_color_manual(values = c("darkblue", "darkred")) +
   theme_classic()
 ```
@@ -182,11 +197,12 @@ ggplot(fortify(sunspot.month)) +
   theme_classic() ->
 p1
 
-smoothed <- sunspot.month |>
+sunspot.month |>
   fftab() |>
   to_polr() |>
   dplyr::mutate(mod = ifelse(abs(.dim_1) > 0.2, 0, mod)) |>
-  ifftab()
+  ifftab() ->
+smoothed
 
 ggplot(fortify(smoothed)) +
   geom_line(aes(x = Index, y = Data)) +
@@ -206,10 +222,10 @@ periodicity of 5 years or fewer.
 A gaussian kernel in the frequency domain has mangnitudes
 
 $$
-\left | F \left ( \vec\omega \right) \right | \propto e^{-\pi^2\sigma^2\left|\left| \vec\omega \right|\right| ^2}
+\left \lvert \left ( \vec f \right) \right \rvert \propto e^{-\pi^2\sigma^2 \left \lVert \vec f \right \rVert ^2}
 $$
 
-where $\left|\left| \vec\omega \right|\right| ^2$ is the sum of squared moduli across the dimensions.
+where $\left \lVert \vec f \right \rVert ^2$ is the sum of squared frequencies across dimensions.
 `fftab` provides functions for computing the L2 norm and squared L2 norm of the frequencies in any
 number of dimensions allowing easy access to these numbers in computations.
 
@@ -235,8 +251,8 @@ tidyr::expand_grid(x = 1:512, y = 1:512) |>
   theme_void()
 ```
 
-The result of this operation is a circular convolution of the white-noise input
-with a gaussian kernel.
+The result of this operation has the autocorrelation a circular convolution of white-noise
+and a gaussian kernel.
 
 ---
 
