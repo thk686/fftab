@@ -4,13 +4,15 @@
 # fftab <a href="https://github.com/thk686/fftab"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+<!-- 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/package=fftab)
 [![Codecov test
 coverage](https://codecov.io/gh/thk686/fftab/graph/badge.svg)](https://app.codecov.io/gh/thk686/fftab/tree/master)
-<!-- badges: end -->
+-->
 
 The goal of **fftab** is to make working with fft’s in R easier and more
 consistent. It follows [the tidy philosophy](https://www.tidyverse.org/)
