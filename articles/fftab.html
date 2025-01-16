@@ -353,9 +353,8 @@ numbers in computations.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">512</span> <span class="op">*</span> <span class="fl">512</span><span class="op">)</span>, <span class="fl">512</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fftab.html">fftab</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/to_cplx.html">to_polr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_l2nm.html">add_l2sq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mod <span class="op">=</span> <span class="va">mod</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">scale_fac</span> <span class="op">*</span> <span class="va">l2sq</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>fx <span class="op">=</span> <span class="va">fx</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">scale_fac</span> <span class="op">*</span> <span class="va">l2sq</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fftab.html">ifftab</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span></span>
 <span><span class="va">gauss_acf</span></span>
 <span></span>
@@ -368,8 +367,6 @@ numbers in computations.</p>
 <span>  <span class="fu">coord_equal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fftab_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
-<p>The result of this operation has the autocorrelation a circular
-convolution of white-noise and a gaussian kernel.</p>
 <hr>
 </div>
 <div class="section level3">
