@@ -1,6 +1,6 @@
 Package: fftab
 Title: Tidy Manipulation of Fourier Transformed Data
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: 
     person("Timothy", "Keitt", , "tkeitt@gmail.com", role = c("aut", "cre"))
 Description: The 'fftab' package stores Fourier coefficients in a tibble and 
