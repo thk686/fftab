@@ -235,9 +235,8 @@ scale_fac <- -pi^2 * sigma^2
 
 matrix(rnorm(512 * 512), 512) |>
   fftab() |>
-  to_polr() |>
   add_l2sq() |>
-  dplyr::mutate(mod = mod * exp(scale_fac * l2sq)) |>
+  dplyr::mutate(fx = fx * exp(scale_fac * l2sq)) |>
   ifftab() ->
 gauss_acf
 
@@ -250,9 +249,6 @@ tidyr::expand_grid(x = 1:512, y = 1:512) |>
   coord_equal() +
   theme_void()
 ```
-
-The result of this operation has the autocorrelation a circular convolution of white-noise
-and a gaussian kernel.
 
 ---
 
