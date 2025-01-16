@@ -9,7 +9,7 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/package=fftab)
 [![Codecov test
-coverage](https://codecov.io/gh/thk686/fftab/graph/badge.svg)](https://app.codecov.io/gh/thk686/fftab)
+coverage](https://codecov.io/gh/thk686/fftab/graph/badge.svg)](https://app.codecov.io/gh/thk686/fftab/tree/master)
 <!-- badges: end -->
 
 The goal of **fftab** is to make working with fft’s in R easier and more
@@ -29,6 +29,12 @@ You can install the development version of fftab from
 # install.packages("pak")
 pak::pak("thk686/fftab")
 ```
+
+### Related Work
+
+The [`fftpipe` package](https://scialicia.com/2022/12/r-fast-fourier-transforms-with-fftpipe/) offers similar table-based manipulations of fourier transformed data.
+
+See also [tidyfft](https://cran.r-project.org/web/packages/healthyR.ts/vignettes/using-tidy-fft.html) in the [healthyR.ts package](https://cran.r-project.org/package=healthyR.ts).
 
 ### Example
 
