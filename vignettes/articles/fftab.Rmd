@@ -222,7 +222,7 @@ periodicity of 5 years or fewer.
 A gaussian kernel in the frequency domain has mangnitudes
 
 $$
-\left \lvert \left ( \vec f \right) \right \rvert \propto e^{-\pi^2\sigma^2 \left \lVert \vec f \right \rVert ^2}
+\left \lvert F \left ( \vec f \right) \right \rvert \propto e^{-\pi^2\sigma^2 \left \lVert \vec f \right \rVert ^2}
 $$
 
 where $\left \lVert \vec f \right \rVert ^2$ is the sum of squared frequencies across dimensions.
