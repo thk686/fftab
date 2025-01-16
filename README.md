@@ -32,7 +32,7 @@ pak::pak("thk686/fftab")
 
 ### Related Work
 
-The [`fftpipe`][https://akey7.github.io/fftpipe/] package offers similar table-based manipulations of fourier transformed data.
+The [`fftpipe`](https://akey7.github.io/fftpipe/) package offers similar table-based manipulations of fourier transformed data.
 
 See also [`tidyfft`](https://cran.r-project.org/web/packages/healthyR.ts/vignettes/using-tidy-fft.html) in the [healthyR.ts[(https://cran.r-project.org/package=healthyR.ts)  package.
 
