@@ -55,6 +55,7 @@ utils::globalVariables(c(
     x,
     ...,
     .size = nrow(x),
+    .is_angular = FALSE,
     .is_complex = .is_complex,
     .is_normalized = .is_normalized,
     class = c("fftab", class(x))
@@ -452,4 +453,19 @@ NULL
     symmetric = dplyr::slice(x, 1:(i - 1)),
     asymmetric = dplyr::slice(x, i:nrow(x))
   )
+}
+
+#' @title Check Whether an Object is Angular
+#'
+#' @description
+#' An internal helper function that checks whether an object `x` is marked as
+#' using angular frequency. It looks for the `.is_angular` attribute.
+#'
+#' @details
+#' This function is not exported and is only used internally by `to_angf()`
+#' and `to_cycf()`.
+#'
+#' @keywords internal
+.is_angular <- function(x) {
+  attr(x, ".is_angular")
 }

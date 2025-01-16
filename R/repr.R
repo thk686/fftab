@@ -244,3 +244,65 @@ add_rect <- function(x) {
 add_polr <- function(x) {
   .set_repr(x, "polr", .keep = "all")
 }
+
+#' Convert between cyclic and angular frequencies
+#'
+#' @description
+#' These functions convert dimensions of frequency from cyclic (measured in cycles)
+#' to angular (measured in radians) or vice versa. This transformation scales
+#' dimensions by a factor of 2 * pi.
+#'
+#' - `to_angf()`: Converts from cyclic to angular frequency.
+#' - `to_cycf()`: Converts from angular to cyclic frequency.
+#'
+#' @param x An `fftab` object containing frequency dimensions. Must include
+#'   columns prefixed with `.dim_` and have an attribute `.is_angular` indicating
+#'   the frequency type.
+#'
+#' @returns
+#' An `fftab` object with dimensions scaled appropriately and the `.is_angular`
+#' attribute updated.
+#'
+#' @examples
+#' # Convert cyclic to angular frequencies
+#' rnorm(64) |>
+#'   fftab() |>
+#'   to_angf() |>
+#'   to_rect() |>
+#'   dplyr::slice_max(abs(.dim_1), n = 5)
+#'
+#' # Convert angular back to cyclic frequencies
+#' rnorm(64) |>
+#'   fftab() |>
+#'   to_angf() |>
+#'   to_cycf() |>
+#'   to_rect() |>
+#'   dplyr::slice_max(abs(.dim_1), n = 5)
+#'
+#' @export
+to_angf <- function(x) {
+  if (.is_angular(x)) {
+    x
+  } else {
+    x |>
+      dplyr::mutate(
+        dplyr::across(
+          dplyr::starts_with(".dim_"), ~ . * 2 * pi)) |>
+      structure(.is_angular = TRUE)
+  }
+}
+
+#' @rdname to_angf
+#' @export
+to_cycf <- function(x) {
+  if (.is_angular(x)) {
+    x |>
+      dplyr::mutate(
+        dplyr::across(
+          dplyr::starts_with(".dim_"), ~ . / 2 / pi)) |>
+      structure(.is_angular = FALSE)
+  } else {
+    x
+  }
+}
+

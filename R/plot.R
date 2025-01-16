@@ -11,7 +11,7 @@ plot.fftab <- function(x, ...) {
   to_polr(x) |>
     ggplot2::ggplot(...) +
     ggplot2::aes(x = .data$.dim_1, y = .data$mod) +
-    ggplot2::geom_line() +
+    ggplot2::geom_col() +
     ggplot2::ylab("modulus") +
     ggplot2::theme_classic()
 }
