@@ -432,6 +432,12 @@ NULL
 
 #' @rdname fft_internal_filters
 #' @keywords internal
+.get_dc <- function(x) {
+  dplyr::filter(x, dplyr::if_all(dplyr::starts_with(".dim_"), ~ . == 0))
+}
+
+#' @rdname fft_internal_filters
+#' @keywords internal
 .remove_symmetric <- function(x) {
   if (.is_complex(x)) {
     return(x)
@@ -469,3 +475,4 @@ NULL
 .is_angular <- function(x) {
   attr(x, ".is_angular")
 }
+

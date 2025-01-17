@@ -235,8 +235,9 @@ scale_fac <- -pi^2 * sigma^2
 
 matrix(rnorm(512 * 512), 512) |>
   fftab() |>
+  to_polr() |>
   add_l2sq() |>
-  dplyr::mutate(fx = fx * exp(scale_fac * l2sq)) |>
+  dplyr::mutate(mod = mod * exp(scale_fac * l2sq)) |>
   ifftab() ->
 gauss_acf
 
