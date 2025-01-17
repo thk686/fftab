@@ -8,10 +8,10 @@
 [![R-CMD-check](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![CRAN status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/package=fftab)
 <!-- badges: end -->
 
 <!--
-[![CRAN status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/package=fftab)
 [![Codecov test coverage](https://codecov.io/gh/thk686/fftab/graph/badge.svg)](https://app.codecov.io/gh/thk686/fftab)
 -->
 
