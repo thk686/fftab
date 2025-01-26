@@ -23,6 +23,17 @@ single `dplyr::mutate` call or by a call to similar functions. Some
 examples are shown
 [here](https://thk686.github.io/fftab/articles/fftab.html).
 
+### Related workflows
+
+- The
+  [`fftpipe`](https://scialicia.com/2022/12/r-fast-fourier-transforms-with-fftpipe/)
+  package takes a similar approach to `fftab`.
+- The
+  [‘healthyR.ts’](https://www.spsanderson.com/healthyR.ts/index.html)
+  package includes a
+  [`tidy_fft`](https://www.spsanderson.com/healthyR.ts/articles/using-tidy-fft.html)
+  function.
+
 ### Installation
 
 You can install the development version of fftab from
