@@ -30,12 +30,12 @@ consistent. It follows [the tidy philosophy](https://www.tidyverse.org/) by
 working with tabular data rather than lists, vectors, and so on. Typical
 signal processing operations can thus often be accomplished in a single
 `dplyr::mutate` call or by a call to similar functions. Some examples are
-shown [here](https://thk686.github.io/fftab/articles/fftab.html).
+shown [here](https://thk686.github.io/fftab/articles/fftab.html#example-1-applying-a-phase-shift).
 
-### Related workflows
+### Related work
 
-* The [`fftpipe`](https://scialicia.com/2022/12/r-fast-fourier-transforms-with-fftpipe/) package takes a similar approach to `fftab`.
-* The ['healthyR.ts'](https://www.spsanderson.com/healthyR.ts/index.html) package includes a [`tidy_fft`](https://www.spsanderson.com/healthyR.ts/articles/using-tidy-fft.html) function.
+* The [`fftpipe`](https://scialicia.com/2022/12/r-fast-fourier-transforms-with-fftpipe/) package takes a approach similar to that of [`fftab`](https://thk686.github.io/fftab/).
+* The [`healthyR.ts`](https://www.spsanderson.com/healthyR.ts/index.html) package includes a [`tidy_fft`](https://www.spsanderson.com/healthyR.ts/articles/using-tidy-fft.html) function.
 
 ### Installation
 

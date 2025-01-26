@@ -8,10 +8,10 @@
 [![R-CMD-check](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thk686/fftab/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![CRAN status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/package=fftab)
 <!-- badges: end -->
 
 <!--
+[![CRAN status](https://www.r-pkg.org/badges/version/fftab)](https://CRAN.R-project.org/package=fftab)
 [![Codecov test coverage](https://codecov.io/gh/thk686/fftab/graph/badge.svg)](https://app.codecov.io/gh/thk686/fftab)
 -->
 
@@ -21,15 +21,16 @@ by working with tabular data rather than lists, vectors, and so on.
 Typical signal processing operations can thus often be accomplished in a
 single `dplyr::mutate` call or by a call to similar functions. Some
 examples are shown
-[here](https://thk686.github.io/fftab/articles/fftab.html).
+[here](https://thk686.github.io/fftab/articles/fftab.html#example-1-applying-a-phase-shift).
 
-### Related workflows
+### Related work
 
 - The
   [`fftpipe`](https://scialicia.com/2022/12/r-fast-fourier-transforms-with-fftpipe/)
-  package takes a similar approach to `fftab`.
+  package takes a approach similar to that of
+  [`fftab`](https://thk686.github.io/fftab/).
 - The
-  [‘healthyR.ts’](https://www.spsanderson.com/healthyR.ts/index.html)
+  [`healthyR.ts`](https://www.spsanderson.com/healthyR.ts/index.html)
   package includes a
   [`tidy_fft`](https://www.spsanderson.com/healthyR.ts/articles/using-tidy-fft.html)
   function.
